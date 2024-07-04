@@ -10,6 +10,7 @@ import UIKit
 class ThirdOnboardingPageViewController: UIViewController {
     var titleText: String?
     var descriptionText: String?
+    var coordinator: AppCoordinator?
 
     private let titleLabel: UILabel = {
         let label = UILabel()

@@ -19,6 +19,8 @@ class OnboardingViewController: UIPageViewController, UIPageViewControllerDataSo
     }()
 
     private let pageControl = UIPageControl()
+    private let nextButton = UIButton(type: .system)
+    private let skipButton = UIButton(type: .system)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,6 +53,7 @@ class OnboardingViewController: UIPageViewController, UIPageViewControllerDataSo
         let onboardingPage = ThirdOnboardingPageViewController()
         onboardingPage.titleText = "Get started now!"
         onboardingPage.descriptionText = "Sign up and explore the world of seamless transactions."
+        onboardingPage.coordinator = coordinator
         return onboardingPage
     }
 
@@ -70,11 +73,9 @@ class OnboardingViewController: UIPageViewController, UIPageViewControllerDataSo
     }
 
     private func setupButtons() {
-        let skipButton = UIButton(type: .system)
         skipButton.setTitle("Skip", for: .normal)
         skipButton.addTarget(self, action: #selector(skipTapped), for: .touchUpInside)
 
-        let nextButton = UIButton(type: .system)
         nextButton.setTitle("Next", for: .normal)
         nextButton.addTarget(self, action: #selector(nextTapped), for: .touchUpInside)
 
@@ -95,7 +96,7 @@ class OnboardingViewController: UIPageViewController, UIPageViewControllerDataSo
 
     @objc private func skipTapped() {
         UserDefaults.standard.set(true, forKey: "hasSeenOnboarding")
-        coordinator?.showLogin() // Adjust this method to navigate to your desired screen
+        coordinator?.showLogin()
     }
 
     @objc private func nextTapped() {
@@ -107,11 +108,25 @@ class OnboardingViewController: UIPageViewController, UIPageViewControllerDataSo
         setViewControllers([nextViewController], direction: .forward, animated: true, completion: { [weak self] completed in
             if completed, let index = self?.orderedViewControllers.firstIndex(of: nextViewController) {
                 self?.pageControl.currentPage = index
-                if index == self?.orderedViewControllers.count ?? 0 - 1 {
-                    self?.skipTapped()
-                }
+                self?.updateNextButtonTitle(for: index)
             }
         })
+    }
+
+    private func updateNextButtonTitle(for index: Int) {
+        if index == orderedViewControllers.count - 1 {
+            nextButton.setTitle("Start", for: .normal)
+            nextButton.removeTarget(self, action: #selector(nextTapped), for: .touchUpInside)
+            nextButton.addTarget(self, action: #selector(startTapped), for: .touchUpInside)
+        } else {
+            nextButton.setTitle("Next", for: .normal)
+            nextButton.removeTarget(self, action: #selector(startTapped), for: .touchUpInside)
+            nextButton.addTarget(self, action: #selector(nextTapped), for: .touchUpInside)
+        }
+    }
+
+    @objc private func startTapped() {
+        coordinator?.showLogin()
     }
 
     // MARK: UIPageViewControllerDataSource
@@ -167,6 +182,7 @@ class OnboardingViewController: UIPageViewController, UIPageViewControllerDataSo
         if let pendingViewController = pendingViewControllers.first,
            let index = orderedViewControllers.firstIndex(of: pendingViewController) {
             pageControl.currentPage = index
+            updateNextButtonTitle(for: index)
         }
     }
 }
