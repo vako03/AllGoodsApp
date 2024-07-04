@@ -1,0 +1,40 @@
+//
+//  AuthViewModel.swift
+//  AllGoodsApp
+//
+//  Created by valeri mekhashishvili on 04.07.24.
+//
+
+import Foundation
+import FirebaseAuth
+
+class AuthViewModel {
+    
+    func register(email: String, password: String, completion: @escaping (Result<UserModel, Error>) -> Void) {
+        Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            guard let user = authResult?.user else { return }
+            
+            let userModel = UserModel(email: email, uid: user.uid)
+            completion(.success(userModel))
+        }
+    }
+    
+    func login(email: String, password: String, completion: @escaping (Result<UserModel, Error>) -> Void) {
+        Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            guard let user = authResult?.user else { return }
+            
+            let userModel = UserModel(email: email, uid: user.uid)
+            completion(.success(userModel))
+        }
+    }
+}
