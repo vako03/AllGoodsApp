@@ -37,22 +37,22 @@ class OnboardingViewController: UIPageViewController, UIPageViewControllerDataSo
 
     private func firstOnboardingPage() -> UIViewController {
         let onboardingPage = FirstOnboardingPageViewController()
-        onboardingPage.titleText = "Easily track your daily transactions"
-        onboardingPage.descriptionText = "Comprehensive up-to-date news coverage, aggregated from sources all over the world"
+        onboardingPage.titleText = "Discover the Best Deals"
+        onboardingPage.descriptionText = "Unlock exclusive discounts and offers on your favorite products."
         return onboardingPage
     }
 
     private func secondOnboardingPage() -> UIViewController {
         let onboardingPage = SecondOnboardingPageViewController()
-        onboardingPage.titleText = "Stay updated with the latest news"
-        onboardingPage.descriptionText = "Real-time notifications and updates from trusted sources."
+        onboardingPage.titleText = "Your Style, Your Way"
+        onboardingPage.descriptionText = "Explore a wide range of categories to match your unique taste and lifestyle."
         return onboardingPage
     }
 
     private func thirdOnboardingPage() -> UIViewController {
         let onboardingPage = ThirdOnboardingPageViewController()
-        onboardingPage.titleText = "Get started now!"
-        onboardingPage.descriptionText = "Sign up and explore the world of seamless transactions."
+        onboardingPage.titleText = "Shopping Made Simple"
+        onboardingPage.descriptionText = "Enjoy a hassle-free shopping experience with easy navigation and quick checkout."
         onboardingPage.coordinator = coordinator
         return onboardingPage
     }
@@ -74,9 +74,11 @@ class OnboardingViewController: UIPageViewController, UIPageViewControllerDataSo
 
     private func setupButtons() {
         skipButton.setTitle("Skip", for: .normal)
+        skipButton.tintColor = .black
         skipButton.addTarget(self, action: #selector(skipTapped), for: .touchUpInside)
 
         nextButton.setTitle("Next", for: .normal)
+        nextButton.tintColor = .black
         nextButton.addTarget(self, action: #selector(nextTapped), for: .touchUpInside)
 
         view.addSubview(skipButton)

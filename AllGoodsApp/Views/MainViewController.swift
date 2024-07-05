@@ -9,13 +9,14 @@ import FirebaseAuth
 
 class MainViewController: UIViewController {
     var coordinator: AppCoordinator?
+    var username: String?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
 
         let label = UILabel()
-        label.text = "Welcome to the Main Page"
+        label.text = "Welcome, \(username ?? "Guest")"
         label.textAlignment = .center
         view.addSubview(label)
         

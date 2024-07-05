@@ -10,4 +10,8 @@ import Foundation
 struct UserModel {
     let email: String
     let uid: String
+    let username: String
 }
+
+
+

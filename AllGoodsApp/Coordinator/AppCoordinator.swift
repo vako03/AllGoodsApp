@@ -20,7 +20,8 @@ class AppCoordinator {
 
     func start() {
         if Auth.auth().currentUser != nil {
-            showMainPage()
+            let username = Auth.auth().currentUser?.displayName ?? "Guest"
+            showMainPage(username: username)
         } else if UserDefaults.standard.bool(forKey: "hasSeenOnboarding") {
             showLogin()
         } else {
@@ -46,9 +47,10 @@ class AppCoordinator {
         navigationController.pushViewController(registerVC, animated: true)
     }
 
-    func showMainPage() {
+    func showMainPage(username: String) {
         let mainVC = MainViewController()
         mainVC.coordinator = self
+        mainVC.username = username
         navigationController.setViewControllers([mainVC], animated: true)
     }
 }

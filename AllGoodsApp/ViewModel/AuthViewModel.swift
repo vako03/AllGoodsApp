@@ -10,7 +10,7 @@ import FirebaseAuth
 
 class AuthViewModel {
     
-    func register(email: String, password: String, completion: @escaping (Result<UserModel, Error>) -> Void) {
+    func register(email: String, password: String, username: String, completion: @escaping (Result<UserModel, Error>) -> Void) {
         Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
             if let error = error {
                 completion(.failure(error))
@@ -19,8 +19,17 @@ class AuthViewModel {
             
             guard let user = authResult?.user else { return }
             
-            let userModel = UserModel(email: email, uid: user.uid)
-            completion(.success(userModel))
+            let changeRequest = user.createProfileChangeRequest()
+            changeRequest.displayName = username
+            changeRequest.commitChanges { error in
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+                
+                let userModel = UserModel(email: email, uid: user.uid, username: username)
+                completion(.success(userModel))
+            }
         }
     }
     
@@ -33,7 +42,7 @@ class AuthViewModel {
             
             guard let user = authResult?.user else { return }
             
-            let userModel = UserModel(email: email, uid: user.uid)
+            let userModel = UserModel(email: email, uid: user.uid, username: user.displayName ?? "")
             completion(.success(userModel))
         }
     }
