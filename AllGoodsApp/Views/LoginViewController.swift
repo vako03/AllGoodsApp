@@ -271,12 +271,14 @@ class LoginViewController: UIViewController {
         viewModel.login(email: email, password: password) { [weak self] result in
             switch result {
             case .success(let userModel):
+                UserDefaults.standard.set(true, forKey: "isLoggedIn")
                 self?.coordinator?.showMainPage(username: userModel.username)
             case .failure(let error):
                 self?.showAlert(message: error.localizedDescription)
             }
         }
     }
+
 
 
     @objc private func registerTapped() {

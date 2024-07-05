@@ -19,7 +19,7 @@ class AppCoordinator {
     }
 
     func start() {
-        if Auth.auth().currentUser != nil {
+        if Auth.auth().currentUser != nil && UserDefaults.standard.bool(forKey: "isLoggedIn") {
             let username = Auth.auth().currentUser?.displayName ?? "Guest"
             showMainPage(username: username)
         } else if UserDefaults.standard.bool(forKey: "hasSeenOnboarding") {

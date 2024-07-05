@@ -459,10 +459,12 @@ class RegisterViewController: UIViewController {
     private func showSuccessAlert() {
         let alertController = UIAlertController(title: "Success", message: "Registration successful. Please log in.", preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak self] _ in
+            UserDefaults.standard.set(false, forKey: "isLoggedIn")
             self?.coordinator?.showLogin()
         }))
         present(alertController, animated: true, completion: nil)
     }
+
 
     private func isValidEmail(_ email: String) -> Bool {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
