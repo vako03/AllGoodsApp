@@ -13,7 +13,7 @@ class LoginViewController: UIViewController {
     private let logoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "allgoodsapp")
-        imageView.contentMode = .scaleToFill
+        imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -53,6 +53,9 @@ class LoginViewController: UIViewController {
         textField.borderStyle = .none
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.addTarget(self, action: #selector(emailTextChanged(_:)), for: .editingChanged)
+        
+        textField.rightView = emailCheckmark
+        textField.rightViewMode = .always
         return textField
     }()
 
@@ -69,6 +72,7 @@ class LoginViewController: UIViewController {
         imageView.tintColor = .black
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.isHidden = true
+        imageView.frame = CGRect(x: 0, y: 0, width: 35, height: 35)
         return imageView
     }()
 
@@ -87,7 +91,9 @@ class LoginViewController: UIViewController {
         textField.borderStyle = .none
         textField.isSecureTextEntry = true
         textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.addTarget(self, action: #selector(passwordTextChanged(_:)), for: .editingChanged)
+
+        textField.rightView = passwordToggle
+        textField.rightViewMode = .always
         return textField
     }()
 
@@ -102,7 +108,7 @@ class LoginViewController: UIViewController {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(systemName: "eye.slash"), for: .normal)
         button.tintColor = .black
-        button.translatesAutoresizingMaskIntoConstraints = false
+        button.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
         button.addTarget(self, action: #selector(togglePasswordVisibility), for: .touchUpInside)
         return button
     }()
@@ -142,104 +148,52 @@ class LoginViewController: UIViewController {
         configureButton(registerButton, title: "Register")
         configureButton(guestButton, title: "Continue as Guest")
 
-        view.addSubview(logoImageView)
-        view.addSubview(titleLabel)
-        view.addSubview(descriptionLabel)
-        view.addSubview(emailLabel)
-        view.addSubview(emailTextField)
-        view.addSubview(emailUnderline)
-        view.addSubview(emailCheckmark)
-        view.addSubview(passwordLabel)
-        view.addSubview(passwordTextField)
-        view.addSubview(passwordUnderline)
-        view.addSubview(passwordToggle)
-        view.addSubview(loginButton)
-        view.addSubview(orLabel)
-        view.addSubview(registerButton)
-        view.addSubview(guestButton)
+        let emailStack = UIStackView(arrangedSubviews: [emailLabel, emailTextField, emailUnderline])
+        emailStack.axis = .vertical
+        emailStack.spacing = 4
+        emailStack.translatesAutoresizingMaskIntoConstraints = false
+
+        let passwordStack = UIStackView(arrangedSubviews: [passwordLabel, passwordTextField, passwordUnderline])
+        passwordStack.axis = .vertical
+        passwordStack.spacing = 4
+        passwordStack.translatesAutoresizingMaskIntoConstraints = false
+
+        let buttonStack = UIStackView(arrangedSubviews: [loginButton, orLabel, registerButton, guestButton])
+        buttonStack.axis = .vertical
+        buttonStack.spacing = 16
+        buttonStack.translatesAutoresizingMaskIntoConstraints = false
+
+        let mainStack = UIStackView(arrangedSubviews: [logoImageView, titleLabel, descriptionLabel, emailStack, passwordStack])
+        mainStack.axis = .vertical
+        mainStack.spacing = 16
+        mainStack.alignment = .fill
+        mainStack.distribution = .equalSpacing
+        mainStack.translatesAutoresizingMaskIntoConstraints = false
+
+        view.addSubview(mainStack)
+        view.addSubview(buttonStack)
 
         NSLayoutConstraint.activate([
-            // Logo ImageView Constraints
-            logoImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
+            mainStack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            mainStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            mainStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            
+            logoImageView.heightAnchor.constraint(equalToConstant: 150),
+            logoImageView.widthAnchor.constraint(equalToConstant: 150),
             logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            logoImageView.heightAnchor.constraint(equalToConstant: 200),
-            logoImageView.widthAnchor.constraint(equalToConstant: 200),
 
-            // Title Label Constraints
-            titleLabel.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 10),
-            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-
-            // Description Label Constraints
-            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5),
-            descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-
-            // Email Label Constraints
-            emailLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
-            emailLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            emailLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-
-            // Email TextField Constraints
-            emailTextField.topAnchor.constraint(equalTo: emailLabel.bottomAnchor, constant: 8),
-            emailTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            emailTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50),
             emailTextField.heightAnchor.constraint(equalToConstant: 30),
-
-            // Email Underline Constraints
-            emailUnderline.topAnchor.constraint(equalTo: emailTextField.bottomAnchor, constant: 4),
-            emailUnderline.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            emailUnderline.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
             emailUnderline.heightAnchor.constraint(equalToConstant: 1),
-
-            // Email Checkmark Constraints
-            emailCheckmark.centerYAnchor.constraint(equalTo: emailTextField.centerYAnchor),
-            emailCheckmark.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-            emailCheckmark.widthAnchor.constraint(equalToConstant: 20),
-            emailCheckmark.heightAnchor.constraint(equalToConstant: 20),
-
-            // Password Label Constraints
-            passwordLabel.topAnchor.constraint(equalTo: emailUnderline.bottomAnchor, constant: 16),
-            passwordLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            passwordLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-
-            // Password TextField Constraints
-            passwordTextField.topAnchor.constraint(equalTo: passwordLabel.bottomAnchor, constant: 8),
-            passwordTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            passwordTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50),
+            
             passwordTextField.heightAnchor.constraint(equalToConstant: 30),
-
-            // Password Underline Constraints
-            passwordUnderline.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 4),
-            passwordUnderline.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            passwordUnderline.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
             passwordUnderline.heightAnchor.constraint(equalToConstant: 1),
 
-            // Password Toggle Constraints
-            passwordToggle.centerYAnchor.constraint(equalTo: passwordTextField.centerYAnchor),
-            passwordToggle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-            passwordToggle.widthAnchor.constraint(equalToConstant: 20),
-            passwordToggle.heightAnchor.constraint(equalToConstant: 20),
+            buttonStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            buttonStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            buttonStack.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
 
-            // Login Button Constraints
-            loginButton.topAnchor.constraint(equalTo: passwordUnderline.bottomAnchor, constant: 40),
-            loginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            loginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
             loginButton.heightAnchor.constraint(equalToConstant: 50),
-
-            // Or Label Constraints
-            orLabel.topAnchor.constraint(equalTo: loginButton.bottomAnchor, constant: 16),
-            orLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-
-            // Register Button Constraints
-            registerButton.topAnchor.constraint(equalTo: orLabel.bottomAnchor, constant: 16),
-            registerButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            registerButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
             registerButton.heightAnchor.constraint(equalToConstant: 50),
-
-            // Guest Button Constraints
-            guestButton.topAnchor.constraint(equalTo: registerButton.bottomAnchor, constant: 16),
-            guestButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            guestButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
             guestButton.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
@@ -278,8 +232,6 @@ class LoginViewController: UIViewController {
             }
         }
     }
-
-
 
     @objc private func registerTapped() {
         coordinator?.showRegister()
