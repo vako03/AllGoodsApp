@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CustomLabel: UILabel {
+final class CustomLabel: UILabel {
     init(text: String, fontSize: CGFloat = 14, textColor: UIColor = .black, alignment: NSTextAlignment = .left) {
         super.init(frame: .zero)
         self.text = text

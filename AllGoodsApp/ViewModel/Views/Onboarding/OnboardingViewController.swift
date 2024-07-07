@@ -7,7 +7,7 @@
 
 import UIKit
 
-class OnboardingViewController: UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate {
+final class OnboardingViewController: UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate {
     var coordinator: AppCoordinator?
 
     private(set) lazy var orderedViewControllers: [UIViewController] = {
@@ -90,7 +90,6 @@ class OnboardingViewController: UIPageViewController, UIPageViewControllerDataSo
     }
 
     private func skipTapped() {
-        UserDefaults.standard.set(true, forKey: "hasSeenOnboarding")
         coordinator?.showLogin()
     }
 

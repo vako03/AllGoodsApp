@@ -7,7 +7,7 @@
 import UIKit
 import FirebaseAuth
 
-class AppCoordinator {
+final class AppCoordinator {
     var window: UIWindow
     var navigationController: UINavigationController
 
@@ -19,11 +19,9 @@ class AppCoordinator {
     }
 
     func start() {
-        if Auth.auth().currentUser != nil && UserDefaults.standard.bool(forKey: "isLoggedIn") {
+        if AuthViewModel().isLoggedIn {
             let username = Auth.auth().currentUser?.displayName ?? "Guest"
             showMainPage(username: username)
-        } else if UserDefaults.standard.bool(forKey: "hasSeenOnboarding") {
-            showLogin()
         } else {
             showOnboarding()
         }

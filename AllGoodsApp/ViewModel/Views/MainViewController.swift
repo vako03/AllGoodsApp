@@ -42,7 +42,13 @@ final class MainViewController: UIViewController {
     }
 
     private func handleLogoutTapped() {
-        UserDefaults.standard.set(false, forKey: "isLoggedIn")
-        coordinator?.showLogin()
+        AuthViewModel().logout { [weak self] result in
+            switch result {
+            case .success:
+                self?.coordinator?.showLogin()
+            case .failure(let error):
+                showAlert(on: self!, message: error.localizedDescription)
+            }
+        }
     }
 }

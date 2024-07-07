@@ -109,7 +109,6 @@ final class LoginViewController: UIViewController {
             guard let self = self else { return }
             switch result {
             case .success(let userModel):
-                UserDefaults.standard.set(true, forKey: "isLoggedIn")
                 self.coordinator?.showMainPage(username: userModel.username)
             case .failure(let error):
                 showAlert(on: self, message: error.localizedDescription)

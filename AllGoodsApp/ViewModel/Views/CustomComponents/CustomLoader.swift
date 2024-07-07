@@ -44,3 +44,4 @@ final class CustomLoader: UIView {
         removeFromSuperview()
     }
 }
+

@@ -57,7 +57,7 @@ class ThirdOnboardingPageViewController: UIViewController {
             descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
 
-            imageViewShopping.centerYAnchor.constraint(equalTo: view.topAnchor, constant: 300),
+            imageViewShopping.centerYAnchor.constraint(equalTo: view.topAnchor, constant: 250),
             imageViewShopping.widthAnchor.constraint(equalToConstant: 250),
             imageViewShopping.heightAnchor.constraint(equalToConstant: 250)
         ])

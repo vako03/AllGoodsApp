@@ -56,7 +56,7 @@ class SecondOnboardingPageViewController: UIViewController {
             descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
 
-            imageView3D.centerYAnchor.constraint(equalTo: view.topAnchor, constant: 300),
+            imageView3D.centerYAnchor.constraint(equalTo: view.topAnchor, constant: 250),
             imageView3D.widthAnchor.constraint(equalToConstant: 250),
             imageView3D.heightAnchor.constraint(equalToConstant: 250)
         ])
