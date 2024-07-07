@@ -13,5 +13,3 @@ struct UserModel {
     let username: String
 }
 
-
-

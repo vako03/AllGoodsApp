@@ -81,8 +81,9 @@ class LoginViewController: UIViewController {
 
     @objc private func passwordTextChanged(_ textField: UITextField) {
         if !textField.text!.isEmpty {
-            passwordTextField.rightIconButton.setImage(UIImage(systemName: "eye.slash"), for: .normal)
-            passwordTextField.isSecureTextEntry = true
+            passwordTextField.rightIconButton.isHidden = false
+        } else {
+            passwordTextField.rightIconButton.isHidden = true
         }
     }
 
