@@ -19,8 +19,12 @@ class OnboardingViewController: UIPageViewController, UIPageViewControllerDataSo
     }()
 
     private let pageControl = UIPageControl()
-    private let nextButton = CustomButton(title: "Next")
-    private let skipButton = CustomButton(title: "Skip")
+    private lazy var nextButton = CustomButton(title: "Next") { [weak self] in
+        self?.nextTapped()
+    }
+    private lazy var skipButton = CustomButton(title: "Skip") { [weak self] in
+        self?.skipTapped()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,9 +77,6 @@ class OnboardingViewController: UIPageViewController, UIPageViewControllerDataSo
     }
 
     private func setupButtons() {
-        skipButton.addTarget(self, action: #selector(skipTapped), for: .touchUpInside)
-        nextButton.addTarget(self, action: #selector(nextTapped), for: .touchUpInside)
-
         view.addSubview(skipButton)
         view.addSubview(nextButton)
 
@@ -88,12 +89,12 @@ class OnboardingViewController: UIPageViewController, UIPageViewControllerDataSo
         ])
     }
 
-    @objc private func skipTapped() {
+    private func skipTapped() {
         UserDefaults.standard.set(true, forKey: "hasSeenOnboarding")
         coordinator?.showLogin()
     }
 
-    @objc private func nextTapped() {
+    private func nextTapped() {
         guard let currentViewController = viewControllers?.first,
               let nextViewController = pageViewController(self, viewControllerAfter: currentViewController) else {
             return
@@ -110,16 +111,18 @@ class OnboardingViewController: UIPageViewController, UIPageViewControllerDataSo
     private func updateNextButtonTitle(for index: Int) {
         if index == orderedViewControllers.count - 1 {
             nextButton.setTitle("Start", for: .normal)
-            nextButton.removeTarget(self, action: #selector(nextTapped), for: .touchUpInside)
-            nextButton.addTarget(self, action: #selector(startTapped), for: .touchUpInside)
+            nextButton.addAction(UIAction { [weak self] _ in
+                self?.startTapped()
+            }, for: .touchUpInside)
         } else {
             nextButton.setTitle("Next", for: .normal)
-            nextButton.removeTarget(self, action: #selector(startTapped), for: .touchUpInside)
-            nextButton.addTarget(self, action: #selector(nextTapped), for: .touchUpInside)
+            nextButton.addAction(UIAction { [weak self] _ in
+                self?.nextTapped()
+            }, for: .touchUpInside)
         }
     }
 
-    @objc private func startTapped() {
+    private func startTapped() {
         coordinator?.showLogin()
     }
 

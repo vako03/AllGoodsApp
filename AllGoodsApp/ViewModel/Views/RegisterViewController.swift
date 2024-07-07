@@ -7,23 +7,71 @@
 
 import UIKit
 
-class RegisterViewController: UIViewController {
+final class RegisterViewController: UIViewController {
     var coordinator: AppCoordinator?
     private let viewModel = AuthViewModel()
 
     private let logoImageView = UIImageView(image: UIImage(named: "allgoodsapp"))
     private let titleLabel = CustomLabel(text: "Register", fontSize: 28, alignment: .left)
-    private let usernameTextField = CustomTextField(placeholder: "Enter your username", rightIconImage: UIImage(systemName: "checkmark.circle"))
-    private let emailTextField = CustomTextField(placeholder: "Enter your email", rightIconImage: UIImage(systemName: "checkmark.circle"))
-    private let passwordTextField = CustomTextField(placeholder: "Enter your password", isSecure: true, rightIconImage: UIImage(systemName: "eye.slash"))
+    private let loader = CustomLoader()
+
+    private lazy var usernameTextField: CustomTextField = {
+        let textField = CustomTextField(
+            placeholder: "Enter your username",
+            rightIconImage: UIImage(systemName: "checkmark.circle"),
+            onTextChange: { [weak self] text in
+                guard let self = self else { return }
+                CustomTextFieldHandlers.handleEmailTextChange(textField: self.usernameTextField, text: text)
+            }
+        )
+        return textField
+    }()
+
+    private lazy var emailTextField: CustomTextField = {
+        let textField = CustomTextField(
+            placeholder: "Enter your email",
+            rightIconImage: UIImage(systemName: "checkmark.circle"),
+            onTextChange: { [weak self] text in
+                guard let self = self else { return }
+                CustomTextFieldHandlers.handleEmailTextChange(textField: self.emailTextField, text: text)
+            }
+        )
+        return textField
+    }()
+
+    private lazy var passwordTextField: CustomTextField = {
+        let textField = CustomTextField(
+            placeholder: "Enter your password",
+            isSecure: true,
+            rightIconImage: UIImage(systemName: "eye.slash"),
+            onTextChange: { [weak self] text in
+                guard let self = self else { return }
+                CustomTextFieldHandlers.handlePasswordTextChange(textField: self.passwordTextField, text: text)
+            },
+            onIconTap: { [weak self] in
+                guard let self = self else { return }
+                CustomTextFieldHandlers.togglePasswordVisibility(textField: self.passwordTextField)
+            }
+        )
+        return textField
+    }()
+
     private let termsCheckmark = UIButton(type: .custom)
     private let termsLabel = CustomLabel(text: "I agree to the terms and conditions")
-    private let registerButton = CustomButton(title: "Register")
+    private lazy var registerButton = CustomButton(title: "Register") { [weak self] in
+        self?.handleRegisterTapped()
+    }
 
     private var termsAccepted = false {
         didSet {
-            registerButton.isEnabled = termsAccepted
+            updateRegisterButtonState()
         }
+    }
+
+    private var allFieldsValid: Bool {
+        return !(usernameTextField.text?.isEmpty ?? true) &&
+               isValidEmail(emailTextField.text ?? "") &&
+               !(passwordTextField.text?.isEmpty ?? true)
     }
 
     override func viewDidLoad() {
@@ -31,6 +79,7 @@ class RegisterViewController: UIViewController {
         view.backgroundColor = .white
         setupUI()
         setupActions()
+        updateRegisterButtonState()
     }
 
     private func setupUI() {
@@ -70,53 +119,29 @@ class RegisterViewController: UIViewController {
     }
 
     private func setupActions() {
-        usernameTextField.addTarget(self, action: #selector(usernameTextChanged(_:)), for: .editingChanged)
-        emailTextField.addTarget(self, action: #selector(emailTextChanged(_:)), for: .editingChanged)
-        passwordTextField.addTarget(self, action: #selector(passwordTextChanged(_:)), for: .editingChanged)
-        passwordTextField.rightIconButton.addTarget(self, action: #selector(togglePasswordVisibility), for: .touchUpInside)
-        registerButton.addTarget(self, action: #selector(registerTapped), for: .touchUpInside)
-        termsCheckmark.addTarget(self, action: #selector(showTermsAndConditions), for: .touchUpInside)
+        termsCheckmark.addAction(UIAction { [weak self] _ in
+            self?.showTermsAndConditions()
+        }, for: .touchUpInside)
     }
 
-    @objc private func usernameTextChanged(_ textField: UITextField) {
-        usernameTextField.rightIconButton.isHidden = textField.text?.isEmpty ?? true
-    }
-
-    @objc private func emailTextChanged(_ textField: UITextField) {
-        emailTextField.rightIconButton.isHidden = !isValidEmail(textField.text ?? "")
-    }
-
-    @objc private func passwordTextChanged(_ textField: UITextField) {
-        passwordTextField.rightIconButton.isHidden = textField.text?.isEmpty ?? true
-    }
-
-    @objc private func togglePasswordVisibility() {
-        passwordTextField.isSecureTextEntry.toggle()
-        let imageName = passwordTextField.isSecureTextEntry ? "eye.slash" : "eye"
-        passwordTextField.rightIconButton.setImage(UIImage(systemName: imageName), for: .normal)
-    }
-
-    @objc private func showTermsAndConditions() {
-        let termsVC = TermsViewController()
-        termsVC.modalPresentationStyle = .formSheet
-        termsVC.delegate = self
-        present(termsVC, animated: true, completion: nil)
-    }
-
-    @objc private func registerTapped() {
+    private func handleRegisterTapped() {
         guard let username = usernameTextField.text, !username.isEmpty,
               let email = emailTextField.text, !email.isEmpty,
               let password = passwordTextField.text, !password.isEmpty else {
-                  showAlert(on: self, message: "Please ensure all fields are filled out correctly.")
-                  return
-              }
+            showAlert(on: self, message: "Please ensure all fields are filled out correctly.")
+            return
+        }
+
+        loader.startLoading(in: view)
 
         viewModel.register(email: email, password: password, username: username) { [weak self] result in
+            guard let self = self else { return }
+            self.loader.stopLoading()
             switch result {
             case .success:
-                self?.showSuccessAlert()
+                self.showSuccessAlert()
             case .failure(let error):
-                showAlert(on: self!, message: error.localizedDescription)
+                showAlert(on: self, message: error.localizedDescription)
             }
         }
     }
@@ -129,12 +154,23 @@ class RegisterViewController: UIViewController {
         }))
         present(alertController, animated: true, completion: nil)
     }
+
+    private func updateRegisterButtonState() {
+        registerButton.isEnabled = termsAccepted && allFieldsValid
+    }
+
+    private func showTermsAndConditions() {
+        let termsVC = TermsViewController()
+        termsVC.modalPresentationStyle = .formSheet
+        termsVC.delegate = self
+        present(termsVC, animated: true, completion: nil)
+    }
 }
 
 extension RegisterViewController: TermsViewControllerDelegate {
     func didAcceptTerms() {
         termsAccepted = true
         termsCheckmark.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
-        registerButton.isEnabled = true
+        updateRegisterButtonState()
     }
 }

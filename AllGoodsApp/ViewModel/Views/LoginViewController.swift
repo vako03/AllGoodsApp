@@ -6,25 +6,61 @@
 //
 import UIKit
 
-class LoginViewController: UIViewController {
+final class LoginViewController: UIViewController {
     var coordinator: AppCoordinator?
     private let viewModel = AuthViewModel()
 
     private let logoImageView = UIImageView(image: UIImage(named: "allgoodsapp"))
     private let titleLabel = CustomLabel(text: "Welcome", fontSize: 28, alignment: .left)
     private let descriptionLabel = CustomLabel(text: "Log in, sign up, or continue as a guest.", fontSize: 16, textColor: .gray, alignment: .left)
-    private let emailTextField = CustomTextField(placeholder: "Enter your email", rightIconImage: UIImage(systemName: "checkmark.circle"))
-    private let passwordTextField = CustomTextField(placeholder: "Enter your password", isSecure: true, rightIconImage: UIImage(systemName: "eye.slash"))
-    private let loginButton = CustomButton(title: "Login")
-    private let registerButton = CustomButton(title: "Register")
-    private let guestButton = CustomButton(title: "Continue as Guest")
+    
+    private lazy var emailTextField: CustomTextField = {
+        let textField = CustomTextField(
+            placeholder: "Enter your email",
+            rightIconImage: UIImage(systemName: "checkmark.circle"),
+            onTextChange: { [weak self] text in
+                guard let self = self else { return }
+                CustomTextFieldHandlers.handleEmailTextChange(textField: self.emailTextField, text: text)
+            }
+        )
+        return textField
+    }()
+    
+    private lazy var passwordTextField: CustomTextField = {
+        let textField = CustomTextField(
+            placeholder: "Enter your password",
+            isSecure: true,
+            rightIconImage: UIImage(systemName: "eye.slash"),
+            onTextChange: { [weak self] text in
+                guard let self = self else { return }
+                CustomTextFieldHandlers.handlePasswordTextChange(textField: self.passwordTextField, text: text)
+            },
+            onIconTap: { [weak self] in
+                guard let self = self else { return }
+                CustomTextFieldHandlers.togglePasswordVisibility(textField: self.passwordTextField)
+            }
+        )
+        return textField
+    }()
+    
+    private lazy var loginButton = CustomButton(title: "Login") { [weak self] in
+        self?.handleLoginTapped()
+    }
+    
+    private lazy var registerButton = CustomButton(title: "Register") { [weak self] in
+        self?.coordinator?.showRegister()
+    }
+    
+    private lazy var guestButton = CustomButton(title: "Continue as Guest") { [weak self] in
+        self?.coordinator?.showMainPage(username: "Guest")
+    }
+    
     private let orLabel = CustomLabel(text: "or", alignment: .center)
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupUI()
-        setupActions()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -62,60 +98,22 @@ class LoginViewController: UIViewController {
         ])
     }
 
-    private func setupActions() {
-        emailTextField.addTarget(self, action: #selector(emailTextChanged(_:)), for: .editingChanged)
-        passwordTextField.addTarget(self, action: #selector(passwordTextChanged(_:)), for: .editingChanged)
-        passwordTextField.rightIconButton.addTarget(self, action: #selector(togglePasswordVisibility), for: .touchUpInside)
-        loginButton.addTarget(self, action: #selector(loginTapped), for: .touchUpInside)
-        registerButton.addTarget(self, action: #selector(registerTapped), for: .touchUpInside)
-        guestButton.addTarget(self, action: #selector(guestTapped), for: .touchUpInside)
-    }
-
-    @objc private func emailTextChanged(_ textField: UITextField) {
-        if let email = textField.text, isValidEmail(email) {
-            emailTextField.rightIconButton.isHidden = false
-        } else {
-            emailTextField.rightIconButton.isHidden = true
-        }
-    }
-
-    @objc private func passwordTextChanged(_ textField: UITextField) {
-        if !textField.text!.isEmpty {
-            passwordTextField.rightIconButton.isHidden = false
-        } else {
-            passwordTextField.rightIconButton.isHidden = true
-        }
-    }
-
-    @objc private func togglePasswordVisibility() {
-        passwordTextField.isSecureTextEntry.toggle()
-        let imageName = passwordTextField.isSecureTextEntry ? "eye.slash" : "eye"
-        passwordTextField.rightIconButton.setImage(UIImage(systemName: imageName), for: .normal)
-    }
-
-    @objc private func loginTapped() {
+    private func handleLoginTapped() {
         guard let email = emailTextField.text, !email.isEmpty,
               let password = passwordTextField.text, !password.isEmpty else {
-                  showAlert(on: self, message: "Please enter a valid email and password.")
-                  return
-              }
+            showAlert(on: self, message: "Please enter a valid email and password.")
+            return
+        }
 
         viewModel.login(email: email, password: password) { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success(let userModel):
                 UserDefaults.standard.set(true, forKey: "isLoggedIn")
-                self?.coordinator?.showMainPage(username: userModel.username)
+                self.coordinator?.showMainPage(username: userModel.username)
             case .failure(let error):
-                showAlert(on: self!, message: error.localizedDescription)
+                showAlert(on: self, message: error.localizedDescription)
             }
         }
-    }
-
-    @objc private func registerTapped() {
-        coordinator?.showRegister()
-    }
-
-    @objc private func guestTapped() {
-        coordinator?.showMainPage(username: "Guest")
     }
 }

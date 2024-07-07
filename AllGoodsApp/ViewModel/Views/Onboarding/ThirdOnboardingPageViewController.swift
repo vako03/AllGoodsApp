@@ -11,7 +11,7 @@ class ThirdOnboardingPageViewController: UIViewController {
     var titleText: String?
     var descriptionText: String?
     var coordinator: AppCoordinator?
-
+
     private let titleLabel = CustomLabel(text: "", fontSize: 24, textColor: .black, alignment: .center)
     private let descriptionLabel = CustomLabel(text: "", fontSize: 16, textColor: .gray, alignment: .center)
     private let imageViewShopping: UIImageView = {
