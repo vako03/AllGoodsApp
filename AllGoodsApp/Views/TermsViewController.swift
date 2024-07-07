@@ -22,16 +22,7 @@ class TermsViewController: UIViewController {
                 return textView
             }()
 
-            private lazy var acceptButton: UIButton = {
-                let button = UIButton(type: .system)
-                button.setTitle("Accept", for: .normal)
-                button.backgroundColor = .black
-                button.tintColor = .white
-                button.layer.cornerRadius = 15
-                button.translatesAutoresizingMaskIntoConstraints = false
-                button.addTarget(self, action: #selector(acceptTapped), for: .touchUpInside)
-                return button
-            }()
+            private let acceptButton = CustomButton(title: "Accept")
 
             override func viewDidLoad() {
                 super.viewDidLoad()
@@ -40,6 +31,8 @@ class TermsViewController: UIViewController {
             }
 
             private func setupUI() {
+                acceptButton.addTarget(self, action: #selector(acceptTapped), for: .touchUpInside)
+
                 view.addSubview(termsTextView)
                 view.addSubview(acceptButton)
 
@@ -51,8 +44,7 @@ class TermsViewController: UIViewController {
 
                     acceptButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
                     acceptButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-                    acceptButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
-                    acceptButton.heightAnchor.constraint(equalToConstant: 50)
+                    acceptButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20)
                 ])
             }
 

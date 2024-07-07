@@ -11,24 +11,8 @@ class FirstOnboardingPageViewController: UIViewController {
     var titleText: String?
     var descriptionText: String?
 
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 24, weight: .bold)
-        label.textColor = .black
-        label.textAlignment = .center
-        label.numberOfLines = 0
-        return label
-    }()
-
-    private let descriptionLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
-        label.textColor = .gray
-        label.textAlignment = .center
-        label.numberOfLines = 0
-        return label
-    }()
-
+    private let titleLabel = CustomLabel(text: "", fontSize: 24, textColor: .black, alignment: .center)
+    private let descriptionLabel = CustomLabel(text: "", fontSize: 16, textColor: .gray, alignment: .center)
     private let parcelImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "FirstOnboard")

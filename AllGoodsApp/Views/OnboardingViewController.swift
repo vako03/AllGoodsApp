@@ -19,8 +19,8 @@ class OnboardingViewController: UIPageViewController, UIPageViewControllerDataSo
     }()
 
     private let pageControl = UIPageControl()
-    private let nextButton = UIButton(type: .system)
-    private let skipButton = UIButton(type: .system)
+    private let nextButton = CustomButton(title: "Next")
+    private let skipButton = CustomButton(title: "Skip")
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,19 +73,11 @@ class OnboardingViewController: UIPageViewController, UIPageViewControllerDataSo
     }
 
     private func setupButtons() {
-        skipButton.setTitle("Skip", for: .normal)
-        skipButton.tintColor = .black
         skipButton.addTarget(self, action: #selector(skipTapped), for: .touchUpInside)
-
-        nextButton.setTitle("Next", for: .normal)
-        nextButton.tintColor = .black
         nextButton.addTarget(self, action: #selector(nextTapped), for: .touchUpInside)
 
         view.addSubview(skipButton)
         view.addSubview(nextButton)
-
-        skipButton.translatesAutoresizingMaskIntoConstraints = false
-        nextButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             skipButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),

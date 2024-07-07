@@ -12,6 +12,8 @@
 		1A1209362C35D59300FDC9BE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1209352C35D59300FDC9BE /* ViewController.swift */; };
 		1A12093B2C35D59500FDC9BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A12093A2C35D59500FDC9BE /* Assets.xcassets */; };
 		1A12093E2C35D59500FDC9BE /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 1A12093D2C35D59500FDC9BE /* Base */; };
+		1A6FE1932C3B37F700F6D5B4 /* ReusableComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6FE1922C3B37F700F6D5B4 /* ReusableComponents.swift */; };
+		1A6FE1952C3B380300F6D5B4 /* SharedLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6FE1942C3B380300F6D5B4 /* SharedLogic.swift */; };
 		1AB695F72C36FC7300EA6F49 /* OnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB695F62C36FC7300EA6F49 /* OnboardingPageViewController.swift */; };
 		1AB695FB2C37195300EA6F49 /* FirstOnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB695FA2C37195300EA6F49 /* FirstOnboardingPageViewController.swift */; };
 		1AB695FD2C37196000EA6F49 /* SecondOnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB695FC2C37196000EA6F49 /* SecondOnboardingPageViewController.swift */; };
@@ -40,6 +42,8 @@
 		1A12093A2C35D59500FDC9BE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1A12093D2C35D59500FDC9BE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1A12093F2C35D59500FDC9BE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1A6FE1922C3B37F700F6D5B4 /* ReusableComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableComponents.swift; sourceTree = "<group>"; };
+		1A6FE1942C3B380300F6D5B4 /* SharedLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedLogic.swift; sourceTree = "<group>"; };
 		1AB695F62C36FC7300EA6F49 /* OnboardingPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageViewController.swift; sourceTree = "<group>"; };
 		1AB695FA2C37195300EA6F49 /* FirstOnboardingPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstOnboardingPageViewController.swift; sourceTree = "<group>"; };
 		1AB695FC2C37196000EA6F49 /* SecondOnboardingPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondOnboardingPageViewController.swift; sourceTree = "<group>"; };
@@ -103,8 +107,18 @@
 				1A12093C2C35D59500FDC9BE /* LaunchScreen.storyboard */,
 				1A12093F2C35D59500FDC9BE /* Info.plist */,
 				1AF97DA32C36D02E00C3E55F /* GoogleService-Info.plist */,
+				1A6FE1912C3B37EA00F6D5B4 /* ReusableComponents */,
 			);
 			path = AllGoodsApp;
+			sourceTree = "<group>";
+		};
+		1A6FE1912C3B37EA00F6D5B4 /* ReusableComponents */ = {
+			isa = PBXGroup;
+			children = (
+				1A6FE1922C3B37F700F6D5B4 /* ReusableComponents.swift */,
+				1A6FE1942C3B380300F6D5B4 /* SharedLogic.swift */,
+			);
+			path = ReusableComponents;
 			sourceTree = "<group>";
 		};
 		1AF97DA62C36D11900C3E55F /* Frameworks */ = {
@@ -242,6 +256,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A6FE1952C3B380300F6D5B4 /* SharedLogic.swift in Sources */,
 				1AB695F72C36FC7300EA6F49 /* OnboardingPageViewController.swift in Sources */,
 				1AF97DB22C36D21200C3E55F /* MainViewController.swift in Sources */,
 				1AF97DB82C36D30600C3E55F /* RegisterViewController.swift in Sources */,
@@ -258,6 +273,7 @@
 				1AB696012C38768100EA6F49 /* TermsViewController.swift in Sources */,
 				1AF97DB62C36D2D300C3E55F /* RegisterViewModel.swift in Sources */,
 				1A1209342C35D59300FDC9BE /* SceneDelegate.swift in Sources */,
+				1A6FE1932C3B37F700F6D5B4 /* ReusableComponents.swift in Sources */,
 				1AF97DBF2C36D8C800C3E55F /* UserModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
