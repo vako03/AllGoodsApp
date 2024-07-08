@@ -18,6 +18,10 @@
 		1A6FE1A02C3B3DC700F6D5B4 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6FE19F2C3B3DC700F6D5B4 /* CustomTextField.swift */; };
 		1A6FE1C02C3B52A500F6D5B4 /* CustomTextFieldHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6FE1BF2C3B52A500F6D5B4 /* CustomTextFieldHandlers.swift */; };
 		1A6FE1C22C3B53C000F6D5B4 /* CustomLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6FE1C12C3B53C000F6D5B4 /* CustomLoader.swift */; };
+		1A6FE1F02C3BE6F700F6D5B4 /* TicTacToeGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6FE1EF2C3BE6F700F6D5B4 /* TicTacToeGameView.swift */; };
+		1A6FE1F22C3BE90300F6D5B4 /* TicTacToeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6FE1F12C3BE90300F6D5B4 /* TicTacToeViewModel.swift */; };
+		1A6FE1F52C3BFBAF00F6D5B4 /* CategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6FE1F42C3BFBAF00F6D5B4 /* CategoryCell.swift */; };
+		1A6FE1F72C3BFBBD00F6D5B4 /* FeaturedProductCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6FE1F62C3BFBBD00F6D5B4 /* FeaturedProductCell.swift */; };
 		1AB695FB2C37195300EA6F49 /* FirstOnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB695FA2C37195300EA6F49 /* FirstOnboardingPageViewController.swift */; };
 		1AB695FD2C37196000EA6F49 /* SecondOnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB695FC2C37196000EA6F49 /* SecondOnboardingPageViewController.swift */; };
 		1AB695FF2C37196C00EA6F49 /* ThirdOnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB695FE2C37196C00EA6F49 /* ThirdOnboardingPageViewController.swift */; };
@@ -49,6 +53,10 @@
 		1A6FE19F2C3B3DC700F6D5B4 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
 		1A6FE1BF2C3B52A500F6D5B4 /* CustomTextFieldHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextFieldHandlers.swift; sourceTree = "<group>"; };
 		1A6FE1C12C3B53C000F6D5B4 /* CustomLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLoader.swift; sourceTree = "<group>"; };
+		1A6FE1EF2C3BE6F700F6D5B4 /* TicTacToeGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicTacToeGameView.swift; sourceTree = "<group>"; };
+		1A6FE1F12C3BE90300F6D5B4 /* TicTacToeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicTacToeViewModel.swift; sourceTree = "<group>"; };
+		1A6FE1F42C3BFBAF00F6D5B4 /* CategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCell.swift; sourceTree = "<group>"; };
+		1A6FE1F62C3BFBBD00F6D5B4 /* FeaturedProductCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedProductCell.swift; sourceTree = "<group>"; };
 		1AB695FA2C37195300EA6F49 /* FirstOnboardingPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstOnboardingPageViewController.swift; sourceTree = "<group>"; };
 		1AB695FC2C37196000EA6F49 /* SecondOnboardingPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondOnboardingPageViewController.swift; sourceTree = "<group>"; };
 		1AB695FE2C37196C00EA6F49 /* ThirdOnboardingPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdOnboardingPageViewController.swift; sourceTree = "<group>"; };
@@ -143,6 +151,15 @@
 			path = Onboarding;
 			sourceTree = "<group>";
 		};
+		1A6FE1F32C3BFB9600F6D5B4 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				1A6FE1F42C3BFBAF00F6D5B4 /* CategoryCell.swift */,
+				1A6FE1F62C3BFBBD00F6D5B4 /* FeaturedProductCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		1AF97DBC2C36D8AC00C3E55F /* Coordinator */ = {
 			isa = PBXGroup;
 			children = (
@@ -164,6 +181,7 @@
 			isa = PBXGroup;
 			children = (
 				1AF97DC12C36D8DA00C3E55F /* AuthViewModel.swift */,
+				1A6FE1F12C3BE90300F6D5B4 /* TicTacToeViewModel.swift */,
 			);
 			name = ViewModel;
 			path = AllGoodsApp/ViewModel;
@@ -178,6 +196,8 @@
 				1AF97DB72C36D30600C3E55F /* RegisterViewController.swift */,
 				1AB696002C38768100EA6F49 /* TermsViewController.swift */,
 				1AF97DB12C36D21200C3E55F /* MainViewController.swift */,
+				1A6FE1EF2C3BE6F700F6D5B4 /* TicTacToeGameView.swift */,
+				1A6FE1F32C3BFB9600F6D5B4 /* Cells */,
 			);
 			name = Views;
 			path = AllGoodsApp/ViewModel/Views;
@@ -262,6 +282,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A6FE1F52C3BFBAF00F6D5B4 /* CategoryCell.swift in Sources */,
 				1A6FE1C02C3B52A500F6D5B4 /* CustomTextFieldHandlers.swift in Sources */,
 				1A6FE1952C3B380300F6D5B4 /* SharedLogic.swift in Sources */,
 				1AF97DB22C36D21200C3E55F /* MainViewController.swift in Sources */,
@@ -275,11 +296,14 @@
 				1AB695FD2C37196000EA6F49 /* SecondOnboardingPageViewController.swift in Sources */,
 				1A6FE1C22C3B53C000F6D5B4 /* CustomLoader.swift in Sources */,
 				1A6FE1A02C3B3DC700F6D5B4 /* CustomTextField.swift in Sources */,
+				1A6FE1F22C3BE90300F6D5B4 /* TicTacToeViewModel.swift in Sources */,
+				1A6FE1F02C3BE6F700F6D5B4 /* TicTacToeGameView.swift in Sources */,
 				1A6FE19C2C3B3DBB00F6D5B4 /* CustomLabel.swift in Sources */,
 				1AB695FB2C37195300EA6F49 /* FirstOnboardingPageViewController.swift in Sources */,
 				1AF97DC22C36D8DA00C3E55F /* AuthViewModel.swift in Sources */,
 				1AB695FF2C37196C00EA6F49 /* ThirdOnboardingPageViewController.swift in Sources */,
 				1AB696012C38768100EA6F49 /* TermsViewController.swift in Sources */,
+				1A6FE1F72C3BFBBD00F6D5B4 /* FeaturedProductCell.swift in Sources */,
 				1A1209342C35D59300FDC9BE /* SceneDelegate.swift in Sources */,
 				1AF97DBF2C36D8C800C3E55F /* UserModel.swift in Sources */,
 			);
