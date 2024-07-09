@@ -72,13 +72,15 @@ struct TicTacToeGameView: View {
                 title: Text("Game Over"),
                 message: {
                     if viewModel.winner == nil {
-                        return Text("You didn't win. Play again or cancel.")
+                        return Text("It's a draw. Try again or cancel.")
+                    } else if viewModel.winner == "O" {
+                        return Text("\(viewModel.username ?? "Player") didn't win. Try again or cancel.")
                     } else {
-                        return Text(viewModel.winner != nil ? "\(String(viewModel.winner!)) won" : "")
+                        return Text("\(String(viewModel.winner!)) won")
                     }
                 }(),
-                primaryButton: .default(Text("Play Again"), action: viewModel.resetGame),
-                secondaryButton: .cancel(Text("Back"), action: viewModel.onGameEnded)
+                primaryButton: .default(Text("Try Again"), action: viewModel.resetGame),
+                secondaryButton: .cancel(Text("Cancel"), action: viewModel.onGameEnded)
             )
         }
         .alert(isPresented: $viewModel.showPromo) {

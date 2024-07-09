@@ -25,6 +25,7 @@
 		1AA5822F2C3D5F2E0081A410 /* FavouriteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA5822E2C3D5F2E0081A410 /* FavouriteViewController.swift */; };
 		1AA582312C3D5F440081A410 /* BasketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA582302C3D5F440081A410 /* BasketViewController.swift */; };
 		1AA582332C3D5F590081A410 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA582322C3D5F590081A410 /* ProfileViewController.swift */; };
+		1AA582352C3D70090081A410 /* CustomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA582342C3D70090081A410 /* CustomImageView.swift */; };
 		1AB695FB2C37195300EA6F49 /* FirstOnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB695FA2C37195300EA6F49 /* FirstOnboardingPageViewController.swift */; };
 		1AB695FD2C37196000EA6F49 /* SecondOnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB695FC2C37196000EA6F49 /* SecondOnboardingPageViewController.swift */; };
 		1AB695FF2C37196C00EA6F49 /* ThirdOnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB695FE2C37196C00EA6F49 /* ThirdOnboardingPageViewController.swift */; };
@@ -63,6 +64,7 @@
 		1AA5822E2C3D5F2E0081A410 /* FavouriteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteViewController.swift; sourceTree = "<group>"; };
 		1AA582302C3D5F440081A410 /* BasketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketViewController.swift; sourceTree = "<group>"; };
 		1AA582322C3D5F590081A410 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		1AA582342C3D70090081A410 /* CustomImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomImageView.swift; sourceTree = "<group>"; };
 		1AB695FA2C37195300EA6F49 /* FirstOnboardingPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstOnboardingPageViewController.swift; sourceTree = "<group>"; };
 		1AB695FC2C37196000EA6F49 /* SecondOnboardingPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondOnboardingPageViewController.swift; sourceTree = "<group>"; };
 		1AB695FE2C37196C00EA6F49 /* ThirdOnboardingPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdOnboardingPageViewController.swift; sourceTree = "<group>"; };
@@ -142,6 +144,7 @@
 				1A6FE19D2C3B3DC000F6D5B4 /* CustomStack.swift */,
 				1A6FE19F2C3B3DC700F6D5B4 /* CustomTextField.swift */,
 				1A6FE1C12C3B53C000F6D5B4 /* CustomLoader.swift */,
+				1AA582342C3D70090081A410 /* CustomImageView.swift */,
 			);
 			path = CustomComponents;
 			sourceTree = "<group>";
@@ -308,6 +311,7 @@
 				1AB695FD2C37196000EA6F49 /* SecondOnboardingPageViewController.swift in Sources */,
 				1A6FE1C22C3B53C000F6D5B4 /* CustomLoader.swift in Sources */,
 				1A6FE1A02C3B3DC700F6D5B4 /* CustomTextField.swift in Sources */,
+				1AA582352C3D70090081A410 /* CustomImageView.swift in Sources */,
 				1A6FE1F22C3BE90300F6D5B4 /* TicTacToeViewModel.swift in Sources */,
 				1A6FE1F02C3BE6F700F6D5B4 /* TicTacToeGameView.swift in Sources */,
 				1A6FE19C2C3B3DBB00F6D5B4 /* CustomLabel.swift in Sources */,

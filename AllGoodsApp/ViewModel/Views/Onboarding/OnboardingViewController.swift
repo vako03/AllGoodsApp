@@ -95,34 +95,31 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
 
     private func nextTapped() {
         guard let currentViewController = viewControllers?.first,
-              let nextViewController = pageViewController(self, viewControllerAfter: currentViewController) else {
+              let currentIndex = orderedViewControllers.firstIndex(of: currentViewController) else {
             return
         }
 
-        setViewControllers([nextViewController], direction: .forward, animated: true, completion: { [weak self] completed in
-            if completed, let index = self?.orderedViewControllers.firstIndex(of: nextViewController) {
-                self?.pageControl.currentPage = index
-                self?.updateNextButtonTitle(for: index)
-            }
-        })
+        let nextIndex = currentIndex + 1
+
+        if nextIndex < orderedViewControllers.count {
+            let nextViewController = orderedViewControllers[nextIndex]
+            setViewControllers([nextViewController], direction: .forward, animated: true, completion: { [weak self] completed in
+                if completed {
+                    self?.pageControl.currentPage = nextIndex
+                    self?.updateNextButtonTitle(for: nextIndex)
+                }
+            })
+        } else {
+            coordinator?.showLogin()
+        }
     }
 
     private func updateNextButtonTitle(for index: Int) {
         if index == orderedViewControllers.count - 1 {
             nextButton.setTitle("Start", for: .normal)
-            nextButton.addAction(UIAction { [weak self] _ in
-                self?.startTapped()
-            }, for: .touchUpInside)
         } else {
             nextButton.setTitle("Next", for: .normal)
-            nextButton.addAction(UIAction { [weak self] _ in
-                self?.nextTapped()
-            }, for: .touchUpInside)
         }
-    }
-
-    private func startTapped() {
-        coordinator?.showLogin()
     }
 
     // MARK: UIPageViewControllerDataSource

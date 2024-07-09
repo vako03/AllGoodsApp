@@ -24,23 +24,28 @@ class TicTacToeViewModel: ObservableObject {
     }
 
     func handlePlayerMove(row: Int, col: Int) {
-        if board[row][col] == nil && player == "X" {
+        makeMove(row: row, col: col)
+        if player == "O" {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.playComputer()
+            }
+        }
+    }
+
+    private func makeMove(row: Int, col: Int) {
+        if board[row][col] == nil {
             board[row][col] = player
             tries += 1
             winner = checkWinner(board: board)
             if winner != nil {
+                isGameOver = true
                 if winner == "X" {
                     showPromo = true
-                } else {
-                    isGameOver = true
                 }
             } else if tries == 9 {
                 isGameOver = true
             } else {
-                player = "O"
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    self.playComputer()
-                }
+                player = (player == "X") ? "O" : "X"
             }
         }
     }
@@ -53,16 +58,7 @@ class TicTacToeViewModel: ObservableObject {
         }
 
         if let (i, j) = emptyTiles.randomElement() {
-            board[i][j] = "O"
-            tries += 1
-            winner = checkWinner(board: board)
-            if winner != nil {
-                isGameOver = true
-            } else if tries == 9 {
-                isGameOver = true
-            } else {
-                player = "X"
-            }
+            makeMove(row: i, col: j)
         }
     }
 
@@ -100,7 +96,7 @@ class TicTacToeViewModel: ObservableObject {
 
         // Check for draw scenario (no winner and all lines have different markers)
         let allMarkers = board.flatMap { $0.compactMap { $0 } }
-        if allMarkers.count == 9 && Set(allMarkers).count == 2 {
+        if allMarkers.count == 9 {
             return nil // Return nil for draw
         }
 

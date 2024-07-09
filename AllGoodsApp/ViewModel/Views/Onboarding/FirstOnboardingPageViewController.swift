@@ -13,12 +13,7 @@ class FirstOnboardingPageViewController: UIViewController {
 
     private let titleLabel = CustomLabel(text: "", fontSize: 24, textColor: .black, alignment: .center)
     private let descriptionLabel = CustomLabel(text: "", fontSize: 16, textColor: .gray, alignment: .center)
-    private let parcelImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "FirstOnboard")
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }()
+    private let parcelImageView = CustomImageView(image: UIImage(named: "FirstOnboard"))
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,46 +26,43 @@ class FirstOnboardingPageViewController: UIViewController {
         titleLabel.text = titleText
         descriptionLabel.text = descriptionText
 
-        view.addSubview(titleLabel)
-        view.addSubview(descriptionLabel)
-        view.addSubview(parcelImageView)
+        let stackView = UIStackView(arrangedSubviews: [parcelImageView, titleLabel, descriptionLabel])
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        stackView.spacing = 20
 
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-        parcelImageView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(stackView)
+        stackView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            titleLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 80),
-            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
+        ])
 
-            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
-            descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-
-            parcelImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            parcelImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: -240), // Start position above the top of the screen
-            parcelImageView.widthAnchor.constraint(equalToConstant: 250), // Double the size
-            parcelImageView.heightAnchor.constraint(equalToConstant: 250) // Double the size
+        NSLayoutConstraint.activate([
+            parcelImageView.widthAnchor.constraint(equalToConstant: 250),
+            parcelImageView.heightAnchor.constraint(equalToConstant: 250)
         ])
     }
 
     private func animateParcelImage() {
+        parcelImageView.transform = CGAffineTransform(translationX: 0, y: -view.bounds.height)
         UIView.animate(withDuration: 2.0, delay: 0, options: [.curveEaseInOut], animations: {
-            self.parcelImageView.transform = CGAffineTransform(translationX: 0, y: self.view.center.y + 50)
-        }) { _ in
+            self.parcelImageView.transform = .identity
+        }, completion: { _ in
             self.moveParcelImageSideways()
-        }
+        })
     }
 
     private func moveParcelImageSideways() {
         UIView.animate(withDuration: 1.0, delay: 0, options: [.autoreverse, .repeat, .curveEaseInOut], animations: {
-            self.parcelImageView.transform = CGAffineTransform(translationX: 20, y: self.view.center.y + 50)
-        }) { _ in
+            self.parcelImageView.transform = CGAffineTransform(translationX: 20, y: 0)
+        }, completion: { _ in
             UIView.animate(withDuration: 1.0, delay: 0, options: [.autoreverse, .repeat, .curveEaseInOut], animations: {
-                self.parcelImageView.transform = CGAffineTransform(translationX: -20, y: self.view.center.y + 50)
+                self.parcelImageView.transform = CGAffineTransform(translationX: -20, y: 0)
             }, completion: nil)
-        }
+        })
     }
 }
