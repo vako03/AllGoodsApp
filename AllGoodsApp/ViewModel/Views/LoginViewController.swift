@@ -52,7 +52,7 @@ final class LoginViewController: UIViewController {
     }
     
     private lazy var guestButton = CustomButton(title: "Continue as Guest") { [weak self] in
-        self?.coordinator?.showMainPage(username: "Guest")
+        self?.coordinator?.showMainTabBar(username: "Guest")
     }
     
     private let orLabel = CustomLabel(text: "or", alignment: .center)
@@ -109,7 +109,7 @@ final class LoginViewController: UIViewController {
             guard let self = self else { return }
             switch result {
             case .success(let userModel):
-                self.coordinator?.showMainPage(username: userModel.username)
+                self.coordinator?.showMainTabBar(username: userModel.username)
             case .failure(let error):
                 showAlert(on: self, message: error.localizedDescription)
             }

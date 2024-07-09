@@ -22,6 +22,9 @@
 		1A6FE1F22C3BE90300F6D5B4 /* TicTacToeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6FE1F12C3BE90300F6D5B4 /* TicTacToeViewModel.swift */; };
 		1A6FE1F52C3BFBAF00F6D5B4 /* CategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6FE1F42C3BFBAF00F6D5B4 /* CategoryCell.swift */; };
 		1A6FE1F72C3BFBBD00F6D5B4 /* FeaturedProductCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6FE1F62C3BFBBD00F6D5B4 /* FeaturedProductCell.swift */; };
+		1AA5822F2C3D5F2E0081A410 /* FavouriteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA5822E2C3D5F2E0081A410 /* FavouriteViewController.swift */; };
+		1AA582312C3D5F440081A410 /* BasketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA582302C3D5F440081A410 /* BasketViewController.swift */; };
+		1AA582332C3D5F590081A410 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA582322C3D5F590081A410 /* ProfileViewController.swift */; };
 		1AB695FB2C37195300EA6F49 /* FirstOnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB695FA2C37195300EA6F49 /* FirstOnboardingPageViewController.swift */; };
 		1AB695FD2C37196000EA6F49 /* SecondOnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB695FC2C37196000EA6F49 /* SecondOnboardingPageViewController.swift */; };
 		1AB695FF2C37196C00EA6F49 /* ThirdOnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB695FE2C37196C00EA6F49 /* ThirdOnboardingPageViewController.swift */; };
@@ -57,6 +60,9 @@
 		1A6FE1F12C3BE90300F6D5B4 /* TicTacToeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicTacToeViewModel.swift; sourceTree = "<group>"; };
 		1A6FE1F42C3BFBAF00F6D5B4 /* CategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCell.swift; sourceTree = "<group>"; };
 		1A6FE1F62C3BFBBD00F6D5B4 /* FeaturedProductCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedProductCell.swift; sourceTree = "<group>"; };
+		1AA5822E2C3D5F2E0081A410 /* FavouriteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteViewController.swift; sourceTree = "<group>"; };
+		1AA582302C3D5F440081A410 /* BasketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketViewController.swift; sourceTree = "<group>"; };
+		1AA582322C3D5F590081A410 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		1AB695FA2C37195300EA6F49 /* FirstOnboardingPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstOnboardingPageViewController.swift; sourceTree = "<group>"; };
 		1AB695FC2C37196000EA6F49 /* SecondOnboardingPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondOnboardingPageViewController.swift; sourceTree = "<group>"; };
 		1AB695FE2C37196C00EA6F49 /* ThirdOnboardingPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdOnboardingPageViewController.swift; sourceTree = "<group>"; };
@@ -197,6 +203,9 @@
 				1AB696002C38768100EA6F49 /* TermsViewController.swift */,
 				1AF97DB12C36D21200C3E55F /* MainViewController.swift */,
 				1A6FE1EF2C3BE6F700F6D5B4 /* TicTacToeGameView.swift */,
+				1AA5822E2C3D5F2E0081A410 /* FavouriteViewController.swift */,
+				1AA582302C3D5F440081A410 /* BasketViewController.swift */,
+				1AA582322C3D5F590081A410 /* ProfileViewController.swift */,
 				1A6FE1F32C3BFB9600F6D5B4 /* Cells */,
 			);
 			name = Views;
@@ -284,12 +293,15 @@
 			files = (
 				1A6FE1F52C3BFBAF00F6D5B4 /* CategoryCell.swift in Sources */,
 				1A6FE1C02C3B52A500F6D5B4 /* CustomTextFieldHandlers.swift in Sources */,
+				1AA582312C3D5F440081A410 /* BasketViewController.swift in Sources */,
 				1A6FE1952C3B380300F6D5B4 /* SharedLogic.swift in Sources */,
 				1AF97DB22C36D21200C3E55F /* MainViewController.swift in Sources */,
 				1A6FE19E2C3B3DC000F6D5B4 /* CustomStack.swift in Sources */,
+				1AA582332C3D5F590081A410 /* ProfileViewController.swift in Sources */,
 				1AF97DB82C36D30600C3E55F /* RegisterViewController.swift in Sources */,
 				1A6FE19A2C3B3DB100F6D5B4 /* CustomButton.swift in Sources */,
 				1AF97DB02C36D20700C3E55F /* LoginViewController.swift in Sources */,
+				1AA5822F2C3D5F2E0081A410 /* FavouriteViewController.swift in Sources */,
 				1AF97DAC2C36D1ED00C3E55F /* AppCoordinator.swift in Sources */,
 				1AF97DAE2C36D1FC00C3E55F /* OnboardingViewController.swift in Sources */,
 				1A1209322C35D59300FDC9BE /* AppDelegate.swift in Sources */,

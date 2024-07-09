@@ -12,9 +12,6 @@ final class MainViewController: UIViewController {
     var username: String?
 
     private let welcomeLabel = CustomLabel(text: "", fontSize: 24, alignment: .center)
-    private lazy var logoutButton = CustomButton(title: "Logout") { [weak self] in
-        self?.handleLogoutTapped()
-    }
 
     private let searchBar: UISearchBar = {
         let searchBar = UISearchBar()
@@ -69,7 +66,6 @@ final class MainViewController: UIViewController {
         stackView.spacing = 20
 
         stackView.addArrangedSubview(welcomeLabel)
-        stackView.addArrangedSubview(logoutButton)
         stackView.addArrangedSubview(searchBar)
         stackView.addArrangedSubview(categoriesCollectionView)
         stackView.addArrangedSubview(featuredProductsLabel)
@@ -100,26 +96,6 @@ final class MainViewController: UIViewController {
 
         featuredProductsCollectionView.delegate = self
         featuredProductsCollectionView.dataSource = self
-    }
-
-    private func handleLogoutTapped() {
-        AuthViewModel().logout { [weak self] result in
-            switch result {
-            case .success:
-                self?.coordinator?.showLogin()
-            case .failure(let error):
-                showAlert(on: self!, message: error.localizedDescription)
-            }
-        }
-    }
-
-    private func showLoginAlert() {
-        let alertController = UIAlertController(title: "Login Required", message: "Please login or register to play the game.", preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        alertController.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
-            self?.coordinator?.showLogin()
-        })
-        present(alertController, animated: true, completion: nil)
     }
 }
 
@@ -164,5 +140,14 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
                 navigationController?.pushViewController(gameViewController, animated: true)
             }
         }
+    }
+
+    private func showLoginAlert() {
+        let alertController = UIAlertController(title: "Login Required", message: "Please login or register to play the game.", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+            self?.coordinator?.showLogin()
+        })
+        present(alertController, animated: true, completion: nil)
     }
 }

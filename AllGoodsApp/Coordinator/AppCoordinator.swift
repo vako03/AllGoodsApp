@@ -21,7 +21,7 @@ final class AppCoordinator {
     func start() {
         if AuthViewModel().isLoggedIn {
             let username = Auth.auth().currentUser?.displayName ?? "Guest"
-            showMainPage(username: username)
+            showMainTabBar(username: username)
         } else {
             showOnboarding()
         }
@@ -45,10 +45,29 @@ final class AppCoordinator {
         navigationController.pushViewController(registerVC, animated: true)
     }
 
-    func showMainPage(username: String) {
+    func showMainTabBar(username: String) {
+        let tabBarVC = UITabBarController()
+
         let mainVC = MainViewController()
         mainVC.coordinator = self
         mainVC.username = username
-        navigationController.setViewControllers([mainVC], animated: true)
+
+        let favouriteVC = FavouriteViewController()
+        favouriteVC.coordinator = self
+
+        let basketVC = BasketViewController()
+        basketVC.coordinator = self
+
+        let profileVC = ProfileViewController()
+        profileVC.coordinator = self
+
+        mainVC.tabBarItem = UITabBarItem(title: "Main", image: UIImage(systemName: "house"), tag: 0)
+        favouriteVC.tabBarItem = UITabBarItem(title: "Favourite", image: UIImage(systemName: "heart"), tag: 1)
+        basketVC.tabBarItem = UITabBarItem(title: "Basket", image: UIImage(systemName: "cart"), tag: 2)
+        profileVC.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person"), tag: 3)
+
+        tabBarVC.viewControllers = [mainVC, favouriteVC, basketVC, profileVC]
+        
+        navigationController.setViewControllers([tabBarVC], animated: true)
     }
 }
