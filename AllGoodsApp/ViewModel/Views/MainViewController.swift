@@ -143,11 +143,11 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     }
 
     private func showLoginAlert() {
-        let alertController = UIAlertController(title: "Login Required", message: "Please login or register to play the game.", preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        alertController.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
-            self?.coordinator?.showLogin()
-        })
-        present(alertController, animated: true, completion: nil)
+            let alertController = UIAlertController(title: "Login Required", message: "Please login or register to play the game.", preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            alertController.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+                self?.coordinator?.showLogin()
+            })
+            present(alertController, animated: true, completion: nil)
+        }
     }
-}
