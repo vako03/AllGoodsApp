@@ -50,7 +50,7 @@ class FirstOnboardingPageViewController: UIViewController {
             descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
 
             parcelImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            parcelImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: -280), // Start position above the top of the screen
+            parcelImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: -240), // Start position above the top of the screen
             parcelImageView.widthAnchor.constraint(equalToConstant: 250), // Double the size
             parcelImageView.heightAnchor.constraint(equalToConstant: 250) // Double the size
         ])

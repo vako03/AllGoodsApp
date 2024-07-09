@@ -60,6 +60,7 @@ final class AppCoordinator {
 
         let profileVC = ProfileViewController()
         profileVC.coordinator = self
+        profileVC.username = username
 
         mainVC.tabBarItem = UITabBarItem(title: "Main", image: UIImage(systemName: "house"), tag: 0)
         favouriteVC.tabBarItem = UITabBarItem(title: "Favourite", image: UIImage(systemName: "heart"), tag: 1)
