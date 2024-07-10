@@ -46,7 +46,7 @@ final class AppCoordinator {
     }
 
     func showMainTabBar(username: String) {
-        let tabBarVC = UITabBarController()
+        let tabBarVC = CustomTabBarController()
 
         let mainVC = MainViewController()
         mainVC.coordinator = self
@@ -54,6 +54,9 @@ final class AppCoordinator {
 
         let favouriteVC = FavouriteViewController()
         favouriteVC.coordinator = self
+        
+        let expressVC = ExpressViewController()
+        expressVC.coordinator = self
 
         let basketVC = BasketViewController()
         basketVC.coordinator = self
@@ -64,11 +67,14 @@ final class AppCoordinator {
 
         mainVC.tabBarItem = UITabBarItem(title: "Main", image: UIImage(systemName: "house"), tag: 0)
         favouriteVC.tabBarItem = UITabBarItem(title: "Favourite", image: UIImage(systemName: "heart"), tag: 1)
-        basketVC.tabBarItem = UITabBarItem(title: "Basket", image: UIImage(systemName: "cart"), tag: 2)
-        profileVC.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person"), tag: 3)
+        expressVC.tabBarItem = UITabBarItem(title: "", image: nil, tag: 2)
+        basketVC.tabBarItem = UITabBarItem(title: "Basket", image: UIImage(systemName: "cart"), tag: 3)
+        profileVC.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person"), tag: 4)
 
-        tabBarVC.viewControllers = [mainVC, favouriteVC, basketVC, profileVC]
+        tabBarVC.viewControllers = [mainVC, favouriteVC, expressVC, basketVC, profileVC]
         
+        tabBarVC.setValue(CustomTabBar(), forKey: "tabBar")
+
         navigationController.setViewControllers([tabBarVC], animated: true)
     }
 }

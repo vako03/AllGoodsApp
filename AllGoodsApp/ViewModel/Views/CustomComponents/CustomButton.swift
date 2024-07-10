@@ -19,17 +19,17 @@ final class CustomButton: UIButton {
         addAction(UIAction { _ in action() }, for: .touchUpInside)
         updateAppearance()
     }
-    
+
     override var isEnabled: Bool {
         didSet {
             updateAppearance()
         }
     }
-    
+
     private func updateAppearance() {
         self.alpha = isEnabled ? 1.0 : 0.5
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

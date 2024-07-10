@@ -11,6 +11,9 @@
 		1A1209342C35D59300FDC9BE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1209332C35D59300FDC9BE /* SceneDelegate.swift */; };
 		1A12093B2C35D59500FDC9BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A12093A2C35D59500FDC9BE /* Assets.xcassets */; };
 		1A12093E2C35D59500FDC9BE /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 1A12093D2C35D59500FDC9BE /* Base */; };
+		1A284E262C3E9A4A00DB27FF /* ExpressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A284E252C3E9A4A00DB27FF /* ExpressViewController.swift */; };
+		1A284E282C3E9B9A00DB27FF /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A284E272C3E9B9A00DB27FF /* CustomTabBarController.swift */; };
+		1A284E2A2C3E9C2600DB27FF /* CustomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A284E292C3E9C2600DB27FF /* CustomTabBar.swift */; };
 		1A6FE1952C3B380300F6D5B4 /* SharedLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6FE1942C3B380300F6D5B4 /* SharedLogic.swift */; };
 		1A6FE19A2C3B3DB100F6D5B4 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6FE1992C3B3DB100F6D5B4 /* CustomButton.swift */; };
 		1A6FE19C2C3B3DBB00F6D5B4 /* CustomLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6FE19B2C3B3DBB00F6D5B4 /* CustomLabel.swift */; };
@@ -50,6 +53,9 @@
 		1A12093A2C35D59500FDC9BE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1A12093D2C35D59500FDC9BE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1A12093F2C35D59500FDC9BE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1A284E252C3E9A4A00DB27FF /* ExpressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpressViewController.swift; sourceTree = "<group>"; };
+		1A284E272C3E9B9A00DB27FF /* CustomTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarController.swift; sourceTree = "<group>"; };
+		1A284E292C3E9C2600DB27FF /* CustomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
 		1A6FE1942C3B380300F6D5B4 /* SharedLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedLogic.swift; sourceTree = "<group>"; };
 		1A6FE1992C3B3DB100F6D5B4 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 		1A6FE19B2C3B3DBB00F6D5B4 /* CustomLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLabel.swift; sourceTree = "<group>"; };
@@ -145,6 +151,8 @@
 				1A6FE19F2C3B3DC700F6D5B4 /* CustomTextField.swift */,
 				1A6FE1C12C3B53C000F6D5B4 /* CustomLoader.swift */,
 				1AA582342C3D70090081A410 /* CustomImageView.swift */,
+				1A284E272C3E9B9A00DB27FF /* CustomTabBarController.swift */,
+				1A284E292C3E9C2600DB27FF /* CustomTabBar.swift */,
 			);
 			path = CustomComponents;
 			sourceTree = "<group>";
@@ -207,6 +215,7 @@
 				1AF97DB12C36D21200C3E55F /* MainViewController.swift */,
 				1A6FE1EF2C3BE6F700F6D5B4 /* TicTacToeGameView.swift */,
 				1AA5822E2C3D5F2E0081A410 /* FavouriteViewController.swift */,
+				1A284E252C3E9A4A00DB27FF /* ExpressViewController.swift */,
 				1AA582302C3D5F440081A410 /* BasketViewController.swift */,
 				1AA582322C3D5F590081A410 /* ProfileViewController.swift */,
 				1A6FE1F32C3BFB9600F6D5B4 /* Cells */,
@@ -296,6 +305,7 @@
 			files = (
 				1A6FE1F52C3BFBAF00F6D5B4 /* CategoryCell.swift in Sources */,
 				1A6FE1C02C3B52A500F6D5B4 /* CustomTextFieldHandlers.swift in Sources */,
+				1A284E282C3E9B9A00DB27FF /* CustomTabBarController.swift in Sources */,
 				1AA582312C3D5F440081A410 /* BasketViewController.swift in Sources */,
 				1A6FE1952C3B380300F6D5B4 /* SharedLogic.swift in Sources */,
 				1AF97DB22C36D21200C3E55F /* MainViewController.swift in Sources */,
@@ -308,6 +318,7 @@
 				1AF97DAC2C36D1ED00C3E55F /* AppCoordinator.swift in Sources */,
 				1AF97DAE2C36D1FC00C3E55F /* OnboardingViewController.swift in Sources */,
 				1A1209322C35D59300FDC9BE /* AppDelegate.swift in Sources */,
+				1A284E262C3E9A4A00DB27FF /* ExpressViewController.swift in Sources */,
 				1AB695FD2C37196000EA6F49 /* SecondOnboardingPageViewController.swift in Sources */,
 				1A6FE1C22C3B53C000F6D5B4 /* CustomLoader.swift in Sources */,
 				1A6FE1A02C3B3DC700F6D5B4 /* CustomTextField.swift in Sources */,
@@ -321,6 +332,7 @@
 				1AB696012C38768100EA6F49 /* TermsViewController.swift in Sources */,
 				1A6FE1F72C3BFBBD00F6D5B4 /* FeaturedProductCell.swift in Sources */,
 				1A1209342C35D59300FDC9BE /* SceneDelegate.swift in Sources */,
+				1A284E2A2C3E9C2600DB27FF /* CustomTabBar.swift in Sources */,
 				1AF97DBF2C36D8C800C3E55F /* UserModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
