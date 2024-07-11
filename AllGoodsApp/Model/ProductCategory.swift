@@ -5,20 +5,12 @@
 //  Created by valeri mekhashishvili on 11.07.24.
 //
 
-import Foundation
-
-struct Category: Decodable {
-    let slug: String
+struct Category: Codable {
     let name: String
     let url: String
 }
 
-struct ProductResponse: Decodable {
-    let products: [Product]
-}
-
-struct Product: Decodable {
-    let id: Int
+struct Product: Codable {
     let title: String
     let description: String
     let price: Double
@@ -29,3 +21,8 @@ struct Product: Decodable {
     let category: String
     let thumbnail: String
 }
+
+struct ProductResponse: Codable {
+    let products: [Product]
+}
+

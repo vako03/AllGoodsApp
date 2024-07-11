@@ -7,6 +7,49 @@
 
 import UIKit
 
+import UIKit
+
+final class FixedCategoryCellView: UIView {
+    private let button: UIButton = {
+        let button = UIButton()
+        button.setTitle("Categories", for: .normal)
+        button.backgroundColor = .clear
+        button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+        return button
+    }()
+
+    init(action: @escaping () -> Void) {
+        super.init(frame: .zero)
+        setupView(action: action)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setupView(action: @escaping () -> Void) {
+        addSubview(button)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            button.centerXAnchor.constraint(equalTo: centerXAnchor),
+            button.centerYAnchor.constraint(equalTo: centerYAnchor),
+            button.widthAnchor.constraint(equalTo: widthAnchor),
+            button.heightAnchor.constraint(equalTo: heightAnchor)
+        ])
+        
+        button.addAction(UIAction { _ in action() }, for: .touchUpInside)
+    }
+}
+
+
+
+// Define a notification name for the tap event
+extension Notification.Name {
+    static let fixedCategoryCellTapped = Notification.Name("fixedCategoryCellTapped")
+}
+
+
 class CategoryCell: UICollectionViewCell {
     private let label: UILabel = {
         let label = UILabel()

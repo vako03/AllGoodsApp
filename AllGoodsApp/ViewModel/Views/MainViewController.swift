@@ -4,6 +4,7 @@
 //
 //  Created by valeri mekhashishvili on 04.07.24.
 //
+
 import UIKit
 
 final class MainViewController: UIViewController {
@@ -20,6 +21,10 @@ final class MainViewController: UIViewController {
         searchBar.searchBarStyle = .minimal
         return searchBar
     }()
+
+    private lazy var fixedCategoryView = FixedCategoryCellView(action: { [weak self] in
+        self?.navigateToAllCategories()
+    })
 
     private let categoriesCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -69,7 +74,12 @@ final class MainViewController: UIViewController {
 
         stackView.addArrangedSubview(welcomeLabel)
         stackView.addArrangedSubview(searchBar)
-        stackView.addArrangedSubview(categoriesCollectionView)
+        
+        let categoriesStackView = UIStackView(arrangedSubviews: [fixedCategoryView, categoriesCollectionView])
+        categoriesStackView.axis = .horizontal
+        categoriesStackView.spacing = 8
+        stackView.addArrangedSubview(categoriesStackView)
+
         stackView.addArrangedSubview(featuredProductsLabel)
         stackView.addArrangedSubview(featuredProductsCollectionView)
 
@@ -96,8 +106,10 @@ final class MainViewController: UIViewController {
         categoriesCollectionView.delegate = self
         categoriesCollectionView.dataSource = self
 
-        featuredProductsCollectionView.delegate = self
-        featuredProductsCollectionView.dataSource = self
+        fixedCategoryView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            fixedCategoryView.widthAnchor.constraint(equalToConstant: 100)
+        ])
     }
 
     private func fetchCategories() {
@@ -106,6 +118,11 @@ final class MainViewController: UIViewController {
                 self?.categoriesCollectionView.reloadData()
             }
         }
+    }
+
+    private func navigateToAllCategories() {
+        let allCategoriesVC = AllCategoriesViewController()
+        navigationController?.pushViewController(allCategoriesVC, animated: true)
     }
 }
 
