@@ -5,12 +5,13 @@
 //  Created by valeri mekhashishvili on 04.07.24.
 //
 import UIKit
-import SwiftUI
 
 final class MainViewController: UIViewController {
     var coordinator: AppCoordinator?
     var username: String?
 
+    private let categoryViewModel = CategoryViewModel()
+    
     private let welcomeLabel = CustomLabel(text: "", fontSize: 24, alignment: .center)
 
     private let searchBar: UISearchBar = {
@@ -54,6 +55,7 @@ final class MainViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupUI()
+        fetchCategories()
     }
 
     private func setupUI() {
@@ -97,12 +99,20 @@ final class MainViewController: UIViewController {
         featuredProductsCollectionView.delegate = self
         featuredProductsCollectionView.dataSource = self
     }
+
+    private func fetchCategories() {
+        categoryViewModel.fetchCategories { [weak self] in
+            DispatchQueue.main.async {
+                self?.categoriesCollectionView.reloadData()
+            }
+        }
+    }
 }
 
 extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == categoriesCollectionView {
-            return 5 // Number of categories
+            return categoryViewModel.categories.count
         } else {
             return 10 // Number of featured products
         }
@@ -111,11 +121,8 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == categoriesCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CategoryCell", for: indexPath) as! CategoryCell
-            if indexPath.item == 2 {
-                cell.configure(with: "Play Game")
-            } else {
-                cell.configure(with: "Category \(indexPath.item + 1)")
-            }
+            let category = categoryViewModel.categories[indexPath.item]
+            cell.configure(with: category.name)
             return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FeaturedProductCell", for: indexPath) as! FeaturedProductCell
@@ -125,29 +132,10 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if collectionView == categoriesCollectionView && indexPath.item == 2 {
-            if username == "Guest" {
-                showLoginAlert()
-            } else {
-                let viewModel = TicTacToeViewModel(username: username)
-                viewModel.onGameEnded = {
-                    self.navigationController?.popViewController(animated: true)
-                }
-                viewModel.onPromoDismissed = {
-                    self.navigationController?.popViewController(animated: true)
-                }
-                let gameViewController = UIHostingController(rootView: TicTacToeGameView(viewModel: viewModel))
-                navigationController?.pushViewController(gameViewController, animated: true)
-            }
+        if collectionView == categoriesCollectionView {
+            let category = categoryViewModel.categories[indexPath.item]
+            let productListVC = ProductListViewController(categoryURL: category.url)
+            navigationController?.pushViewController(productListVC, animated: true)
         }
     }
-
-    private func showLoginAlert() {
-            let alertController = UIAlertController(title: "Login Required", message: "Please login or register to play the game.", preferredStyle: .alert)
-            alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-            alertController.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
-                self?.coordinator?.showLogin()
-            })
-            present(alertController, animated: true, completion: nil)
-        }
-    }
+}
