@@ -12,6 +12,8 @@ class CategoryCell: UICollectionViewCell {
         let label = UILabel()
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 14)
+        label.numberOfLines = 2 // Limit to 2 lines
+        label.lineBreakMode = .byTruncatingTail
         return label
     }()
 
