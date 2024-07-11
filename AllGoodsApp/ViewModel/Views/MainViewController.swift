@@ -6,153 +6,118 @@
 //
 
 import UIKit
+import SwiftUI
 
 final class MainViewController: UIViewController {
     var coordinator: AppCoordinator?
     var username: String?
 
-    private let categoryViewModel = CategoryViewModel()
-    
-    private let welcomeLabel = CustomLabel(text: "", fontSize: 24, alignment: .center)
-
-    private let searchBar: UISearchBar = {
-        let searchBar = UISearchBar()
-        searchBar.placeholder = "Search headphone"
-        searchBar.searchBarStyle = .minimal
-        return searchBar
-    }()
-
-    private lazy var fixedCategoryView = FixedCategoryCellView(action: { [weak self] in
-        self?.navigateToAllCategories()
-    })
-
-    private let categoriesCollectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        layout.itemSize = CGSize(width: 100, height: 100)
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.register(CategoryCell.self, forCellWithReuseIdentifier: "CategoryCell")
-        collectionView.showsHorizontalScrollIndicator = false
-        return collectionView
-    }()
-
-    private let featuredProductsLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Featured Products"
-        label.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
-        return label
-    }()
-
-    private let featuredProductsCollectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        layout.itemSize = CGSize(width: UIScreen.main.bounds.width - 40, height: 200)
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.register(FeaturedProductCell.self, forCellWithReuseIdentifier: "FeaturedProductCell")
-        collectionView.isScrollEnabled = false
-        return collectionView
-    }()
-
-    private let scrollView = UIScrollView()
-    private let stackView = UIStackView()
+    private let welcomeLabel = UILabel()
+    private var collectionView: UICollectionView!
+    private let viewModel = ProductViewModel()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupUI()
-        fetchCategories()
+        fetchProducts()
     }
 
     private func setupUI() {
-        view.addSubview(scrollView)
-        scrollView.addSubview(stackView)
+        welcomeLabel.text = "Hi, \(username ?? "User")"
+        welcomeLabel.font = UIFont.systemFont(ofSize: 24)
+        welcomeLabel.textAlignment = .center
+        welcomeLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .vertical
-        stackView.spacing = 20
-
-        stackView.addArrangedSubview(welcomeLabel)
-        stackView.addArrangedSubview(searchBar)
-        
-        let categoriesStackView = UIStackView(arrangedSubviews: [fixedCategoryView, categoriesCollectionView])
-        categoriesStackView.axis = .horizontal
-        categoriesStackView.spacing = 8
-        stackView.addArrangedSubview(categoriesStackView)
-
-        stackView.addArrangedSubview(featuredProductsLabel)
-        stackView.addArrangedSubview(featuredProductsCollectionView)
-
-        NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-
-            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-
-            categoriesCollectionView.heightAnchor.constraint(equalToConstant: 100),
-            featuredProductsCollectionView.heightAnchor.constraint(equalToConstant: 600) // Adjust based on content
-        ])
-
-        if let username = username {
-            welcomeLabel.text = "Hi, \(username)"
+        let playGameButton = CustomButton(title: "Play Game") { [weak self] in
+            self?.playGameButtonTapped()
         }
 
-        categoriesCollectionView.delegate = self
-        categoriesCollectionView.dataSource = self
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.itemSize = CGSize(width: 150, height: 200)
+        collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.register(CategoryCell.self, forCellWithReuseIdentifier: CategoryCell.identifier)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
 
-        fixedCategoryView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(welcomeLabel)
+        view.addSubview(playGameButton)
+        view.addSubview(collectionView)
+
         NSLayoutConstraint.activate([
-            fixedCategoryView.widthAnchor.constraint(equalToConstant: 100)
+            welcomeLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            welcomeLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+
+            playGameButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            playGameButton.topAnchor.constraint(equalTo: welcomeLabel.bottomAnchor, constant: 20),
+
+            collectionView.topAnchor.constraint(equalTo: playGameButton.bottomAnchor, constant: 20),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collectionView.heightAnchor.constraint(equalToConstant: 200)
         ])
     }
 
-    private func fetchCategories() {
-        categoryViewModel.fetchCategories { [weak self] in
+    private func fetchProducts() {
+        viewModel.fetchAllProducts { [weak self] result in
             DispatchQueue.main.async {
-                self?.categoriesCollectionView.reloadData()
+                switch result {
+                case .success:
+                    self?.collectionView.reloadData()
+                case .failure(let error):
+                    print("Failed to fetch products:", error)
+                }
             }
         }
     }
 
-    private func navigateToAllCategories() {
-        let allCategoriesVC = AllCategoriesViewController()
-        navigationController?.pushViewController(allCategoriesVC, animated: true)
+    private func playGameButtonTapped() {
+        if username == "Guest" {
+            showLoginAlert()
+        } else {
+            let viewModel = TicTacToeViewModel(username: username)
+            viewModel.onGameEnded = {
+                self.navigationController?.popViewController(animated: true)
+            }
+            viewModel.onPromoDismissed = {
+                self.navigationController?.popViewController(animated: true)
+            }
+            let gameViewController = UIHostingController(rootView: TicTacToeGameView(viewModel: viewModel))
+            navigationController?.pushViewController(gameViewController, animated: true)
+        }
+    }
+
+    private func showLoginAlert() {
+        let alertController = UIAlertController(title: "Login Required", message: "Please login or register to play the game.", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+            self?.coordinator?.showLogin()
+        })
+        present(alertController, animated: true, completion: nil)
     }
 }
 
-extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension MainViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if collectionView == categoriesCollectionView {
-            return categoryViewModel.categories.count
-        } else {
-            return 10 // Number of featured products
-        }
+        return viewModel.productsByCategory.keys.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if collectionView == categoriesCollectionView {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CategoryCell", for: indexPath) as! CategoryCell
-            let category = categoryViewModel.categories[indexPath.item]
-            cell.configure(with: category.name)
-            return cell
-        } else {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FeaturedProductCell", for: indexPath) as! FeaturedProductCell
-            cell.configure(with: "Product \(indexPath.item + 1)")
-            return cell
-        }
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CategoryCell.identifier, for: indexPath) as! CategoryCell
+        let category = Array(viewModel.productsByCategory.keys)[indexPath.row]
+        let image = UIImage(named: "placeholder") // Replace with actual category image
+        cell.configure(with: category, image: image)
+        return cell
     }
+}
 
+extension MainViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if collectionView == categoriesCollectionView {
-            let category = categoryViewModel.categories[indexPath.item]
-            let productListVC = ProductListViewController(categoryURL: category.url)
-            navigationController?.pushViewController(productListVC, animated: true)
-        }
+        let selectedCategory = Array(viewModel.productsByCategory.keys)[indexPath.row]
+        let products = viewModel.productsByCategory[selectedCategory] ?? []
+        let categoryViewController = CategoryViewController(category: selectedCategory, products: products)
+        navigationController?.pushViewController(categoryViewController, animated: true)
     }
 }

@@ -7,26 +7,9 @@
 
 import UIKit
 
-final class ProductDetailsViewController: UIViewController {
+class ProductDetailViewController: UIViewController {
     private let product: Product
-
-    private let imageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 8
-        return imageView
-    }()
-
-    private let titleLabel = CustomLabel(text: "", fontSize: 24, textColor: .black, alignment: .center)
-    private let descriptionLabel = CustomLabel(text: "", fontSize: 16, textColor: .darkGray, alignment: .left)
-    private let priceLabel = CustomLabel(text: "", fontSize: 20, textColor: .systemBlue, alignment: .left)
-    private let discountLabel = CustomLabel(text: "", fontSize: 18, textColor: .systemRed, alignment: .left)
-    private let ratingLabel = CustomLabel(text: "", fontSize: 18, textColor: .systemGreen, alignment: .left)
-    private let stockLabel = CustomLabel(text: "", fontSize: 18, textColor: .systemOrange, alignment: .left)
-    private let brandLabel = CustomLabel(text: "", fontSize: 18, textColor: .systemGray, alignment: .left)
-    private let categoryLabel = CustomLabel(text: "", fontSize: 18, textColor: .systemPurple, alignment: .left)
-
+    
     init(product: Product) {
         self.product = product
         super.init(nibName: nil, bundle: nil)
@@ -38,45 +21,62 @@ final class ProductDetailsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = product.title
         view.backgroundColor = .white
         setupUI()
-        displayProductDetails()
     }
 
     private func setupUI() {
-        let stackView = UIStackView(arrangedSubviews: [imageView, titleLabel, descriptionLabel, priceLabel, discountLabel, ratingLabel, stockLabel, brandLabel, categoryLabel])
-        stackView.axis = .vertical
-        stackView.spacing = 16
-        stackView.translatesAutoresizingMaskIntoConstraints = false
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        if let imageUrl = URL(string: product.thumbnail) {
+            imageView.load(url: imageUrl)
+        } else {
+            imageView.image = UIImage(named: "placeholder")
+        }
 
-        view.addSubview(stackView)
+        let titleLabel = UILabel()
+        titleLabel.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        titleLabel.textAlignment = .center
+        titleLabel.text = product.title
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        let descriptionLabel = UILabel()
+        descriptionLabel.font = UIFont.systemFont(ofSize: 16)
+        descriptionLabel.numberOfLines = 0
+        descriptionLabel.text = product.description
+        descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        let priceLabel = UILabel()
+        priceLabel.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        priceLabel.textColor = .systemGreen
+        priceLabel.text = "$\(product.price)"
+        priceLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        view.addSubview(imageView)
+        view.addSubview(titleLabel)
+        view.addSubview(descriptionLabel)
+        view.addSubview(priceLabel)
 
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            imageView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
+            imageView.heightAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
 
-            imageView.heightAnchor.constraint(equalToConstant: 250)
+            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 20),
+            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+
+            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
+            descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+
+            priceLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 20),
+            priceLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            priceLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
         ])
     }
-
-    private func displayProductDetails() {
-        titleLabel.text = product.title
-        descriptionLabel.text = product.description
-        priceLabel.text = "Price: $\(product.price)"
-        discountLabel.text = "Discount: \(product.discountPercentage)%"
-        ratingLabel.text = "Rating: \(product.rating)"
-        stockLabel.text = "Stock: \(product.stock)"
-        brandLabel.text = "Brand: \(product.brand)"
-        categoryLabel.text = "Category: \(product.category)"
-        if let url = URL(string: product.thumbnail) {
-            NetworkManager.shared.fetchImage(from: url) { [weak self] data in
-                DispatchQueue.main.async {
-                    if let data = data {
-                        self?.imageView.image = UIImage(data: data)
-                    }
-                }
-            }
-        }
-    }
 }
+

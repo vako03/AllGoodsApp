@@ -9,42 +9,55 @@ import Foundation
 
 class NetworkManager {
     static let shared = NetworkManager()
-    
+    private let baseURL = "https://dummyjson.com/products"
     private init() {}
 
-    func fetchCategories(completion: @escaping ([Category]) -> Void) {
-        guard let url = URL(string: "https://dummyjson.com/products/categories") else { return }
-        
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            if let data = data {
+    func fetchAllProducts(completion: @escaping (Result<[Product], Error>) -> Void) {
+        var allProducts: [Product] = []
+        var skip = 0
+        func fetchNextPage() {
+            let urlString = "\(baseURL)?limit=30&skip=\(skip)"
+            guard let url = URL(string: urlString) else { return }
+            let task = URLSession.shared.dataTask(with: url) { data, response, error in
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+                guard let data = data else { return }
                 do {
-                    let categories = try JSONDecoder().decode([Category].self, from: data)
-                    completion(categories)
+                    let productResponse = try JSONDecoder().decode(ProductResponse.self, from: data)
+                    allProducts.append(contentsOf: productResponse.products)
+                    if productResponse.skip + productResponse.limit < productResponse.total {
+                        skip += productResponse.limit
+                        fetchNextPage()
+                    } else {
+                        completion(.success(allProducts))
+                    }
                 } catch {
-                    print("Error decoding data: \(error)")
+                    completion(.failure(error))
                 }
             }
-        }.resume()
+            task.resume()
+        }
+        fetchNextPage()
     }
     
-    func fetchProducts(for url: String, completion: @escaping ([Product]) -> Void) {
-        guard let url = URL(string: url) else { return }
-        
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            if let data = data {
-                do {
-                    let response = try JSONDecoder().decode(ProductResponse.self, from: data)
-                    completion(response.products)
-                } catch {
-                    print("Error decoding data: \(error)")
-                }
+    func fetchProducts(for category: String, completion: @escaping (Result<[Product], Error>) -> Void) {
+        let urlString = "\(baseURL)/category/\(category)"
+        guard let url = URL(string: urlString) else { return }
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
             }
-        }.resume()
-    }
-    
-    func fetchImage(from url: URL, completion: @escaping (Data?) -> Void) {
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            completion(data)
-        }.resume()
+            guard let data = data else { return }
+            do {
+                let productResponse = try JSONDecoder().decode(ProductResponse.self, from: data)
+                completion(.success(productResponse.products))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+        task.resume()
     }
 }
