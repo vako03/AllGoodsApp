@@ -4,17 +4,18 @@
 //
 //  Created by valeri mekhashishvili on 04.07.24.
 //
-import UIKit
-import SwiftUI
 
+import UIKit
 final class MainViewController: UIViewController {
     var coordinator: AppCoordinator?
     var username: String?
 
-    private let welcomeLabel = UILabel()
+    private let headerView = UIView()
+    private let searchBar = UISearchBar()
     private var collectionView: UICollectionView!
+    private var promotionCollectionView: UICollectionView!
     private let viewModel = ProductViewModel()
-    private let allCategoriesCell = AllCategoryCell()
+    private let playGameButton = CustomButton(title: "Play Game", action: { }) // Define the button but hide it later
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,52 +25,76 @@ final class MainViewController: UIViewController {
     }
 
     private func setupUI() {
-        welcomeLabel.text = "Hi, \(username ?? "User")"
-        welcomeLabel.font = UIFont.systemFont(ofSize: 24)
-        welcomeLabel.textAlignment = .center
-        welcomeLabel.translatesAutoresizingMaskIntoConstraints = false
+        // Setup Header View
+        headerView.backgroundColor = .customGreen
+        headerView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(headerView)
 
-        let playGameButton = CustomButton(title: "Play Game") { [weak self] in
-            self?.playGameButtonTapped()
-        }
+        // Setup Search Bar
+        let nickname = username ?? "User"
+        searchBar.placeholder = "Hi \(nickname), search for anything"
+        searchBar.backgroundImage = UIImage() // Remove the background of the search bar
+        searchBar.barTintColor = .white // Set the search bar background color to white
+        searchBar.tintColor = .black // Set the search bar text and icons color to black
+        searchBar.searchTextField.backgroundColor = .white // Ensure the search text field is also white
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        headerView.addSubview(searchBar)
+
+        NSLayoutConstraint.activate([
+            headerView.topAnchor.constraint(equalTo: view.topAnchor), // Start from the top of the screen
+            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            headerView.heightAnchor.constraint(equalToConstant: 120), // 100 points height
+
+            searchBar.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 8),
+            searchBar.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -8),
+            searchBar.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -5),
+            searchBar.heightAnchor.constraint(equalToConstant: 44)
+        ])
 
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        let cellWidth = (view.frame.width - 40) / 4 + 20 // Increase width by 20
-        let cellHeight: CGFloat = 150 - 10 // Decrease height by 10
+        let cellSpacing: CGFloat = 20 // Define the spacing between cells
+        let cellWidth = (view.frame.width - 40 - cellSpacing) / 4 // Adjust width to account for spacing
+        let cellHeight: CGFloat = 150
         layout.itemSize = CGSize(width: cellWidth, height: cellHeight)
+        layout.minimumLineSpacing = cellSpacing // Set the spacing between cells
+        layout.sectionInset = UIEdgeInsets(top: 0, left: cellSpacing, bottom: 0, right: cellSpacing) // Add left and right insets for spacing
+
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.dataSource = self
         collectionView.delegate = self
+        collectionView.register(AllCategoryCell.self, forCellWithReuseIdentifier: AllCategoryCell.identifier)
         collectionView.register(CategoryCell.self, forCellWithReuseIdentifier: CategoryCell.identifier)
+        collectionView.showsHorizontalScrollIndicator = false // Hide the horizontal scroll indicator
         collectionView.translatesAutoresizingMaskIntoConstraints = false
 
-        // Setup the fixed "All Categories" cell
-        allCategoriesCell.translatesAutoresizingMaskIntoConstraints = false
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(allCategoriesTapped))
-        allCategoriesCell.addGestureRecognizer(tapGesture)
+        let promotionLayout = UICollectionViewFlowLayout()
+        promotionLayout.scrollDirection = .horizontal
+        promotionLayout.itemSize = CGSize(width: view.frame.width * 0.75, height: view.frame.width * 0.75 * 1.5) // 3x width, 1.5x height
+        promotionLayout.minimumLineSpacing = cellSpacing
+        promotionLayout.sectionInset = UIEdgeInsets(top: 0, left: cellSpacing, bottom: 0, right: cellSpacing)
 
-        view.addSubview(welcomeLabel)
-        view.addSubview(playGameButton)
-        view.addSubview(allCategoriesCell)
+        promotionCollectionView = UICollectionView(frame: .zero, collectionViewLayout: promotionLayout)
+        promotionCollectionView.dataSource = self
+        promotionCollectionView.delegate = self
+        promotionCollectionView.register(PromotionCell.self, forCellWithReuseIdentifier: PromotionCell.identifier)
+        promotionCollectionView.showsHorizontalScrollIndicator = false
+        promotionCollectionView.translatesAutoresizingMaskIntoConstraints = false
+
         view.addSubview(collectionView)
+        view.addSubview(promotionCollectionView)
 
         NSLayoutConstraint.activate([
-            welcomeLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            welcomeLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-
-            playGameButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            playGameButton.topAnchor.constraint(equalTo: welcomeLabel.bottomAnchor, constant: 20),
-
-            allCategoriesCell.topAnchor.constraint(equalTo: playGameButton.bottomAnchor, constant: 20),
-            allCategoriesCell.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            allCategoriesCell.widthAnchor.constraint(equalToConstant: cellWidth),
-            allCategoriesCell.heightAnchor.constraint(equalToConstant: cellHeight),
-
-            collectionView.topAnchor.constraint(equalTo: playGameButton.bottomAnchor, constant: 20),
-            collectionView.leadingAnchor.constraint(equalTo: allCategoriesCell.trailingAnchor),
+            collectionView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 20),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.heightAnchor.constraint(equalToConstant: cellHeight) // Match cell height
+            collectionView.heightAnchor.constraint(equalToConstant: cellHeight), // Match cell height
+
+            promotionCollectionView.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: 20),
+            promotionCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            promotionCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            promotionCollectionView.heightAnchor.constraint(equalToConstant: view.frame.width * 0.5 * 0.8) // Match PromotionCell height
         ])
     }
 
@@ -87,19 +112,7 @@ final class MainViewController: UIViewController {
     }
 
     private func playGameButtonTapped() {
-        if username == "Guest" {
-            showLoginAlert()
-        } else {
-            let viewModel = TicTacToeViewModel(username: username)
-            viewModel.onGameEnded = {
-                self.navigationController?.popViewController(animated: true)
-            }
-            viewModel.onPromoDismissed = {
-                self.navigationController?.popViewController(animated: true)
-            }
-            let gameViewController = UIHostingController(rootView: TicTacToeGameView(viewModel: viewModel))
-            navigationController?.pushViewController(gameViewController, animated: true)
-        }
+        // Placeholder for play game logic
     }
 
     private func showLoginAlert() {
@@ -117,26 +130,62 @@ final class MainViewController: UIViewController {
     }
 }
 
-extension MainViewController: UICollectionViewDataSource {
+extension MainViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.productsByCategory.keys.count
+        if collectionView == self.collectionView {
+            return viewModel.productsByCategory.keys.count + 1 // Adding 1 for the AllCategoryCell
+        } else {
+            return 5 // Assuming 5 promotion items
+        }
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CategoryCell.identifier, for: indexPath) as! CategoryCell
-        let category = Array(viewModel.productsByCategory.keys)[indexPath.row]
-        let imageUrlString = viewModel.categoryImages[category]
-        let imageUrl = URL(string: imageUrlString ?? "")
-        cell.configure(with: category, imageUrl: imageUrl)
-        return cell
+        if collectionView == self.collectionView {
+            if indexPath.row == 0 {
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AllCategoryCell.identifier, for: indexPath) as! AllCategoryCell
+                // Configure AllCategoryCell if needed
+                return cell
+            } else {
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CategoryCell.identifier, for: indexPath) as! CategoryCell
+                let category = Array(viewModel.productsByCategory.keys)[indexPath.row - 1] // Adjust index for AllCategoryCell
+                let imageUrlString = viewModel.categoryImages[category]
+                let imageUrl = URL(string: imageUrlString ?? "")
+                cell.configure(with: category, imageUrl: imageUrl)
+                return cell
+            }
+        } else {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PromotionCell.identifier, for: indexPath) as! PromotionCell
+            // Configure PromotionCell with dummy data
+            cell.configure(with: "Promotion \(indexPath.row + 1)", image: UIImage(named: "placeholder"))
+            return cell
+        }
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if collectionView == self.collectionView {
+            if indexPath.row == 0 {
+                allCategoriesTapped()
+            } else {
+                let selectedCategory = Array(viewModel.productsByCategory.keys)[indexPath.row - 1]
+                let products = viewModel.productsByCategory[selectedCategory] ?? []
+                let categoryViewController = CategoryViewController(category: selectedCategory, products: products)
+                navigationController?.pushViewController(categoryViewController, animated: true)
+            }
+        } else {
+            print("Promotion \(indexPath.row + 1) tapped")
+        }
+    }
+
+    // Implement the delegate method to set the spacing for the first cell
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 20 // Define the spacing between cells
     }
 }
 
-extension MainViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let selectedCategory = Array(viewModel.productsByCategory.keys)[indexPath.row]
-        let products = viewModel.productsByCategory[selectedCategory] ?? []
-        let categoryViewController = CategoryViewController(category: selectedCategory, products: products)
-        navigationController?.pushViewController(categoryViewController, animated: true)
-    }
+extension UIColor {
+    static let customGreen = UIColor(red: 0x00 / 255.0, green: 0xCC / 255.0, blue: 0x96 / 255.0, alpha: 1.0)
 }

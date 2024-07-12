@@ -21,7 +21,7 @@ class CategoryCell: UICollectionViewCell {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+        label.font = UIFont.systemFont(ofSize: 11, weight: .bold)
         label.textAlignment = .center
         label.numberOfLines = 2
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -30,18 +30,18 @@ class CategoryCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.backgroundColor = .gray
+        contentView.backgroundColor = .lightGray
         contentView.layer.cornerRadius = 8
         contentView.addSubview(imageView)
         contentView.addSubview(titleLabel)
         
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20), // Top spacing of 20
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
             
-            imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
-            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
+            imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8), // Bottom spacing
+            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -2), // Trailing 0
             imageView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.5),
             imageView.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.5)
         ])
@@ -60,4 +60,3 @@ class CategoryCell: UICollectionViewCell {
         }
     }
 }
-
