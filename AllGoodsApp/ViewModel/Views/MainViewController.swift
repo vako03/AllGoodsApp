@@ -4,7 +4,6 @@
 //
 //  Created by valeri mekhashishvili on 04.07.24.
 //
-
 import UIKit
 import SwiftUI
 
@@ -15,6 +14,7 @@ final class MainViewController: UIViewController {
     private let welcomeLabel = UILabel()
     private var collectionView: UICollectionView!
     private let viewModel = ProductViewModel()
+    private let allCategoriesCell = AllCategoryCell()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,15 +35,23 @@ final class MainViewController: UIViewController {
 
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        layout.itemSize = CGSize(width: 150, height: 200)
+        let cellWidth = (view.frame.width - 40) / 4 + 20 // Increase width by 20
+        let cellHeight: CGFloat = 150 - 10 // Decrease height by 10
+        layout.itemSize = CGSize(width: cellWidth, height: cellHeight)
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(CategoryCell.self, forCellWithReuseIdentifier: CategoryCell.identifier)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
 
+        // Setup the fixed "All Categories" cell
+        allCategoriesCell.translatesAutoresizingMaskIntoConstraints = false
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(allCategoriesTapped))
+        allCategoriesCell.addGestureRecognizer(tapGesture)
+
         view.addSubview(welcomeLabel)
         view.addSubview(playGameButton)
+        view.addSubview(allCategoriesCell)
         view.addSubview(collectionView)
 
         NSLayoutConstraint.activate([
@@ -53,10 +61,15 @@ final class MainViewController: UIViewController {
             playGameButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             playGameButton.topAnchor.constraint(equalTo: welcomeLabel.bottomAnchor, constant: 20),
 
+            allCategoriesCell.topAnchor.constraint(equalTo: playGameButton.bottomAnchor, constant: 20),
+            allCategoriesCell.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            allCategoriesCell.widthAnchor.constraint(equalToConstant: cellWidth),
+            allCategoriesCell.heightAnchor.constraint(equalToConstant: cellHeight),
+
             collectionView.topAnchor.constraint(equalTo: playGameButton.bottomAnchor, constant: 20),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: allCategoriesCell.trailingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.heightAnchor.constraint(equalToConstant: 200)
+            collectionView.heightAnchor.constraint(equalToConstant: cellHeight) // Match cell height
         ])
     }
 
@@ -97,6 +110,11 @@ final class MainViewController: UIViewController {
         })
         present(alertController, animated: true, completion: nil)
     }
+
+    @objc private func allCategoriesTapped() {
+        let allCategoriesViewController = AllCategoriesViewController(categories: Array(viewModel.productsByCategory.keys))
+        navigationController?.pushViewController(allCategoriesViewController, animated: true)
+    }
 }
 
 extension MainViewController: UICollectionViewDataSource {
@@ -107,8 +125,9 @@ extension MainViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CategoryCell.identifier, for: indexPath) as! CategoryCell
         let category = Array(viewModel.productsByCategory.keys)[indexPath.row]
-        let image = UIImage(named: "placeholder") // Replace with actual category image
-        cell.configure(with: category, image: image)
+        let imageUrlString = viewModel.categoryImages[category]
+        let imageUrl = URL(string: imageUrlString ?? "")
+        cell.configure(with: category, imageUrl: imageUrl)
         return cell
     }
 }

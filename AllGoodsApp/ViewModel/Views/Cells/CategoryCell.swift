@@ -21,28 +21,29 @@ class CategoryCell: UICollectionViewCell {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
         label.textAlignment = .center
-        label.numberOfLines = 0
+        label.numberOfLines = 2
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        contentView.backgroundColor = .gray
+        contentView.layer.cornerRadius = 8
         contentView.addSubview(imageView)
         contentView.addSubview(titleLabel)
         
         NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            imageView.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.7),
+            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
             
-            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 4),
-            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 4),
-            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -4),
-            titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -4)
+            imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
+            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
+            imageView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.5),
+            imageView.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.5)
         ])
     }
     
@@ -50,8 +51,13 @@ class CategoryCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(with category: String, image: UIImage?) {
+    func configure(with category: String, imageUrl: URL?) {
         titleLabel.text = category.capitalized
-        imageView.image = image ?? UIImage(named: "placeholder")
+        if let imageUrl = imageUrl {
+            imageView.load(url: imageUrl)
+        } else {
+            imageView.image = UIImage(named: "placeholder")
+        }
     }
 }
+
