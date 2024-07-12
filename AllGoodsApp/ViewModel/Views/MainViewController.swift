@@ -6,6 +6,12 @@
 //
 
 import UIKit
+import SwiftUI
+
+extension UIColor {
+    static let customGreen = UIColor(red: 0x00 / 255.0, green: 0xCC / 255.0, blue: 0x96 / 255.0, alpha: 1.0)
+}
+
 final class MainViewController: UIViewController {
     var coordinator: AppCoordinator?
     var username: String?
@@ -44,7 +50,7 @@ final class MainViewController: UIViewController {
             headerView.topAnchor.constraint(equalTo: view.topAnchor), // Start from the top of the screen
             headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            headerView.heightAnchor.constraint(equalToConstant: 120), // 100 points height
+            headerView.heightAnchor.constraint(equalToConstant: 120), // 120 points height
 
             searchBar.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 8),
             searchBar.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -8),
@@ -55,8 +61,8 @@ final class MainViewController: UIViewController {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         let cellSpacing: CGFloat = 20 // Define the spacing between cells
-        let cellWidth = (view.frame.width - 40 - cellSpacing) / 4 // Adjust width to account for spacing
-        let cellHeight: CGFloat = 150
+        let cellWidth = (view.frame.width - 40 - cellSpacing) / 3 // Increase width
+        let cellHeight: CGFloat = 130 // Reduce height
         layout.itemSize = CGSize(width: cellWidth, height: cellHeight)
         layout.minimumLineSpacing = cellSpacing // Set the spacing between cells
         layout.sectionInset = UIEdgeInsets(top: 0, left: cellSpacing, bottom: 0, right: cellSpacing) // Add left and right insets for spacing
@@ -71,7 +77,7 @@ final class MainViewController: UIViewController {
 
         let promotionLayout = UICollectionViewFlowLayout()
         promotionLayout.scrollDirection = .horizontal
-        promotionLayout.itemSize = CGSize(width: view.frame.width * 0.75, height: view.frame.width * 0.75 * 1.5) // 3x width, 1.5x height
+        promotionLayout.itemSize = CGSize(width: view.frame.width * 0.375 * 1.5, height: view.frame.width * 0.375) // Swap width and height
         promotionLayout.minimumLineSpacing = cellSpacing
         promotionLayout.sectionInset = UIEdgeInsets(top: 0, left: cellSpacing, bottom: 0, right: cellSpacing)
 
@@ -94,7 +100,7 @@ final class MainViewController: UIViewController {
             promotionCollectionView.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: 20),
             promotionCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             promotionCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            promotionCollectionView.heightAnchor.constraint(equalToConstant: view.frame.width * 0.5 * 0.8) // Match PromotionCell height
+            promotionCollectionView.heightAnchor.constraint(equalToConstant: view.frame.width * 0.375) // Match new PromotionCell height
         ])
     }
 
@@ -128,6 +134,18 @@ final class MainViewController: UIViewController {
         let allCategoriesViewController = AllCategoriesViewController(categories: Array(viewModel.productsByCategory.keys))
         navigationController?.pushViewController(allCategoriesViewController, animated: true)
     }
+
+    private func navigateToTicTacToe() {
+        let viewModel = TicTacToeViewModel(username: username)
+        viewModel.onGameEnded = {
+            self.navigationController?.popViewController(animated: true)
+        }
+        viewModel.onPromoDismissed = {
+            self.navigationController?.popViewController(animated: true)
+        }
+        let gameViewController = UIHostingController(rootView: TicTacToeGameView(viewModel: viewModel))
+        navigationController?.pushViewController(gameViewController, animated: true)
+    }
 }
 
 extension MainViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -135,7 +153,7 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
         if collectionView == self.collectionView {
             return viewModel.productsByCategory.keys.count + 1 // Adding 1 for the AllCategoryCell
         } else {
-            return 5 // Assuming 5 promotion items
+            return 3 // Only 3 promotion items
         }
     }
 
@@ -155,8 +173,13 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
             }
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PromotionCell.identifier, for: indexPath) as! PromotionCell
-            // Configure PromotionCell with dummy data
-            cell.configure(with: "Promotion \(indexPath.row + 1)", image: UIImage(named: "placeholder"))
+            if indexPath.row == 0 {
+                cell.configure(image: UIImage(named: "game"), topText: "DISCOUNTS", bottomText: " - MAX $300 ")
+            } else if indexPath.row == 1 {
+                cell.configure(image: UIImage(named: "brand"), topText: "Brands", bottomText: "MORE THAN 50 + ")
+            } else if indexPath.row == 2 {
+                cell.configure(image: UIImage(named: "supermarket"), topText: "FAST DELIVERY", bottomText: "35-50 Minutes ")
+            }
             return cell
         }
     }
@@ -172,7 +195,11 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
                 navigationController?.pushViewController(categoryViewController, animated: true)
             }
         } else {
-            print("Promotion \(indexPath.row + 1) tapped")
+            if indexPath.row == 0 {
+                navigateToTicTacToe()
+            } else {
+                print("Promotion \(indexPath.row + 1) tapped")
+            }
         }
     }
 
@@ -184,8 +211,4 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 20 // Define the spacing between cells
     }
-}
-
-extension UIColor {
-    static let customGreen = UIColor(red: 0x00 / 255.0, green: 0xCC / 255.0, blue: 0x96 / 255.0, alpha: 1.0)
 }

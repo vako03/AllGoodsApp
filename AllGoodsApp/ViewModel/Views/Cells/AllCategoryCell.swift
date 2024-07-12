@@ -17,6 +17,7 @@ class AllCategoryCell: UICollectionViewCell {
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "All Categories"
+        label.textColor = .white
         return label
     }()
     
@@ -26,13 +27,13 @@ class AllCategoryCell: UICollectionViewCell {
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(systemName: "list.bullet") // Using SF Symbols
-        imageView.tintColor = .black // Set icon color to black
+        imageView.tintColor = .white // Set icon color to black
         return imageView
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.backgroundColor = .lightGray
+        contentView.backgroundColor = .black
         contentView.layer.cornerRadius = 8
         contentView.addSubview(iconImageView)
         contentView.addSubview(titleLabel)

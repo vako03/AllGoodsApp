@@ -12,38 +12,52 @@ class PromotionCell: UICollectionViewCell {
     
     private let imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
+        imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 16
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
-    private let titleLabel: UILabel = {
+    private let topLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.boldSystemFont(ofSize: 24)
+        label.textAlignment = .center
+        label.textColor = .black
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private let bottomTextLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        label.textColor = .black
         label.textAlignment = .center
-        label.numberOfLines = 0
+        label.backgroundColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.backgroundColor = .gray
+        contentView.backgroundColor = .customGreen
         contentView.layer.cornerRadius = 15
         contentView.addSubview(imageView)
-        contentView.addSubview(titleLabel)
+        contentView.addSubview(topLabel)
+        contentView.addSubview(bottomTextLabel)
         
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
+            topLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            topLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             
-            imageView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
-            imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
+            bottomTextLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20),
+            bottomTextLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0),
+            bottomTextLabel.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -8),
+            bottomTextLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 30),
+            
+            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5),
+            imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5),
+            imageView.widthAnchor.constraint(equalToConstant: 60),
+            imageView.heightAnchor.constraint(equalToConstant: 60)
         ])
     }
     
@@ -51,8 +65,9 @@ class PromotionCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(with title: String, image: UIImage?) {
-        titleLabel.text = title
+    func configure(image: UIImage?, topText: String, bottomText: String) {
         imageView.image = image
+        topLabel.text = topText
+        bottomTextLabel.text = bottomText
     }
 }
