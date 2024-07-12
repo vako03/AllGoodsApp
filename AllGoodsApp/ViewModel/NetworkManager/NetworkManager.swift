@@ -61,3 +61,29 @@ class NetworkManager {
         task.resume()
     }
 }
+
+extension NetworkManager {
+    func fetchAllBrands(completion: @escaping (Result<[String], Error>) -> Void) {
+        fetchAllProducts { result in
+            switch result {
+            case .success(let products):
+                let brands = Set(products.compactMap { $0.brand }).sorted()
+                completion(.success(brands))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func fetchProducts(forBrand brand: String, completion: @escaping (Result<[Product], Error>) -> Void) {
+        fetchAllProducts { result in
+            switch result {
+            case .success(let products):
+                let filteredProducts = products.filter { $0.brand == brand }
+                completion(.success(filteredProducts))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+}

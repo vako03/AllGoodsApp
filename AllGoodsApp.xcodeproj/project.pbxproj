@@ -23,6 +23,7 @@
 		1A5F28982C40874200FFBAE3 /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5F28972C40874200FFBAE3 /* CategoryViewController.swift */; };
 		1A5F28A92C41276F00FFBAE3 /* AllCategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5F28A82C41276F00FFBAE3 /* AllCategoryCell.swift */; };
 		1A5F28CB2C415EA400FFBAE3 /* PromotionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5F28CA2C415EA400FFBAE3 /* PromotionCell.swift */; };
+		1A5F28CF2C41C33A00FFBAE3 /* BrandListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5F28CE2C41C33A00FFBAE3 /* BrandListViewController.swift */; };
 		1A6FE1952C3B380300F6D5B4 /* SharedLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6FE1942C3B380300F6D5B4 /* SharedLogic.swift */; };
 		1A6FE19A2C3B3DB100F6D5B4 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6FE1992C3B3DB100F6D5B4 /* CustomButton.swift */; };
 		1A6FE19C2C3B3DBB00F6D5B4 /* CustomLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6FE19B2C3B3DBB00F6D5B4 /* CustomLabel.swift */; };
@@ -75,6 +76,7 @@
 		1A5F28972C40874200FFBAE3 /* CategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
 		1A5F28A82C41276F00FFBAE3 /* AllCategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllCategoryCell.swift; sourceTree = "<group>"; };
 		1A5F28CA2C415EA400FFBAE3 /* PromotionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromotionCell.swift; sourceTree = "<group>"; };
+		1A5F28CE2C41C33A00FFBAE3 /* BrandListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandListViewController.swift; sourceTree = "<group>"; };
 		1A6FE1942C3B380300F6D5B4 /* SharedLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedLogic.swift; sourceTree = "<group>"; };
 		1A6FE1992C3B3DB100F6D5B4 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 		1A6FE19B2C3B3DBB00F6D5B4 /* CustomLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLabel.swift; sourceTree = "<group>"; };
@@ -196,6 +198,7 @@
 				1AB695FE2C37196C00EA6F49 /* ThirdOnboardingPageViewController.swift */,
 				1A284E7D2C400CD100DB27FF /* ProductListViewController.swift */,
 				1AA97ABF2C403BDD003DA15C /* AllCategoriesViewController.swift */,
+				1A5F28CE2C41C33A00FFBAE3 /* BrandListViewController.swift */,
 			);
 			path = Onboarding;
 			sourceTree = "<group>";
@@ -358,6 +361,7 @@
 				1A284E7A2C400C4200DB27FF /* ProductCell.swift in Sources */,
 				1AA5822F2C3D5F2E0081A410 /* FavouriteViewController.swift in Sources */,
 				1AF97DAC2C36D1ED00C3E55F /* AppCoordinator.swift in Sources */,
+				1A5F28CF2C41C33A00FFBAE3 /* BrandListViewController.swift in Sources */,
 				1A284E7C2C400C5C00DB27FF /* ProductDetailsViewController.swift in Sources */,
 				1AF97DAE2C36D1FC00C3E55F /* OnboardingViewController.swift in Sources */,
 				1A1209322C35D59300FDC9BE /* AppDelegate.swift in Sources */,

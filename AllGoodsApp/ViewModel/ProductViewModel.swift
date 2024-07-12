@@ -45,3 +45,12 @@ class ProductViewModel {
         }
     }
 }
+extension ProductViewModel {
+    func fetchAllBrands(completion: @escaping (Result<[String], Error>) -> Void) {
+        networkManager.fetchAllBrands(completion: completion)
+    }
+    
+    func fetchProducts(forBrand brand: String, completion: @escaping (Result<[Product], Error>) -> Void) {
+        networkManager.fetchProducts(forBrand: brand, completion: completion)
+    }
+}

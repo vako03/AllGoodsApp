@@ -146,6 +146,12 @@ final class MainViewController: UIViewController {
         allCategoriesViewController.delegate = self
         navigationController?.pushViewController(allCategoriesViewController, animated: true)
     }
+    
+    private func allBrandsTapped() {
+        let brandListViewController = BrandListViewController()
+        brandListViewController.delegate = self
+        navigationController?.pushViewController(brandListViewController, animated: true)
+    }
 
     private func navigateToTicTacToe() {
         let viewModel = TicTacToeViewModel(username: username)
@@ -210,6 +216,8 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
         } else {
             if indexPath.row == 0 {
                 navigateToTicTacToe()
+            } else if indexPath.row == 1 {
+                allBrandsTapped()
             } else {
                 print("Promotion \(indexPath.row + 1) tapped")
             }
@@ -238,5 +246,13 @@ extension MainViewController: ProductSelectionDelegate {
     func didSelectProduct(_ product: Product) {
         let productDetailViewController = ProductDetailViewController(product: product)
         navigationController?.pushViewController(productDetailViewController, animated: true)
+    }
+}
+
+extension MainViewController: BrandSelectionDelegate {
+    func didSelectBrand(_ brand: String, products: [Product]) {
+        let productListVC = ProductListViewController(category: brand, products: products)
+        productListVC.delegate = self
+        navigationController?.pushViewController(productListVC, animated: true)
     }
 }
