@@ -19,6 +19,7 @@ final class MainViewController: UIViewController {
     private let searchBar = UISearchBar()
     private var collectionView: UICollectionView!
     private var promotionCollectionView: UICollectionView!
+    private var featuredProductCollectionView: UICollectionView!
     private let viewModel = ProductViewModel()
     private let playGameButton: CustomButton
 
@@ -98,8 +99,22 @@ final class MainViewController: UIViewController {
         promotionCollectionView.showsHorizontalScrollIndicator = false
         promotionCollectionView.translatesAutoresizingMaskIntoConstraints = false
 
+        let featuredLayout = UICollectionViewFlowLayout()
+        featuredLayout.scrollDirection = .horizontal
+        featuredLayout.itemSize = CGSize(width: view.frame.width * 0.45, height: view.frame.width * 0.6)
+        featuredLayout.minimumLineSpacing = 20
+        featuredLayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+
+        featuredProductCollectionView = UICollectionView(frame: .zero, collectionViewLayout: featuredLayout)
+        featuredProductCollectionView.dataSource = self
+        featuredProductCollectionView.delegate = self
+        featuredProductCollectionView.register(FeaturedProductCell.self, forCellWithReuseIdentifier: FeaturedProductCell.identifier)
+        featuredProductCollectionView.showsHorizontalScrollIndicator = false
+        featuredProductCollectionView.translatesAutoresizingMaskIntoConstraints = false
+
         view.addSubview(collectionView)
         view.addSubview(promotionCollectionView)
+        view.addSubview(featuredProductCollectionView)
 
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 20),
@@ -110,7 +125,12 @@ final class MainViewController: UIViewController {
             promotionCollectionView.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: 20),
             promotionCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             promotionCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            promotionCollectionView.heightAnchor.constraint(equalToConstant: view.frame.width * 0.375) // Match new PromotionCell height
+            promotionCollectionView.heightAnchor.constraint(equalToConstant: view.frame.width * 0.375), // Match new PromotionCell height
+
+            featuredProductCollectionView.topAnchor.constraint(equalTo: promotionCollectionView.bottomAnchor, constant: 20),
+            featuredProductCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            featuredProductCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            featuredProductCollectionView.heightAnchor.constraint(equalToConstant: view.frame.width * 0.6) // Fixed height for horizontal scroll
         ])
     }
 
@@ -120,6 +140,8 @@ final class MainViewController: UIViewController {
                 switch result {
                 case .success:
                     self?.collectionView.reloadData()
+                    self?.promotionCollectionView.reloadData()
+                    self?.featuredProductCollectionView.reloadData()
                 case .failure(let error):
                     print("Failed to fetch products:", error)
                 }
@@ -146,7 +168,7 @@ final class MainViewController: UIViewController {
         allCategoriesViewController.delegate = self
         navigationController?.pushViewController(allCategoriesViewController, animated: true)
     }
-    
+
     private func allBrandsTapped() {
         let brandListViewController = BrandListViewController()
         brandListViewController.delegate = self
@@ -170,8 +192,10 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == self.collectionView {
             return viewModel.productsByCategory.keys.count + 1 // Adding 1 for the AllCategoryCell
-        } else {
+        } else if collectionView == self.promotionCollectionView {
             return 3 // Only 3 promotion items
+        } else {
+            return viewModel.products.count // Number of featured products
         }
     }
 
@@ -189,7 +213,7 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
                 cell.configure(with: category, imageUrl: imageUrl)
                 return cell
             }
-        } else {
+        } else if collectionView == self.promotionCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PromotionCell.identifier, for: indexPath) as! PromotionCell
             if indexPath.row == 0 {
                 cell.configure(image: UIImage(named: "game"), topText: "DISCOUNTS", bottomText: " - MAX $300 ")
@@ -198,6 +222,11 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
             } else if indexPath.row == 2 {
                 cell.configure(image: UIImage(named: "supermarket"), topText: "FAST DELIVERY", bottomText: "35-50 Minutes ")
             }
+            return cell
+        } else {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeaturedProductCell.identifier, for: indexPath) as! FeaturedProductCell
+            let product = viewModel.products[indexPath.row]
+            cell.configure(with: product)
             return cell
         }
     }
@@ -213,7 +242,7 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
                 categoryViewController.delegate = self
                 navigationController?.pushViewController(categoryViewController, animated: true)
             }
-        } else {
+        } else if collectionView == self.promotionCollectionView {
             if indexPath.row == 0 {
                 navigateToTicTacToe()
             } else if indexPath.row == 1 {
@@ -221,6 +250,10 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
             } else {
                 print("Promotion \(indexPath.row + 1) tapped")
             }
+        } else {
+            let selectedProduct = viewModel.products[indexPath.row]
+            let productDetailViewController = ProductDetailViewController(product: selectedProduct)
+            navigationController?.pushViewController(productDetailViewController, animated: true)
         }
     }
 
