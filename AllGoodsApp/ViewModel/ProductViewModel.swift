@@ -5,8 +5,6 @@
 //  Created by valeri mekhashishvili on 11.07.24.
 //
 
-
-
 import Foundation
 
 class ProductViewModel {

@@ -7,11 +7,16 @@
 
 import UIKit
 
+protocol ProductSelectionDelegate: AnyObject {
+    func didSelectProduct(_ product: Product)
+}
+
 class CategoryViewController: UIViewController {
     private let category: String
     private let products: [Product]
     private var collectionView: UICollectionView!
-    
+    weak var delegate: ProductSelectionDelegate?
+
     init(category: String, products: [Product]) {
         self.category = category
         self.products = products
@@ -53,8 +58,7 @@ extension CategoryViewController: UICollectionViewDataSource {
 
 extension CategoryViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let product = products[indexPath.row]
-        let productDetailViewController = ProductDetailViewController(product: product)
-        navigationController?.pushViewController(productDetailViewController, animated: true)
+        let selectedProduct = products[indexPath.row]
+        delegate?.didSelectProduct(selectedProduct)
     }
 }

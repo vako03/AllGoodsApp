@@ -4,7 +4,6 @@
 //
 //  Created by valeri mekhashishvili on 04.07.24.
 //
-
 import UIKit
 import SwiftUI
 
@@ -21,7 +20,18 @@ final class MainViewController: UIViewController {
     private var collectionView: UICollectionView!
     private var promotionCollectionView: UICollectionView!
     private let viewModel = ProductViewModel()
-    private let playGameButton = CustomButton(title: "Play Game", action: { }) // Define the button but hide it later
+    private let playGameButton: CustomButton
+
+    init() {
+        self.playGameButton = CustomButton(title: "Play Game") {
+            // Action for play game button
+        }
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -119,6 +129,7 @@ final class MainViewController: UIViewController {
 
     private func playGameButtonTapped() {
         // Placeholder for play game logic
+        navigateToTicTacToe()
     }
 
     private func showLoginAlert() {
@@ -130,8 +141,9 @@ final class MainViewController: UIViewController {
         present(alertController, animated: true, completion: nil)
     }
 
-    @objc private func allCategoriesTapped() {
+    private func allCategoriesTapped() {
         let allCategoriesViewController = AllCategoriesViewController(categories: Array(viewModel.productsByCategory.keys))
+        allCategoriesViewController.delegate = self
         navigationController?.pushViewController(allCategoriesViewController, animated: true)
     }
 
@@ -192,6 +204,7 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
                 let selectedCategory = Array(viewModel.productsByCategory.keys)[indexPath.row - 1]
                 let products = viewModel.productsByCategory[selectedCategory] ?? []
                 let categoryViewController = CategoryViewController(category: selectedCategory, products: products)
+                categoryViewController.delegate = self
                 navigationController?.pushViewController(categoryViewController, animated: true)
             }
         } else {
@@ -208,7 +221,22 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
         return UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
     }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+    func collectionView(_ collectionView: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 20 // Define the spacing between cells
+    }
+}
+
+extension MainViewController: CategorySelectionDelegate {
+    func didSelectCategory(_ category: String, products: [Product]) {
+        let categoryViewController = CategoryViewController(category: category, products: products)
+        categoryViewController.delegate = self
+        navigationController?.pushViewController(categoryViewController, animated: true)
+    }
+}
+
+extension MainViewController: ProductSelectionDelegate {
+    func didSelectProduct(_ product: Product) {
+        let productDetailViewController = ProductDetailViewController(product: product)
+        navigationController?.pushViewController(productDetailViewController, animated: true)
     }
 }
