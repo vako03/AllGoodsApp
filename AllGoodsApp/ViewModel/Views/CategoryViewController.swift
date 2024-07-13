@@ -7,16 +7,19 @@
 
 import UIKit
 
+
 protocol ProductSelectionDelegate: AnyObject {
     func didSelectProduct(_ product: Product)
 }
 
-class CategoryViewController: UIViewController {
-    private let category: String
-    private let products: [Product]
-    private var collectionView: UICollectionView!
-    weak var delegate: ProductSelectionDelegate?
 
+import UIKit
+
+class CategoryViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, ProductSelectionDelegate {
+    private var collectionView: UICollectionView!
+    private var products: [Product]
+    private var category: String
+    
     init(category: String, products: [Product]) {
         self.category = category
         self.products = products
@@ -29,36 +32,55 @@ class CategoryViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = category.capitalized
+        title = category
+        view.backgroundColor = .white
         setupCollectionView()
     }
 
     private func setupCollectionView() {
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: 100, height: 150)
-        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
+        layout.scrollDirection = .vertical
+        layout.minimumLineSpacing = 3
+        
+        collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(ProductCell.self, forCellWithReuseIdentifier: ProductCell.identifier)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(collectionView)
+        
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
     }
-}
 
-extension CategoryViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return products.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProductCell.identifier, for: indexPath) as! ProductCell
-        cell.configure(with: products[indexPath.row])
+        let product = products[indexPath.row]
+        cell.configure(with: product)
+        cell.delegate = self
         return cell
     }
-}
 
-extension CategoryViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: 150)
+    }
+
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedProduct = products[indexPath.row]
-        delegate?.didSelectProduct(selectedProduct)
+        let productDetailViewController = ProductDetailViewController(product: selectedProduct)
+        navigationController?.pushViewController(productDetailViewController, animated: true)
+    }
+
+    func didSelectProduct(_ product: Product) {
+        let productDetailViewController = ProductDetailViewController(product: product)
+        navigationController?.pushViewController(productDetailViewController, animated: true)
     }
 }

@@ -11,115 +11,90 @@ enum SortCriteria {
     case rating
 }
 
-class AllProductViewController: UIViewController {
+import UIKit
+
+class AllProductViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, ProductSelectionDelegate {
+    private var collectionView: UICollectionView!
     private var products: [Product]
-    private let sortCriteria: SortCriteria
-    private var currentPage: Int = 1
-    private var totalPages: Int {
-        return (products.count + 19) / 20
-    }
-    
-    private let collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        layout.itemSize = CGSize(width: UIScreen.main.bounds.width - 32, height: 300)
-        layout.minimumInteritemSpacing = 0
-        layout.minimumLineSpacing = 3
-        layout.sectionInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
-        return UICollectionView(frame: .zero, collectionViewLayout: layout)
-    }()
-    
-    private let paginationStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.alignment = .center
-        stackView.distribution = .fillEqually
-        stackView.spacing = 8
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
-    }()
-    
+    private var sortedProducts: [Product]
+    private var currentPage = 0
+    private let itemsPerPage = 20
+    private var sortCriteria: SortCriteria
+
     init(products: [Product], sortCriteria: SortCriteria) {
         self.products = products
         self.sortCriteria = sortCriteria
+        self.sortedProducts = products.sorted(by: { (p1, p2) -> Bool in
+            switch sortCriteria {
+            case .discount:
+                return p1.discountPercentage > p2.discountPercentage
+            case .rating:
+                return p1.rating > p2.rating
+            }
+        })
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        setupCollectionView()
+    }
+
+    private func setupCollectionView() {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        layout.minimumLineSpacing = 3
         
+        collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(ProductCell.self, forCellWithReuseIdentifier: ProductCell.identifier)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(collectionView)
         
-        view.addSubview(paginationStackView)
-        setupConstraints()
-        setupPaginationButtons()
-    }
-    
-    private func setupConstraints() {
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: paginationStackView.topAnchor),
-            
-            paginationStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            paginationStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            paginationStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16),
-            paginationStackView.heightAnchor.constraint(equalToConstant: 40)
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
-    
-    private func setupPaginationButtons() {
-        paginationStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        let totalPages = self.totalPages
-        
-        for page in 1...totalPages {
-            let button = UIButton(type: .system)
-            button.setTitle("\(page)", for: .normal)
-            button.tag = page
-            button.addTarget(self, action: #selector(pageButtonTapped(_:)), for: .touchUpInside)
-            paginationStackView.addArrangedSubview(button)
-        }
-    }
-    
-    @objc private func pageButtonTapped(_ sender: UIButton) {
-        currentPage = sender.tag
-        collectionView.reloadData()
-    }
-}
 
-extension AllProductViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let startIndex = (currentPage - 1) * 20
-        let endIndex = min(startIndex + 20, products.count)
+        let startIndex = currentPage * itemsPerPage
+        let endIndex = min(startIndex + itemsPerPage, sortedProducts.count)
         return endIndex - startIndex
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let startIndex = (currentPage - 1) * 20
-        let endIndex = min(startIndex + 20, products.count)
-        let product = products[startIndex + indexPath.row]
-        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProductCell.identifier, for: indexPath) as! ProductCell
+        let startIndex = currentPage * itemsPerPage
+        let product = sortedProducts[startIndex + indexPath.row]
         cell.configure(with: product)
+        cell.delegate = self
         return cell
     }
-    
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: 150)
+    }
+
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let startIndex = (currentPage - 1) * 20
-        let product = products[startIndex + indexPath.row]
+        let startIndex = currentPage * itemsPerPage
+        let selectedProduct = sortedProducts[startIndex + indexPath.row]
+        let productDetailViewController = ProductDetailViewController(product: selectedProduct)
+        navigationController?.pushViewController(productDetailViewController, animated: true)
+    }
+
+    func didSelectProduct(_ product: Product) {
         let productDetailViewController = ProductDetailViewController(product: product)
         navigationController?.pushViewController(productDetailViewController, animated: true)
     }
-}
 
-   
+    // Implement pagination logic if necessary
+}

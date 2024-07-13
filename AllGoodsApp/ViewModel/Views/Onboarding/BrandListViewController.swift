@@ -10,22 +10,20 @@ protocol BrandSelectionDelegate: AnyObject {
     func didSelectBrand(_ brand: String, products: [Product])
 }
 
-import UIKit
-
 class BrandListViewController: UIViewController {
     private var brands: [String] = []
     private var tableView: UITableView!
     weak var delegate: BrandSelectionDelegate?
-    
+
     private let viewModel = ProductViewModel()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Brands"
         setupTableView()
         fetchBrands()
     }
-    
+
     private func setupTableView() {
         tableView = UITableView(frame: view.bounds)
         tableView.dataSource = self
@@ -33,7 +31,7 @@ class BrandListViewController: UIViewController {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "BrandCell")
         view.addSubview(tableView)
     }
-    
+
     private func fetchBrands() {
         viewModel.fetchAllBrands { [weak self] result in
             switch result {
@@ -53,7 +51,7 @@ extension BrandListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return brands.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "BrandCell", for: indexPath)
         cell.textLabel?.text = brands[indexPath.row]

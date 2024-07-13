@@ -298,7 +298,6 @@ final class MainViewController: UIViewController {
 
     private func allCategoriesTapped() {
         let allCategoriesViewController = AllCategoriesViewController(categories: Array(viewModel.productsByCategory.keys))
-        allCategoriesViewController.delegate = self
         navigationController?.pushViewController(allCategoriesViewController, animated: true)
     }
 
@@ -391,7 +390,6 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
                 let selectedCategory = Array(viewModel.productsByCategory.keys)[indexPath.row - 1]
                 let products = viewModel.productsByCategory[selectedCategory] ?? []
                 let categoryViewController = CategoryViewController(category: selectedCategory, products: products)
-                categoryViewController.delegate = self
                 navigationController?.pushViewController(categoryViewController, animated: true)
             }
         } else if collectionView == self.promotionCollectionView {
@@ -430,15 +428,13 @@ extension MainViewController: ProductSelectionDelegate {
 extension MainViewController: CategorySelectionDelegate {
     func didSelectCategory(_ category: String, products: [Product]) {
         let categoryViewController = CategoryViewController(category: category, products: products)
-        categoryViewController.delegate = self
         navigationController?.pushViewController(categoryViewController, animated: true)
     }
 }
 
 extension MainViewController: BrandSelectionDelegate {
     func didSelectBrand(_ brand: String, products: [Product]) {
-        let productListVC = ProductListViewController(category: brand, products: products)
-        productListVC.delegate = self
-        navigationController?.pushViewController(productListVC, animated: true)
+        let brandProductsVC = CategoryViewController(category: brand, products: products)
+        navigationController?.pushViewController(brandProductsVC, animated: true)
     }
 }
