@@ -108,6 +108,12 @@ class FeaturedProductCell: UICollectionViewCell {
         }
     }
     
+    private var isAddedToCart: Bool = false {
+        didSet {
+            updateAddToCartButtonAppearance()
+        }
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.addSubview(imageView)
@@ -120,6 +126,7 @@ class FeaturedProductCell: UICollectionViewCell {
         contentView.addSubview(addToCartButton)
         
         heartButton.addTarget(self, action: #selector(heartButtonTapped), for: .touchUpInside)
+        addToCartButton.addTarget(self, action: #selector(addToCartButtonTapped), for: .touchUpInside)
         
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
@@ -197,6 +204,11 @@ class FeaturedProductCell: UICollectionViewCell {
         animateHeartButton()
     }
     
+    @objc private func addToCartButtonTapped() {
+        isAddedToCart.toggle()
+        animateAddToCartButton()
+    }
+    
     private func updateHeartButtonAppearance() {
         let iconName = isFavorite ? "heart.fill" : "heart"
         let icon = UIImage(systemName: iconName)?.withRenderingMode(.alwaysTemplate)
@@ -211,6 +223,17 @@ class FeaturedProductCell: UICollectionViewCell {
         }
     }
     
+    private func updateAddToCartButtonAppearance() {
+        let tintColor: UIColor = isAddedToCart ? .black : .white
+        if #available(iOS 15.0, *) {
+            var configuration = addToCartButton.configuration
+            configuration?.baseForegroundColor = tintColor
+            addToCartButton.configuration = configuration
+        } else {
+            addToCartButton.tintColor = tintColor
+        }
+    }
+    
     private func animateHeartButton() {
         UIView.animate(withDuration: 0.1, animations: {
             self.heartButton.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
@@ -220,4 +243,17 @@ class FeaturedProductCell: UICollectionViewCell {
             }
         }
     }
+    
+    private func animateAddToCartButton() {
+        UIView.animate(withDuration: 0.1, animations: {
+            self.addToCartButton.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+            let tintColor: UIColor = self.isAddedToCart ? .black : .white
+            self.addToCartButton.tintColor = tintColor
+        }) { _ in
+            UIView.animate(withDuration: 0.1) {
+                self.addToCartButton.transform = CGAffineTransform.identity
+            }
+        }
+    }
 }
+
