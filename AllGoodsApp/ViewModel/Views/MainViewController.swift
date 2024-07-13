@@ -27,7 +27,7 @@ final class MainViewController: UIViewController {
 
     private let bestPriceLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        label.font = UIFont.systemFont(ofSize: 18, weight: .light)
         label.text = "Best Price"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -316,8 +316,9 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
                 navigateToTicTacToe()
             } else if indexPath.row == 1 {
                 allBrandsTapped()
-            } else {
-                print("Promotion \(indexPath.row + 1) tapped")
+            } else if indexPath.row == 2 {
+                let expressViewController = ExpressViewController()
+                navigationController?.pushViewController(expressViewController, animated: true)
             }
         } else {
             let selectedProduct = viewModel.products[indexPath.row]

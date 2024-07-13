@@ -5,8 +5,6 @@
 //  Created by valeri mekhashishvili on 11.07.24.
 //
 
-import Foundation
-
 class ProductViewModel {
     private let networkManager = NetworkManager.shared
     private(set) var products: [Product] = []
@@ -17,7 +15,7 @@ class ProductViewModel {
         networkManager.fetchAllProducts { [weak self] result in
             switch result {
             case .success(let products):
-                self?.products = products
+                self?.products = products.sorted { $0.discountPercentage > $1.discountPercentage }
                 self?.categorizeProducts(products)
                 self?.setCategoryImages()
                 completion(.success(()))
@@ -26,13 +24,25 @@ class ProductViewModel {
             }
         }
     }
-    
+
     func fetchProducts(for category: String, completion: @escaping (Result<[Product], Error>) -> Void) {
         networkManager.fetchProducts(for: category) { result in
             completion(result)
         }
     }
-    
+
+    func fetchAllBrands(completion: @escaping (Result<[String], Error>) -> Void) {
+        networkManager.fetchAllBrands { result in
+            completion(result)
+        }
+    }
+
+    func fetchProducts(forBrand brand: String, completion: @escaping (Result<[Product], Error>) -> Void) {
+        networkManager.fetchProducts(forBrand: brand) { result in
+            completion(result)
+        }
+    }
+
     private func categorizeProducts(_ products: [Product]) {
         productsByCategory = Dictionary(grouping: products, by: { $0.category })
     }
@@ -43,14 +53,5 @@ class ProductViewModel {
                 categoryImages[category] = firstProduct.thumbnail
             }
         }
-    }
-}
-extension ProductViewModel {
-    func fetchAllBrands(completion: @escaping (Result<[String], Error>) -> Void) {
-        networkManager.fetchAllBrands(completion: completion)
-    }
-    
-    func fetchProducts(forBrand brand: String, completion: @escaping (Result<[Product], Error>) -> Void) {
-        networkManager.fetchProducts(forBrand: brand, completion: completion)
     }
 }
