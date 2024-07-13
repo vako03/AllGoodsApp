@@ -4,12 +4,12 @@
 //
 //  Created by valeri mekhashishvili on 04.07.24.
 //
-import UIKit
-import SwiftUI
 
 extension UIColor {
     static let customGreen = UIColor(red: 0x00 / 255.0, green: 0xCC / 255.0, blue: 0x96 / 255.0, alpha: 1.0)
 }
+import UIKit
+import SwiftUI
 
 final class MainViewController: UIViewController {
     var coordinator: AppCoordinator?
@@ -22,6 +22,16 @@ final class MainViewController: UIViewController {
     private var featuredProductCollectionView: UICollectionView!
     private let viewModel = ProductViewModel()
     private let playGameButton: CustomButton
+    private let scrollView = UIScrollView()
+    private let contentView = UIView()
+
+    private let bestPriceLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        label.text = "Best Price"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
 
     init() {
         self.playGameButton = CustomButton(title: "Play Game") {
@@ -57,18 +67,19 @@ final class MainViewController: UIViewController {
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         headerView.addSubview(searchBar)
 
-        NSLayoutConstraint.activate([
-            headerView.topAnchor.constraint(equalTo: view.topAnchor), // Start from the top of the screen
-            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            headerView.heightAnchor.constraint(equalToConstant: 120), // 120 points height
+        // Setup Black Line
+        let blackLine = UIView()
+        blackLine.backgroundColor = .black
+        blackLine.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(blackLine)
 
-            searchBar.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 8),
-            searchBar.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -8),
-            searchBar.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -5),
-            searchBar.heightAnchor.constraint(equalToConstant: 44)
-        ])
+        // Setup Scroll View
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(contentView)
+        view.addSubview(scrollView)
 
+        // Setup Collection Views
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         let cellSpacing: CGFloat = 20 // Define the spacing between cells
@@ -101,7 +112,8 @@ final class MainViewController: UIViewController {
 
         let featuredLayout = UICollectionViewFlowLayout()
         featuredLayout.scrollDirection = .horizontal
-        featuredLayout.itemSize = CGSize(width: view.frame.width * 0.45, height: view.frame.width * 0.6)
+        let newCellHeight: CGFloat = view.frame.width * 0.8 // Increased height
+        featuredLayout.itemSize = CGSize(width: view.frame.width * 0.45, height: newCellHeight)
         featuredLayout.minimumLineSpacing = 20
         featuredLayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
 
@@ -112,25 +124,82 @@ final class MainViewController: UIViewController {
         featuredProductCollectionView.showsHorizontalScrollIndicator = false
         featuredProductCollectionView.translatesAutoresizingMaskIntoConstraints = false
 
-        view.addSubview(collectionView)
-        view.addSubview(promotionCollectionView)
-        view.addSubview(featuredProductCollectionView)
+        // Setup new ImageView
+        let sImageView = UIImageView()
+        sImageView.translatesAutoresizingMaskIntoConstraints = false
+        sImageView.backgroundColor = .lightGray // Set a background color to visualize the image view
+        sImageView.contentMode = .scaleAspectFit
+        sImageView.image = UIImage(named: "Payment Card") // Set your image here
 
+        contentView.addSubview(collectionView)
+        contentView.addSubview(promotionCollectionView)
+        contentView.addSubview(bestPriceLabel)
+        contentView.addSubview(featuredProductCollectionView)
+        contentView.addSubview(sImageView)
+
+        // Setup Constraints
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 20),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            // HeaderView Constraints
+            headerView.topAnchor.constraint(equalTo: view.topAnchor), // Start from the top of the screen
+            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            headerView.heightAnchor.constraint(equalToConstant: 120), // 120 points height
+
+            // SearchBar Constraints
+            searchBar.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 8),
+            searchBar.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -8),
+            searchBar.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -5),
+            searchBar.heightAnchor.constraint(equalToConstant: 44),
+            
+            // Black Line Constraints
+            blackLine.topAnchor.constraint(equalTo: headerView.bottomAnchor),
+            blackLine.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            blackLine.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            blackLine.heightAnchor.constraint(equalToConstant: 1),
+
+            // ScrollView Constraints
+            scrollView.topAnchor.constraint(equalTo: blackLine.bottomAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            // ContentView Constraints
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+
+            // CollectionView Constraints
+            collectionView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
+            collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             collectionView.heightAnchor.constraint(equalToConstant: cellHeight), // Match cell height
 
+            // PromotionCollectionView Constraints
             promotionCollectionView.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: 20),
-            promotionCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            promotionCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            promotionCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            promotionCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             promotionCollectionView.heightAnchor.constraint(equalToConstant: view.frame.width * 0.375), // Match new PromotionCell height
 
-            featuredProductCollectionView.topAnchor.constraint(equalTo: promotionCollectionView.bottomAnchor, constant: 20),
-            featuredProductCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            featuredProductCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            featuredProductCollectionView.heightAnchor.constraint(equalToConstant: view.frame.width * 0.6) // Fixed height for horizontal scroll
+            // BestPriceLabel Constraints
+            bestPriceLabel.topAnchor.constraint(equalTo: promotionCollectionView.bottomAnchor, constant: 20),
+            bestPriceLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+
+            // FeaturedProductCollectionView Constraints
+            featuredProductCollectionView.topAnchor.constraint(equalTo: bestPriceLabel.bottomAnchor, constant: 10),
+            featuredProductCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            featuredProductCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            featuredProductCollectionView.heightAnchor.constraint(equalToConstant: newCellHeight), // Increased height for horizontal scroll
+
+            // New ImageView Constraints
+            sImageView.topAnchor.constraint(equalTo: featuredProductCollectionView.bottomAnchor, constant: 20),
+            sImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            sImageView.widthAnchor.constraint(equalToConstant: 200),
+            sImageView.heightAnchor.constraint(equalToConstant: 200),
+
+            // Adjust bottom anchor to sImageView with padding
+            sImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -50) // Adding 20 points of padding
         ])
     }
 
