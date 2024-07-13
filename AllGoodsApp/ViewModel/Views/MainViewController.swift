@@ -125,17 +125,19 @@ final class MainViewController: UIViewController {
         featuredProductCollectionView.translatesAutoresizingMaskIntoConstraints = false
 
         // Setup new ImageView
-        let sImageView = UIImageView()
-        sImageView.translatesAutoresizingMaskIntoConstraints = false
-        sImageView.backgroundColor = .lightGray // Set a background color to visualize the image view
-        sImageView.contentMode = .scaleAspectFit
-        sImageView.image = UIImage(named: "Payment Card") // Set your image here
+        let PromoImageView = UIImageView()
+        PromoImageView.translatesAutoresizingMaskIntoConstraints = false
+        PromoImageView.backgroundColor = .lightGray // Set a background color to visualize the image view
+        PromoImageView.contentMode = .scaleToFill
+        PromoImageView.layer.cornerRadius = 15 // Set corner radius here
+        PromoImageView.layer.masksToBounds = true // Ensure the corner radius is applied
+        PromoImageView.image = UIImage(named: "FreeDelivery") // Set your image here
 
         contentView.addSubview(collectionView)
         contentView.addSubview(promotionCollectionView)
         contentView.addSubview(bestPriceLabel)
         contentView.addSubview(featuredProductCollectionView)
-        contentView.addSubview(sImageView)
+        contentView.addSubview(PromoImageView)
 
         // Setup Constraints
         NSLayoutConstraint.activate([
@@ -193,13 +195,11 @@ final class MainViewController: UIViewController {
             featuredProductCollectionView.heightAnchor.constraint(equalToConstant: newCellHeight), // Increased height for horizontal scroll
 
             // New ImageView Constraints
-            sImageView.topAnchor.constraint(equalTo: featuredProductCollectionView.bottomAnchor, constant: 20),
-            sImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            sImageView.widthAnchor.constraint(equalToConstant: 200),
-            sImageView.heightAnchor.constraint(equalToConstant: 200),
-
-            // Adjust bottom anchor to sImageView with padding
-            sImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -50) // Adding 20 points of padding
+            PromoImageView.topAnchor.constraint(equalTo: featuredProductCollectionView.bottomAnchor, constant: 20),
+            PromoImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            PromoImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            PromoImageView.heightAnchor.constraint(equalToConstant: 300),
+            PromoImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -50) // Adding 20 points of padding
         ])
     }
 
