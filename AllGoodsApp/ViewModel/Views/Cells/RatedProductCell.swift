@@ -1,13 +1,13 @@
 //
-//  FeaturedProductCell.swift
+//  RatedProductCell.swift
 //  AllGoodsApp
 //
-//  Created by valeri mekhashishvili on 08.07.24.
+//  Created by valeri mekhashishvili on 14.07.24.
 //
 import UIKit
 
-class FeaturedProductCell: UICollectionViewCell {
-    static let identifier = "FeaturedProductCell"
+class RatedProductCell: UICollectionViewCell {
+    static let identifier = "RatedProductCell"
     weak var delegate: ProductSelectionDelegate?
     private var product: Product?
 
@@ -26,7 +26,7 @@ class FeaturedProductCell: UICollectionViewCell {
         return label
     }()
     
-    private let newPriceLabel: UILabel = {
+    private let priceLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
         label.textColor = .black
@@ -34,11 +34,10 @@ class FeaturedProductCell: UICollectionViewCell {
         return label
     }()
     
-    private let oldPriceLabel: UILabel = {
+    private let ratingLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 14, weight: .light)
-        label.textColor = .gray
-        label.attributedText = NSAttributedString(string: "$0.00", attributes: [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue])
+        label.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+        label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -49,14 +48,6 @@ class FeaturedProductCell: UICollectionViewCell {
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
-    }()
-    
-    private let ratingLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 14, weight: .bold)
-        label.textColor = .black
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
     }()
     
     private let heartButton: UIButton = {
@@ -121,8 +112,7 @@ class FeaturedProductCell: UICollectionViewCell {
         super.init(frame: frame)
         contentView.addSubview(imageView)
         contentView.addSubview(titleLabel)
-        contentView.addSubview(newPriceLabel)
-        contentView.addSubview(oldPriceLabel)
+        contentView.addSubview(priceLabel)
         contentView.addSubview(starIconImageView)
         contentView.addSubview(ratingLabel)
         contentView.addSubview(heartButton)
@@ -144,11 +134,8 @@ class FeaturedProductCell: UICollectionViewCell {
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -40),
             
-            newPriceLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
-            newPriceLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
-            
-            oldPriceLabel.leadingAnchor.constraint(equalTo: newPriceLabel.trailingAnchor, constant: 8),
-            oldPriceLabel.centerYAnchor.constraint(equalTo: newPriceLabel.centerYAnchor),
+            priceLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
+            priceLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             
             starIconImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0),
             starIconImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0),
@@ -181,21 +168,7 @@ class FeaturedProductCell: UICollectionViewCell {
             imageView.load(url: url)
         }
         titleLabel.text = product.title
-        
-        let newPrice = product.price - (product.price * product.discountPercentage / 100)
-        newPriceLabel.text = "$\(String(format: "%.2f", newPrice))"
-        
-        let attributedOldPrice = NSAttributedString(
-            string: "$\(String(format: "%.2f", product.price))",
-            attributes: [
-                .font: UIFont.systemFont(ofSize: 14),
-                .foregroundColor: UIColor.gray,
-                .strikethroughStyle: NSUnderlineStyle.single.rawValue
-            ]
-        )
-        oldPriceLabel.attributedText = attributedOldPrice
-        
-        // Set the rating label
+        priceLabel.text = "$\(String(format: "%.2f", product.price))"
         ratingLabel.text = "\(product.rating)"
     }
     

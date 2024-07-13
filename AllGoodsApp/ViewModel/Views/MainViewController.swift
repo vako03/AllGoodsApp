@@ -8,8 +8,9 @@
 extension UIColor {
     static let customGreen = UIColor(red: 0x00 / 255.0, green: 0xCC / 255.0, blue: 0x96 / 255.0, alpha: 1.0)
 }
-import UIKit
+
 import SwiftUI
+import UIKit
 
 final class MainViewController: UIViewController {
     var coordinator: AppCoordinator?
@@ -20,6 +21,7 @@ final class MainViewController: UIViewController {
     private var collectionView: UICollectionView!
     private var promotionCollectionView: UICollectionView!
     private var featuredProductCollectionView: UICollectionView!
+    private var ratedProductCollectionView: UICollectionView!
     private let viewModel = ProductViewModel()
     private let playGameButton: CustomButton
     private let scrollView = UIScrollView()
@@ -31,6 +33,30 @@ final class MainViewController: UIViewController {
         label.text = "Best Price"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
+    }()
+
+    private let bestRatingLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 18, weight: .light)
+        label.text = "Best Rating"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
+    private let seeMoreBestPriceButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("See More ->", for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(seeMoreBestPriceTapped), for: .touchUpInside)
+        return button
+    }()
+
+    private let seeMoreBestRatingButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("See More ->", for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(seeMoreBestRatingTapped), for: .touchUpInside)
+        return button
     }()
 
     init() {
@@ -133,11 +159,30 @@ final class MainViewController: UIViewController {
         PromoImageView.layer.masksToBounds = true // Ensure the corner radius is applied
         PromoImageView.image = UIImage(named: "FreeDelivery") // Set your image here
 
+        // Setup RatedProductCollectionView
+        let ratedLayout = UICollectionViewFlowLayout()
+        ratedLayout.scrollDirection = .horizontal
+        let ratedCellHeight: CGFloat = view.frame.width * 0.8 // Increased height
+        ratedLayout.itemSize = CGSize(width: view.frame.width * 0.45, height: ratedCellHeight)
+        ratedLayout.minimumLineSpacing = 20
+        ratedLayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+
+        ratedProductCollectionView = UICollectionView(frame: .zero, collectionViewLayout: ratedLayout)
+        ratedProductCollectionView.dataSource = self
+        ratedProductCollectionView.delegate = self
+        ratedProductCollectionView.register(RatedProductCell.self, forCellWithReuseIdentifier: RatedProductCell.identifier)
+        ratedProductCollectionView.showsHorizontalScrollIndicator = false
+        ratedProductCollectionView.translatesAutoresizingMaskIntoConstraints = false
+
         contentView.addSubview(collectionView)
         contentView.addSubview(promotionCollectionView)
         contentView.addSubview(bestPriceLabel)
+        contentView.addSubview(seeMoreBestPriceButton)
         contentView.addSubview(featuredProductCollectionView)
         contentView.addSubview(PromoImageView)
+        contentView.addSubview(bestRatingLabel)
+        contentView.addSubview(seeMoreBestRatingButton)
+        contentView.addSubview(ratedProductCollectionView)
 
         // Setup Constraints
         NSLayoutConstraint.activate([
@@ -188,6 +233,10 @@ final class MainViewController: UIViewController {
             bestPriceLabel.topAnchor.constraint(equalTo: promotionCollectionView.bottomAnchor, constant: 20),
             bestPriceLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
 
+            // SeeMoreBestPriceButton Constraints
+            seeMoreBestPriceButton.centerYAnchor.constraint(equalTo: bestPriceLabel.centerYAnchor),
+            seeMoreBestPriceButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+
             // FeaturedProductCollectionView Constraints
             featuredProductCollectionView.topAnchor.constraint(equalTo: bestPriceLabel.bottomAnchor, constant: 10),
             featuredProductCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
@@ -199,7 +248,21 @@ final class MainViewController: UIViewController {
             PromoImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             PromoImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             PromoImageView.heightAnchor.constraint(equalToConstant: 300),
-            PromoImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -50) // Adding 20 points of padding
+
+            // BestRatingLabel Constraints
+            bestRatingLabel.topAnchor.constraint(equalTo: PromoImageView.bottomAnchor, constant: 20),
+            bestRatingLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+
+            // SeeMoreBestRatingButton Constraints
+            seeMoreBestRatingButton.centerYAnchor.constraint(equalTo: bestRatingLabel.centerYAnchor),
+            seeMoreBestRatingButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+
+            // RatedProductCollectionView Constraints
+            ratedProductCollectionView.topAnchor.constraint(equalTo: bestRatingLabel.bottomAnchor, constant: 10),
+            ratedProductCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            ratedProductCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            ratedProductCollectionView.heightAnchor.constraint(equalToConstant: ratedCellHeight),
+            ratedProductCollectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -50)
         ])
     }
 
@@ -211,6 +274,7 @@ final class MainViewController: UIViewController {
                     self?.collectionView.reloadData()
                     self?.promotionCollectionView.reloadData()
                     self?.featuredProductCollectionView.reloadData()
+                    self?.ratedProductCollectionView.reloadData()
                 case .failure(let error):
                     print("Failed to fetch products:", error)
                 }
@@ -255,6 +319,16 @@ final class MainViewController: UIViewController {
         let gameViewController = UIHostingController(rootView: TicTacToeGameView(viewModel: viewModel))
         navigationController?.pushViewController(gameViewController, animated: true)
     }
+
+    @objc private func seeMoreBestPriceTapped() {
+        let allProductsVC = AllProductViewController(products: viewModel.sortedProductsByDiscount(), sortCriteria: .discount)
+        navigationController?.pushViewController(allProductsVC, animated: true)
+    }
+
+    @objc private func seeMoreBestRatingTapped() {
+        let allProductsVC = AllProductViewController(products: viewModel.sortedProductsByRating(), sortCriteria: .rating)
+        navigationController?.pushViewController(allProductsVC, animated: true)
+    }
 }
 
 extension MainViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -263,8 +337,10 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
             return viewModel.productsByCategory.keys.count + 1 // Adding 1 for the AllCategoryCell
         } else if collectionView == self.promotionCollectionView {
             return 3 // Only 3 promotion items
+        } else if collectionView == self.ratedProductCollectionView {
+            return viewModel.sortedProductsByRating().count // Filter products by rating
         } else {
-            return viewModel.products.count // Number of featured products
+            return viewModel.sortedProductsByDiscount().count // Number of featured products
         }
     }
 
@@ -292,10 +368,17 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
                 cell.configure(image: UIImage(named: "supermarket"), topText: "FAST DELIVERY", bottomText: "35-50 Minutes ")
             }
             return cell
+        } else if collectionView == self.ratedProductCollectionView {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RatedProductCell.identifier, for: indexPath) as! RatedProductCell
+            let product = viewModel.sortedProductsByRating()[indexPath.row]
+            cell.configure(with: product)
+            cell.delegate = self
+            return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeaturedProductCell.identifier, for: indexPath) as! FeaturedProductCell
-            let product = viewModel.products[indexPath.row]
+            let product = viewModel.sortedProductsByDiscount()[indexPath.row]
             cell.configure(with: product)
+            cell.delegate = self
             return cell
         }
     }
@@ -337,18 +420,18 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
     }
 }
 
+extension MainViewController: ProductSelectionDelegate {
+    func didSelectProduct(_ product: Product) {
+        let productDetailViewController = ProductDetailViewController(product: product)
+        navigationController?.pushViewController(productDetailViewController, animated: true)
+    }
+}
+
 extension MainViewController: CategorySelectionDelegate {
     func didSelectCategory(_ category: String, products: [Product]) {
         let categoryViewController = CategoryViewController(category: category, products: products)
         categoryViewController.delegate = self
         navigationController?.pushViewController(categoryViewController, animated: true)
-    }
-}
-
-extension MainViewController: ProductSelectionDelegate {
-    func didSelectProduct(_ product: Product) {
-        let productDetailViewController = ProductDetailViewController(product: product)
-        navigationController?.pushViewController(productDetailViewController, animated: true)
     }
 }
 

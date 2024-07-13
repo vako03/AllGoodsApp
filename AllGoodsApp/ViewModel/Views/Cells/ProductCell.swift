@@ -12,24 +12,31 @@ class ProductCell: UICollectionViewCell {
     
     private let imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 8
+        imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+        label.font = UIFont.systemFont(ofSize: 16, weight: .light)
+        label.numberOfLines = 2
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private let priceLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-        label.textColor = .systemGreen
+        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        label.textColor = .black
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private let ratingLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+        label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -39,21 +46,24 @@ class ProductCell: UICollectionViewCell {
         contentView.addSubview(imageView)
         contentView.addSubview(titleLabel)
         contentView.addSubview(priceLabel)
+        contentView.addSubview(ratingLabel)
         
         NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            imageView.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.7),
+            imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
+            imageView.heightAnchor.constraint(equalTo: contentView.widthAnchor),
             
-            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 4),
-            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 4),
-            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -4),
+            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
+            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
             
-            priceLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
-            priceLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 4),
-            priceLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -4),
-            priceLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -4)
+            priceLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
+            priceLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+            
+            ratingLabel.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 4),
+            ratingLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+            ratingLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
         ])
     }
     
@@ -62,13 +72,11 @@ class ProductCell: UICollectionViewCell {
     }
     
     func configure(with product: Product) {
-        titleLabel.text = product.title
-        priceLabel.text = "$\(product.price)"
-        
-        if let imageUrl = URL(string: product.thumbnail) {
-            imageView.load(url: imageUrl)
-        } else {
-            imageView.image = UIImage(named: "placeholder")
+        if let url = URL(string: product.thumbnail) {
+            imageView.load(url: url)
         }
+        titleLabel.text = product.title
+        priceLabel.text = "$\(String(format: "%.2f", product.price))"
+        ratingLabel.text = "\(product.rating)"
     }
 }

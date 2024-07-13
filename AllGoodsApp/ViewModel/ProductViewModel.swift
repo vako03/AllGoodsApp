@@ -15,7 +15,7 @@ class ProductViewModel {
         networkManager.fetchAllProducts { [weak self] result in
             switch result {
             case .success(let products):
-                self?.products = products.sorted { $0.discountPercentage > $1.discountPercentage }
+                self?.products = products
                 self?.categorizeProducts(products)
                 self?.setCategoryImages()
                 completion(.success(()))
@@ -41,6 +41,14 @@ class ProductViewModel {
         networkManager.fetchProducts(forBrand: brand) { result in
             completion(result)
         }
+    }
+
+    func sortedProductsByDiscount() -> [Product] {
+        return products.sorted { $0.discountPercentage > $1.discountPercentage }
+    }
+
+    func sortedProductsByRating() -> [Product] {
+        return products.sorted { $0.rating > $1.rating }
     }
 
     private func categorizeProducts(_ products: [Product]) {
