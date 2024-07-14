@@ -5,11 +5,22 @@
 //  Created by valeri mekhashishvili on 11.07.24.
 //
 
+import Foundation
+
 class ProductViewModel {
     private let networkManager = NetworkManager.shared
     private(set) var products: [Product] = []
     private(set) var productsByCategory: [String: [Product]] = [:]
     private(set) var categoryImages: [String: String] = [:]
+    
+    init() {
+        NotificationCenter.default.addObserver(self, selector: #selector(handleFavoritesUpdated), name: .favoritesUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleCartUpdated), name: .cartUpdated, object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
     
     func fetchAllProducts(completion: @escaping (Result<Void, Error>) -> Void) {
         networkManager.fetchAllProducts { [weak self] result in
@@ -90,5 +101,12 @@ class ProductViewModel {
     func getCartProducts() -> [Product] {
         return SharedStorage.shared.getCartProducts(from: products)
     }
+    
+    @objc private func handleFavoritesUpdated() {
+        // Handle updates to the favorites list if needed
+    }
+    
+    @objc private func handleCartUpdated() {
+        // Handle updates to the cart list if needed
+    }
 }
-

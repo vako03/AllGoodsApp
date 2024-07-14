@@ -9,8 +9,8 @@ extension UIColor {
     static let customGreen = UIColor(red: 0x00 / 255.0, green: 0xCC / 255.0, blue: 0x96 / 255.0, alpha: 1.0)
 }
 
-import SwiftUI
 import UIKit
+import SwiftUI
 
 final class MainViewController: UIViewController {
     var coordinator: AppCoordinator?
@@ -74,6 +74,7 @@ final class MainViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupUI()
+        setupNotificationObservers()
         fetchProducts()
     }
 
@@ -264,6 +265,47 @@ final class MainViewController: UIViewController {
             ratedProductCollectionView.heightAnchor.constraint(equalToConstant: ratedCellHeight),
             ratedProductCollectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -50)
         ])
+    }
+
+    private func setupNotificationObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(handleFavoritesUpdated(_:)), name: .favoritesUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleCartUpdated(_:)), name: .cartUpdated, object: nil)
+    }
+
+    @objc private func handleFavoritesUpdated(_ notification: Notification) {
+        guard let productId = notification.object as? Int else { return }
+        updateCellButtons(for: productId)
+    }
+
+    @objc private func handleCartUpdated(_ notification: Notification) {
+        guard let productId = notification.object as? Int else { return }
+        updateCellButtons(for: productId)
+    }
+
+    private func updateCellButtons(for productId: Int) {
+        let indexPaths = collectionView.indexPathsForVisibleItems
+        for indexPath in indexPaths {
+            if let cell = collectionView.cellForItem(at: indexPath) as? ProductCell, cell.product?.id == productId {
+                cell.isFavorite = viewModel.isFavorite(productId: productId)
+                cell.isAddedToCart = viewModel.isInCart(productId: productId)
+            }
+        }
+
+        let featuredIndexPaths = featuredProductCollectionView.indexPathsForVisibleItems
+        for indexPath in featuredIndexPaths {
+            if let cell = featuredProductCollectionView.cellForItem(at: indexPath) as? FeaturedProductCell, cell.product?.id == productId {
+                cell.isFavorite = viewModel.isFavorite(productId: productId)
+                cell.isAddedToCart = viewModel.isInCart(productId: productId)
+            }
+        }
+
+        let ratedIndexPaths = ratedProductCollectionView.indexPathsForVisibleItems
+        for indexPath in ratedIndexPaths {
+            if let cell = ratedProductCollectionView.cellForItem(at: indexPath) as? RatedProductCell, cell.product?.id == productId {
+                cell.isFavorite = viewModel.isFavorite(productId: productId)
+                cell.isAddedToCart = viewModel.isInCart(productId: productId)
+            }
+        }
     }
 
     private func fetchProducts() {

@@ -21,6 +21,7 @@ class SharedStorage {
         } else {
             favoriteProductIds.insert(productId)
         }
+        NotificationCenter.default.post(name: .favoritesUpdated, object: nil)
     }
     
     func toggleCart(productId: Int) {
@@ -29,6 +30,7 @@ class SharedStorage {
         } else {
             cartProductIds.insert(productId)
         }
+        NotificationCenter.default.post(name: .cartUpdated, object: nil)
     }
     
     func isFavorite(productId: Int) -> Bool {
@@ -46,4 +48,9 @@ class SharedStorage {
     func getCartProducts(from products: [Product]) -> [Product] {
         return products.filter { cartProductIds.contains($0.id) }
     }
+}
+
+extension Notification.Name {
+    static let favoritesUpdated = Notification.Name("favoritesUpdated")
+    static let cartUpdated = Notification.Name("cartUpdated")
 }

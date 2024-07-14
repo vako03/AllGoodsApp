@@ -19,6 +19,7 @@ class FavouriteViewController: UIViewController {
         title = "Favourite"
         setupCollectionView()
         fetchFavorites()
+        setupNotificationObservers()
     }
 
     private func setupCollectionView() {
@@ -52,6 +53,22 @@ class FavouriteViewController: UIViewController {
                 print("Failed to fetch products:", error)
             }
         }
+    }
+    
+    private func setupNotificationObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadCollectionView), name: .favoritesUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadCollectionView), name: .cartUpdated, object: nil)
+    }
+    
+    @objc private func reloadCollectionView() {
+        DispatchQueue.main.async {
+            self.favoriteProducts = self.viewModel.getFavoriteProducts()
+            self.collectionView.reloadData()
+        }
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 }
 

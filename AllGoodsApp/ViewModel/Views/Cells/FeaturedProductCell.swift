@@ -9,7 +9,7 @@ import UIKit
 class FeaturedProductCell: UICollectionViewCell {
     static let identifier = "FeaturedProductCell"
     weak var delegate: ProductSelectionDelegate?
-    private var product: Product?
+    public var product: Product? // Make this property public to access it outside the cell
     private var viewModel: ProductViewModel?
 
     private let imageView: UIImageView = {
@@ -106,13 +106,13 @@ class FeaturedProductCell: UICollectionViewCell {
         return button
     }()
     
-    private var isFavorite: Bool = false {
+    public var isFavorite: Bool = false { // Make this property public to access it outside the cell
         didSet {
             updateHeartButtonAppearance()
         }
     }
     
-    private var isAddedToCart: Bool = false {
+    public var isAddedToCart: Bool = false { // Make this property public to access it outside the cell
         didSet {
             updateAddToCartButtonAppearance()
         }
@@ -210,14 +210,18 @@ class FeaturedProductCell: UICollectionViewCell {
         guard let product = product, let viewModel = viewModel else { return }
         viewModel.toggleFavorite(productId: product.id)
         isFavorite.toggle()
+        updateHeartButtonAppearance() // Directly update the button UI
         animateHeartButton()
+        NotificationCenter.default.post(name: .favoritesUpdated, object: product.id)
     }
     
     @objc private func addToCartButtonTapped() {
         guard let product = product, let viewModel = viewModel else { return }
         viewModel.toggleCart(productId: product.id)
         isAddedToCart.toggle()
+        updateAddToCartButtonAppearance() // Directly update the button UI
         animateAddToCartButton()
+        NotificationCenter.default.post(name: .cartUpdated, object: product.id)
     }
     
     @objc private func cellTapped() {

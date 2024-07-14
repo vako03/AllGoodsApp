@@ -19,6 +19,7 @@ class BasketViewController: UIViewController {
         title = "Basket"
         setupCollectionView()
         fetchCartItems()
+        setupNotificationObservers()
     }
 
     private func setupCollectionView() {
@@ -52,6 +53,22 @@ class BasketViewController: UIViewController {
                 print("Failed to fetch products:", error)
             }
         }
+    }
+    
+    private func setupNotificationObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadCollectionView), name: .favoritesUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadCollectionView), name: .cartUpdated, object: nil)
+    }
+    
+    @objc private func reloadCollectionView() {
+        DispatchQueue.main.async {
+            self.cartProducts = self.viewModel.getCartProducts()
+            self.collectionView.reloadData()
+        }
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 }
 
