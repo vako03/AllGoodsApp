@@ -5,16 +5,12 @@
 //  Created by valeri mekhashishvili on 11.07.24.
 //
 
-import Foundation
-
 class ProductViewModel {
     private let networkManager = NetworkManager.shared
     private(set) var products: [Product] = []
     private(set) var productsByCategory: [String: [Product]] = [:]
     private(set) var categoryImages: [String: String] = [:]
-    private var favoriteProductIds: Set<Int> = []
-    private var cartProductIds: Set<Int> = []
-
+    
     func fetchAllProducts(completion: @escaping (Result<Void, Error>) -> Void) {
         networkManager.fetchAllProducts { [weak self] result in
             switch result {
@@ -69,27 +65,30 @@ class ProductViewModel {
 
     // Favorite actions
     func toggleFavorite(productId: Int) {
-        if favoriteProductIds.contains(productId) {
-            favoriteProductIds.remove(productId)
-        } else {
-            favoriteProductIds.insert(productId)
-        }
+        SharedStorage.shared.toggleFavorite(productId: productId)
     }
 
     func isFavorite(productId: Int) -> Bool {
-        return favoriteProductIds.contains(productId)
+        return SharedStorage.shared.isFavorite(productId: productId)
     }
 
     // Add-to-cart actions
     func toggleCart(productId: Int) {
-        if cartProductIds.contains(productId) {
-            cartProductIds.remove(productId)
-        } else {
-            cartProductIds.insert(productId)
-        }
+        SharedStorage.shared.toggleCart(productId: productId)
     }
 
     func isInCart(productId: Int) -> Bool {
-        return cartProductIds.contains(productId)
+        return SharedStorage.shared.isInCart(productId: productId)
+    }
+
+    // Fetch favorite products
+    func getFavoriteProducts() -> [Product] {
+        return SharedStorage.shared.getFavoriteProducts(from: products)
+    }
+
+    // Fetch cart products
+    func getCartProducts() -> [Product] {
+        return SharedStorage.shared.getCartProducts(from: products)
     }
 }
+
