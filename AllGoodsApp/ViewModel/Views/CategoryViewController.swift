@@ -19,10 +19,12 @@ class CategoryViewController: UIViewController, UICollectionViewDataSource, UICo
     private var collectionView: UICollectionView!
     private var products: [Product]
     private var category: String
+    private let viewModel: ProductViewModel
     
-    init(category: String, products: [Product]) {
+    init(category: String, products: [Product], viewModel: ProductViewModel) {
         self.category = category
         self.products = products
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -64,7 +66,7 @@ class CategoryViewController: UIViewController, UICollectionViewDataSource, UICo
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProductCell.identifier, for: indexPath) as! ProductCell
         let product = products[indexPath.row]
-        cell.configure(with: product)
+        cell.configure(with: product, viewModel: viewModel)
         cell.delegate = self
         return cell
     }

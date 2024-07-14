@@ -91,50 +91,6 @@ class ProductDetailViewController: UIViewController {
         tagsLabel.text = "Tags: \(product.tags?.joined(separator: ", ") ?? "N/A")"
         tagsLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        let skuLabel = UILabel()
-        skuLabel.font = UIFont.systemFont(ofSize: 16)
-        skuLabel.text = "SKU: \(product.sku ?? "N/A")"
-        skuLabel.translatesAutoresizingMaskIntoConstraints = false
-
-        let weightLabel = UILabel()
-        weightLabel.font = UIFont.systemFont(ofSize: 16)
-        weightLabel.text = "Weight: \(product.weight ?? 0) kg"
-        weightLabel.translatesAutoresizingMaskIntoConstraints = false
-
-        let dimensionsLabel = UILabel()
-        dimensionsLabel.font = UIFont.systemFont(ofSize: 16)
-        if let dimensions = product.dimensions {
-            dimensionsLabel.text = "Dimensions: \(dimensions.width) x \(dimensions.height) x \(dimensions.depth)"
-        } else {
-            dimensionsLabel.text = "Dimensions: N/A"
-        }
-        dimensionsLabel.translatesAutoresizingMaskIntoConstraints = false
-
-        let warrantyLabel = UILabel()
-        warrantyLabel.font = UIFont.systemFont(ofSize: 16)
-        warrantyLabel.text = "Warranty: \(product.warrantyInformation ?? "N/A")"
-        warrantyLabel.translatesAutoresizingMaskIntoConstraints = false
-
-        let shippingLabel = UILabel()
-        shippingLabel.font = UIFont.systemFont(ofSize: 16)
-        shippingLabel.text = "Shipping: \(product.shippingInformation ?? "N/A")"
-        shippingLabel.translatesAutoresizingMaskIntoConstraints = false
-
-        let returnPolicyLabel = UILabel()
-        returnPolicyLabel.font = UIFont.systemFont(ofSize: 16)
-        returnPolicyLabel.text = "Return Policy: \(product.returnPolicy ?? "N/A")"
-        returnPolicyLabel.translatesAutoresizingMaskIntoConstraints = false
-
-        let minimumOrderQuantityLabel = UILabel()
-        minimumOrderQuantityLabel.font = UIFont.systemFont(ofSize: 16)
-        minimumOrderQuantityLabel.text = "Min. Order Quantity: \(product.minimumOrderQuantity ?? 1)"
-        minimumOrderQuantityLabel.translatesAutoresizingMaskIntoConstraints = false
-
-        let reviewsLabel = UILabel()
-        reviewsLabel.font = UIFont.systemFont(ofSize: 18, weight: .bold)
-        reviewsLabel.text = "Reviews"
-        reviewsLabel.translatesAutoresizingMaskIntoConstraints = false
-
         contentView.addSubview(imageView)
         contentView.addSubview(titleLabel)
         contentView.addSubview(descriptionLabel)
@@ -145,42 +101,9 @@ class ProductDetailViewController: UIViewController {
         contentView.addSubview(availabilityLabel)
         contentView.addSubview(ratingLabel)
         contentView.addSubview(tagsLabel)
-        contentView.addSubview(skuLabel)
-        contentView.addSubview(weightLabel)
-        contentView.addSubview(dimensionsLabel)
-        contentView.addSubview(warrantyLabel)
-        contentView.addSubview(shippingLabel)
-        contentView.addSubview(returnPolicyLabel)
-        contentView.addSubview(minimumOrderQuantityLabel)
-        contentView.addSubview(reviewsLabel)
-
-        var previousLabel: UILabel? = nil
-        for review in product.reviews ?? [] {
-            let reviewLabel = UILabel()
-            reviewLabel.font = UIFont.systemFont(ofSize: 14)
-            reviewLabel.numberOfLines = 0
-            reviewLabel.text = "\(review.reviewerName) (\(review.rating) stars): \(review.comment)"
-            reviewLabel.translatesAutoresizingMaskIntoConstraints = false
-            contentView.addSubview(reviewLabel)
-            
-            if let previous = previousLabel {
-                NSLayoutConstraint.activate([
-                    reviewLabel.topAnchor.constraint(equalTo: previous.bottomAnchor, constant: 8),
-                    reviewLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-                    reviewLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
-                ])
-            } else {
-                NSLayoutConstraint.activate([
-                    reviewLabel.topAnchor.constraint(equalTo: reviewsLabel.bottomAnchor, constant: 8),
-                    reviewLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-                    reviewLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
-                ])
-            }
-            previousLabel = reviewLabel
-        }
 
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -192,9 +115,9 @@ class ProductDetailViewController: UIViewController {
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
 
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
-            imageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            imageView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.8),
-            imageView.heightAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.8),
+            imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            imageView.heightAnchor.constraint(equalToConstant: 300),
 
             titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 16),
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
@@ -231,82 +154,36 @@ class ProductDetailViewController: UIViewController {
             tagsLabel.topAnchor.constraint(equalTo: ratingLabel.bottomAnchor, constant: 16),
             tagsLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             tagsLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-
-            skuLabel.topAnchor.constraint(equalTo: tagsLabel.bottomAnchor, constant: 16),
-            skuLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            skuLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-
-            weightLabel.topAnchor.constraint(equalTo: skuLabel.bottomAnchor, constant: 16),
-            weightLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            weightLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-
-            dimensionsLabel.topAnchor.constraint(equalTo: weightLabel.bottomAnchor, constant: 16),
-            dimensionsLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            dimensionsLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-
-            warrantyLabel.topAnchor.constraint(equalTo: dimensionsLabel.bottomAnchor, constant: 16),
-            warrantyLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            warrantyLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-
-            shippingLabel.topAnchor.constraint(equalTo: warrantyLabel.bottomAnchor, constant: 16),
-            shippingLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            shippingLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-
-            returnPolicyLabel.topAnchor.constraint(equalTo: shippingLabel.bottomAnchor, constant: 16),
-            returnPolicyLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            returnPolicyLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-
-            minimumOrderQuantityLabel.topAnchor.constraint(equalTo: returnPolicyLabel.bottomAnchor, constant: 16),
-            minimumOrderQuantityLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            minimumOrderQuantityLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-
-            reviewsLabel.topAnchor.constraint(equalTo: minimumOrderQuantityLabel.bottomAnchor, constant: 16),
-            reviewsLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            reviewsLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
+            tagsLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
         ])
-
-        if let lastReviewLabel = previousLabel {
-            lastReviewLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16).isActive = true
-        } else {
-            reviewsLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16).isActive = true
-        }
     }
 
     private func getPriceAttributedText(for product: Product) -> NSAttributedString {
-        let originalPrice = "$\(product.price)"
-        let discountedPrice = "$\(product.price - (product.price * product.discountPercentage / 100))"
+        let originalPrice = "$\(String(format: "%.2f", product.price))"
+        let discountedPrice = "$\(String(format: "%.2f", product.price - (product.price * product.discountPercentage / 100)))"
         
-        let originalPriceAttributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont.systemFont(ofSize: 18, weight: .medium),
-            .foregroundColor: UIColor.systemRed,
+        let attributedText = NSMutableAttributedString(string: discountedPrice, attributes: [.foregroundColor: UIColor.systemGreen, .font: UIFont.systemFont(ofSize: 18, weight: .medium)])
+        attributedText.append(NSAttributedString(string: " "))
+        
+        let originalPriceText = NSAttributedString(string: originalPrice, attributes: [
+            .font: UIFont.systemFont(ofSize: 16, weight: .regular),
+            .foregroundColor: UIColor.gray,
             .strikethroughStyle: NSUnderlineStyle.single.rawValue
-        ]
+        ])
+        attributedText.append(originalPriceText)
         
-        let discountedPriceAttributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont.systemFont(ofSize: 18, weight: .medium),
-            .foregroundColor: UIColor.systemGreen
-        ]
-        
-        let originalPriceAttributedString = NSAttributedString(string: originalPrice, attributes: originalPriceAttributes)
-        let discountedPriceAttributedString = NSAttributedString(string: " \(discountedPrice)", attributes: discountedPriceAttributes)
-        
-        let combinedAttributedString = NSMutableAttributedString()
-        combinedAttributedString.append(originalPriceAttributedString)
-        combinedAttributedString.append(discountedPriceAttributedString)
-        
-        return combinedAttributedString
+        return attributedText
     }
 }
 
-// Extension to load image from URL
+import UIKit
+
 extension UIImageView {
     func load(url: URL) {
         DispatchQueue.global().async { [weak self] in
-            if let data = try? Data(contentsOf: url) {
-                if let image = UIImage(data: data) {
-                    DispatchQueue.main.async {
-                        self?.image = image
-                    }
+            if let data = try? Data(contentsOf: url), let image = UIImage(data: data) {
+                DispatchQueue.main.async {
+                    self?.image = image
                 }
             }
         }

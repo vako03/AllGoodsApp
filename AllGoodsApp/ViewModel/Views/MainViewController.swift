@@ -297,12 +297,12 @@ final class MainViewController: UIViewController {
     }
 
     private func allCategoriesTapped() {
-        let allCategoriesViewController = AllCategoriesViewController(categories: Array(viewModel.productsByCategory.keys))
+        let allCategoriesViewController = AllCategoriesViewController(categories: Array(viewModel.productsByCategory.keys), viewModel: viewModel)
         navigationController?.pushViewController(allCategoriesViewController, animated: true)
     }
 
     private func allBrandsTapped() {
-        let brandListViewController = BrandListViewController()
+        let brandListViewController = BrandListViewController(viewModel: viewModel)
         brandListViewController.delegate = self
         navigationController?.pushViewController(brandListViewController, animated: true)
     }
@@ -320,12 +320,12 @@ final class MainViewController: UIViewController {
     }
 
     @objc private func seeMoreBestPriceTapped() {
-        let allProductsVC = AllProductViewController(products: viewModel.sortedProductsByDiscount(), sortCriteria: .discount)
+        let allProductsVC = AllProductViewController(products: viewModel.sortedProductsByDiscount(), sortCriteria: .discount, viewModel: viewModel)
         navigationController?.pushViewController(allProductsVC, animated: true)
     }
 
     @objc private func seeMoreBestRatingTapped() {
-        let allProductsVC = AllProductViewController(products: viewModel.sortedProductsByRating(), sortCriteria: .rating)
+        let allProductsVC = AllProductViewController(products: viewModel.sortedProductsByRating(), sortCriteria: .rating, viewModel: viewModel)
         navigationController?.pushViewController(allProductsVC, animated: true)
     }
 }
@@ -354,7 +354,7 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
                 let category = Array(viewModel.productsByCategory.keys)[indexPath.row - 1] // Adjust index for AllCategoryCell
                 let imageUrlString = viewModel.categoryImages[category]
                 let imageUrl = URL(string: imageUrlString ?? "")
-                cell.configure(with: category, imageUrl: imageUrl)
+                cell.configure(with: category, imageUrl: imageUrl, viewModel: viewModel)
                 return cell
             }
         } else if collectionView == self.promotionCollectionView {
@@ -370,13 +370,13 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
         } else if collectionView == self.ratedProductCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RatedProductCell.identifier, for: indexPath) as! RatedProductCell
             let product = viewModel.sortedProductsByRating()[indexPath.row]
-            cell.configure(with: product)
+            cell.configure(with: product, viewModel: viewModel)
             cell.delegate = self
             return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeaturedProductCell.identifier, for: indexPath) as! FeaturedProductCell
             let product = viewModel.sortedProductsByDiscount()[indexPath.row]
-            cell.configure(with: product)
+            cell.configure(with: product, viewModel: viewModel)
             cell.delegate = self
             return cell
         }
@@ -389,7 +389,7 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
             } else {
                 let selectedCategory = Array(viewModel.productsByCategory.keys)[indexPath.row - 1]
                 let products = viewModel.productsByCategory[selectedCategory] ?? []
-                let categoryViewController = CategoryViewController(category: selectedCategory, products: products)
+                let categoryViewController = CategoryViewController(category: selectedCategory, products: products, viewModel: viewModel)
                 navigationController?.pushViewController(categoryViewController, animated: true)
             }
         } else if collectionView == self.promotionCollectionView {
@@ -398,7 +398,7 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
             } else if indexPath.row == 1 {
                 allBrandsTapped()
             } else if indexPath.row == 2 {
-                let expressViewController = ExpressViewController()
+                let expressViewController = ExpressViewController(viewModel: viewModel)
                 navigationController?.pushViewController(expressViewController, animated: true)
             }
         } else {
@@ -427,14 +427,14 @@ extension MainViewController: ProductSelectionDelegate {
 
 extension MainViewController: CategorySelectionDelegate {
     func didSelectCategory(_ category: String, products: [Product]) {
-        let categoryViewController = CategoryViewController(category: category, products: products)
+        let categoryViewController = CategoryViewController(category: category, products: products, viewModel: viewModel)
         navigationController?.pushViewController(categoryViewController, animated: true)
     }
 }
 
 extension MainViewController: BrandSelectionDelegate {
     func didSelectBrand(_ brand: String, products: [Product]) {
-        let brandProductsVC = CategoryViewController(category: brand, products: products)
+        let brandProductsVC = CategoryViewController(category: brand, products: products, viewModel: viewModel)
         navigationController?.pushViewController(brandProductsVC, animated: true)
     }
 }

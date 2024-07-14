@@ -5,11 +5,15 @@
 //  Created by valeri mekhashishvili on 11.07.24.
 //
 
+import Foundation
+
 class ProductViewModel {
     private let networkManager = NetworkManager.shared
     private(set) var products: [Product] = []
     private(set) var productsByCategory: [String: [Product]] = [:]
     private(set) var categoryImages: [String: String] = [:]
+    private var favoriteProductIds: Set<Int> = []
+    private var cartProductIds: Set<Int> = []
 
     func fetchAllProducts(completion: @escaping (Result<Void, Error>) -> Void) {
         networkManager.fetchAllProducts { [weak self] result in
@@ -61,5 +65,31 @@ class ProductViewModel {
                 categoryImages[category] = firstProduct.thumbnail
             }
         }
+    }
+
+    // Favorite actions
+    func toggleFavorite(productId: Int) {
+        if favoriteProductIds.contains(productId) {
+            favoriteProductIds.remove(productId)
+        } else {
+            favoriteProductIds.insert(productId)
+        }
+    }
+
+    func isFavorite(productId: Int) -> Bool {
+        return favoriteProductIds.contains(productId)
+    }
+
+    // Add-to-cart actions
+    func toggleCart(productId: Int) {
+        if cartProductIds.contains(productId) {
+            cartProductIds.remove(productId)
+        } else {
+            cartProductIds.insert(productId)
+        }
+    }
+
+    func isInCart(productId: Int) -> Bool {
+        return cartProductIds.contains(productId)
     }
 }

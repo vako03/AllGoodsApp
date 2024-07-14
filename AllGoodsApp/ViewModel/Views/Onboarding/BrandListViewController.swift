@@ -14,8 +14,16 @@ class BrandListViewController: UIViewController {
     private var brands: [String] = []
     private var tableView: UITableView!
     weak var delegate: BrandSelectionDelegate?
+    private let viewModel: ProductViewModel
 
-    private let viewModel = ProductViewModel()
+    init(viewModel: ProductViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()

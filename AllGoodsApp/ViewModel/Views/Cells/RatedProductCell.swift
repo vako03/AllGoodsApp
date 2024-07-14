@@ -10,6 +10,7 @@ class RatedProductCell: UICollectionViewCell {
     static let identifier = "RatedProductCell"
     weak var delegate: ProductSelectionDelegate?
     private var product: Product?
+    private var viewModel: ProductViewModel?
 
     private let imageView: UIImageView = {
         let imageView = UIImageView()
@@ -162,22 +163,32 @@ class RatedProductCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(with product: Product) {
+    func configure(with product: Product, viewModel: ProductViewModel) {
         self.product = product
+        self.viewModel = viewModel
         if let url = URL(string: product.thumbnail) {
             imageView.load(url: url)
         }
         titleLabel.text = product.title
         priceLabel.text = "$\(String(format: "%.2f", product.price))"
         ratingLabel.text = "\(product.rating)"
+        
+        isFavorite = viewModel.isFavorite(productId: product.id)
+        isAddedToCart = viewModel.isInCart(productId: product.id)
+        updateHeartButtonAppearance()
+        updateAddToCartButtonAppearance()
     }
     
     @objc private func heartButtonTapped() {
+        guard let product = product, let viewModel = viewModel else { return }
+        viewModel.toggleFavorite(productId: product.id)
         isFavorite.toggle()
         animateHeartButton()
     }
     
     @objc private func addToCartButtonTapped() {
+        guard let product = product, let viewModel = viewModel else { return }
+        viewModel.toggleCart(productId: product.id)
         isAddedToCart.toggle()
         animateAddToCartButton()
     }

@@ -11,8 +11,6 @@ enum SortCriteria {
     case rating
 }
 
-import UIKit
-
 class AllProductViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, ProductSelectionDelegate {
     private var collectionView: UICollectionView!
     private var products: [Product]
@@ -20,10 +18,12 @@ class AllProductViewController: UIViewController, UICollectionViewDataSource, UI
     private var currentPage = 0
     private let itemsPerPage = 20
     private var sortCriteria: SortCriteria
+    private let viewModel: ProductViewModel
 
-    init(products: [Product], sortCriteria: SortCriteria) {
+    init(products: [Product], sortCriteria: SortCriteria, viewModel: ProductViewModel) {
         self.products = products
         self.sortCriteria = sortCriteria
+        self.viewModel = viewModel
         self.sortedProducts = products.sorted(by: { (p1, p2) -> Bool in
             switch sortCriteria {
             case .discount:
@@ -75,7 +75,7 @@ class AllProductViewController: UIViewController, UICollectionViewDataSource, UI
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProductCell.identifier, for: indexPath) as! ProductCell
         let startIndex = currentPage * itemsPerPage
         let product = sortedProducts[startIndex + indexPath.row]
-        cell.configure(with: product)
+        cell.configure(with: product, viewModel: viewModel)
         cell.delegate = self
         return cell
     }

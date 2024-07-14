@@ -10,6 +10,7 @@ import FirebaseAuth
 final class AppCoordinator {
     var window: UIWindow
     var navigationController: UINavigationController
+    private let viewModel = ProductViewModel() // Add this line to create an instance of ProductViewModel
 
     init(window: UIWindow) {
         self.window = window
@@ -55,7 +56,7 @@ final class AppCoordinator {
         let favouriteVC = FavouriteViewController()
         favouriteVC.coordinator = self
         
-        let expressVC = ExpressViewController()
+        let expressVC = ExpressViewController(viewModel: viewModel) // Pass viewModel here
         expressVC.coordinator = self
 
         let basketVC = BasketViewController()

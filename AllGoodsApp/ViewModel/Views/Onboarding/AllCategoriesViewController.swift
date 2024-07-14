@@ -15,10 +15,11 @@ class AllCategoriesViewController: UIViewController {
     private let categories: [String]
     private var tableView: UITableView!
     weak var delegate: CategorySelectionDelegate?
-    private let viewModel = ProductViewModel()
+    private let viewModel: ProductViewModel
 
-    init(categories: [String]) {
+    init(categories: [String], viewModel: ProductViewModel) {
         self.categories = categories.sorted()
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -62,7 +63,7 @@ extension AllCategoriesViewController: UITableViewDelegate {
             switch result {
             case .success(let products):
                 DispatchQueue.main.async {
-                    let productListVC = ProductListViewController(category: selectedCategory, products: products)
+                    let productListVC = ProductListViewController(category: selectedCategory, products: products, viewModel: self?.viewModel ?? ProductViewModel())
                     productListVC.delegate = self?.delegate as? ProductSelectionDelegate
                     self?.navigationController?.pushViewController(productListVC, animated: true)
                 }

@@ -51,7 +51,7 @@ class CategoryCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(with category: String, imageUrl: URL?) {
+    func configure(with category: String, imageUrl: URL?, viewModel: ProductViewModel) {
         titleLabel.text = category.capitalized
         if let imageUrl = imageUrl {
             imageView.load(url: imageUrl)

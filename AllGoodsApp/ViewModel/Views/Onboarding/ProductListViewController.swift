@@ -11,11 +11,13 @@ class ProductListViewController: UIViewController {
     private let category: String
     private var products: [Product]
     private var collectionView: UICollectionView!
+    private let viewModel: ProductViewModel
     weak var delegate: ProductSelectionDelegate?
 
-    init(category: String, products: [Product]) {
+    init(category: String, products: [Product], viewModel: ProductViewModel) {
         self.category = category
         self.products = products
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -48,7 +50,8 @@ extension ProductListViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProductCell.identifier, for: indexPath) as! ProductCell
-        cell.configure(with: products[indexPath.row])
+        cell.configure(with: products[indexPath.row], viewModel: viewModel)
+        cell.delegate = self
         return cell
     }
 }
@@ -57,5 +60,12 @@ extension ProductListViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedProduct = products[indexPath.row]
         delegate?.didSelectProduct(selectedProduct)
+    }
+}
+
+extension ProductListViewController: ProductSelectionDelegate {
+    func didSelectProduct(_ product: Product) {
+        let productDetailViewController = ProductDetailViewController(product: product)
+        navigationController?.pushViewController(productDetailViewController, animated: true)
     }
 }
