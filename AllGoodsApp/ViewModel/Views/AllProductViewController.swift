@@ -46,17 +46,16 @@ class AllProductViewController: UIViewController, UICollectionViewDataSource, UI
     }
 
     private func setupCollectionView() {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        layout.minimumLineSpacing = 3
-        
+        let layout = LineFlowLayout()
+
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(ProductCell.self, forCellWithReuseIdentifier: ProductCell.identifier)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+
         view.addSubview(collectionView)
-        
+
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),

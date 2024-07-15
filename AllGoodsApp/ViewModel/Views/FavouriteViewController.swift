@@ -23,18 +23,18 @@ class FavouriteViewController: UIViewController {
     }
 
     private func setupCollectionView() {
-        let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: 150, height: 200)
+        let layout = LineFlowLayout()
+
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(ProductCell.self, forCellWithReuseIdentifier: ProductCell.identifier)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        
+
         view.addSubview(collectionView)
-        
+
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
@@ -54,19 +54,19 @@ class FavouriteViewController: UIViewController {
             }
         }
     }
-    
+
     private func setupNotificationObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(reloadCollectionView), name: .favoritesUpdated, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadCollectionView), name: .cartUpdated, object: nil)
     }
-    
+
     @objc private func reloadCollectionView(notification: Notification) {
         DispatchQueue.main.async {
             self.favoriteProducts = self.viewModel.getFavoriteProducts()
             self.collectionView.reloadData()
         }
     }
-    
+
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
@@ -90,5 +90,11 @@ extension FavouriteViewController: UICollectionViewDelegate {
         let product = favoriteProducts[indexPath.row]
         let productDetailViewController = ProductDetailViewController(product: product)
         navigationController?.pushViewController(productDetailViewController, animated: true)
+    }
+}
+
+extension FavouriteViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: 150)
     }
 }

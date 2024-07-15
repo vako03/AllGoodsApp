@@ -23,18 +23,18 @@ class BasketViewController: UIViewController {
     }
 
     private func setupCollectionView() {
-        let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: 150, height: 200)
+        let layout = LineFlowLayout()
+
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(ProductCell.self, forCellWithReuseIdentifier: ProductCell.identifier)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        
+
         view.addSubview(collectionView)
-        
+
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
@@ -54,19 +54,19 @@ class BasketViewController: UIViewController {
             }
         }
     }
-    
+
     private func setupNotificationObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(reloadCollectionView), name: .cartUpdated, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadCollectionView), name: .favoritesUpdated, object: nil)
     }
-    
+
     @objc private func reloadCollectionView(notification: Notification) {
         DispatchQueue.main.async {
             self.cartProducts = self.viewModel.getCartProducts()
             self.collectionView.reloadData()
         }
     }
-    
+
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
@@ -92,3 +92,10 @@ extension BasketViewController: UICollectionViewDelegate {
         navigationController?.pushViewController(productDetailViewController, animated: true)
     }
 }
+
+extension BasketViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: 150)
+    }
+}
+
