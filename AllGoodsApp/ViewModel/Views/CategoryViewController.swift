@@ -85,3 +85,4 @@ class CategoryViewController: UIViewController, UICollectionViewDataSource, UICo
         navigationController?.pushViewController(productDetailViewController, animated: true)
     }
 }
+

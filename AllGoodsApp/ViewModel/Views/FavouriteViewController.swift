@@ -81,6 +81,7 @@ extension FavouriteViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProductCell.identifier, for: indexPath) as! ProductCell
         let product = favoriteProducts[indexPath.row]
         cell.configure(with: product, viewModel: viewModel)
+        cell.delegate = self
         return cell
     }
 }
@@ -96,5 +97,12 @@ extension FavouriteViewController: UICollectionViewDelegate {
 extension FavouriteViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: 150)
+    }
+}
+
+extension FavouriteViewController: ProductSelectionDelegate {
+    func didSelectProduct(_ product: Product) {
+        let productDetailViewController = ProductDetailViewController(product: product)
+        navigationController?.pushViewController(productDetailViewController, animated: true)
     }
 }

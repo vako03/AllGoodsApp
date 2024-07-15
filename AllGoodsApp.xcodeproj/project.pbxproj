@@ -50,6 +50,7 @@
 		1AE296A02C434855006224F7 /* BrandCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE2969F2C434855006224F7 /* BrandCell.swift */; };
 		1AEF54062C45B93C009B1CFF /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 1AEF54052C45B93C009B1CFF /* SDWebImage */; };
 		1AEF54082C45B93C009B1CFF /* SDWebImageMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 1AEF54072C45B93C009B1CFF /* SDWebImageMapKit */; };
+		1AEF540B2C45C10B009B1CFF /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 1AEF540A2C45C10B009B1CFF /* FirebaseFirestore */; };
 		1AF97DA42C36D02E00C3E55F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1AF97DA32C36D02E00C3E55F /* GoogleService-Info.plist */; };
 		1AF97DA82C36D11900C3E55F /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 1AF97DA72C36D11900C3E55F /* FirebaseAnalytics */; };
 		1AF97DAA2C36D12A00C3E55F /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 1AF97DA92C36D12A00C3E55F /* FirebaseAuth */; };
@@ -127,6 +128,7 @@
 				1AF97DA82C36D11900C3E55F /* FirebaseAnalytics in Frameworks */,
 				1AEF54062C45B93C009B1CFF /* SDWebImage in Frameworks */,
 				1AF97DAA2C36D12A00C3E55F /* FirebaseAuth in Frameworks */,
+				1AEF540B2C45C10B009B1CFF /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,6 +145,7 @@
 				1AF97DC32C36D8E000C3E55F /* Views */,
 				1A6FE1912C3B37EA00F6D5B4 /* ReusableComponents */,
 				1A12092F2C35D59300FDC9BE /* Products */,
+				1AEF54092C45BEA6009B1CFF /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -230,6 +233,13 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		1AEF54092C45BEA6009B1CFF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		1AF97DBC2C36D8AC00C3E55F /* Coordinator */ = {
 			isa = PBXGroup;
 			children = (
@@ -304,6 +314,7 @@
 				1AF97DB92C36D3EC00C3E55F /* FirebaseAnalyticsSwift */,
 				1AEF54052C45B93C009B1CFF /* SDWebImage */,
 				1AEF54072C45B93C009B1CFF /* SDWebImageMapKit */,
+				1AEF540A2C45C10B009B1CFF /* FirebaseFirestore */,
 			);
 			productName = AllGoodsApp;
 			productReference = 1A12092E2C35D59300FDC9BE /* AllGoodsApp.app */;
@@ -650,6 +661,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1AEF54042C45B93C009B1CFF /* XCRemoteSwiftPackageReference "SDWebImage" */;
 			productName = SDWebImageMapKit;
+		};
+		1AEF540A2C45C10B009B1CFF /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1AF97DA52C36D0B100C3E55F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
 		};
 		1AF97DA72C36D11900C3E55F /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;

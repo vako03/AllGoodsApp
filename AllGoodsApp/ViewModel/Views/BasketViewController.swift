@@ -81,6 +81,7 @@ extension BasketViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProductCell.identifier, for: indexPath) as! ProductCell
         let product = cartProducts[indexPath.row]
         cell.configure(with: product, viewModel: viewModel)
+        cell.delegate = self
         return cell
     }
 }
@@ -99,3 +100,9 @@ extension BasketViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
+extension BasketViewController: ProductSelectionDelegate {
+    func didSelectProduct(_ product: Product) {
+        let productDetailViewController = ProductDetailViewController(product: product)
+        navigationController?.pushViewController(productDetailViewController, animated: true)
+    }
+}
