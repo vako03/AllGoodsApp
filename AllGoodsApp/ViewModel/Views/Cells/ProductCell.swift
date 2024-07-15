@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class ProductCell: UICollectionViewCell {
     static let identifier = "ProductCell"
@@ -167,9 +168,7 @@ class ProductCell: UICollectionViewCell {
     func configure(with product: Product, viewModel: ProductViewModel) {
         self.product = product
         self.viewModel = viewModel
-        if let url = URL(string: product.thumbnail) {
-            imageView.load(url: url)
-        }
+        imageView.sd_setImage(with: URL(string: product.thumbnail), placeholderImage: UIImage(named: "placeholder"))
         titleLabel.text = product.title
         priceLabel.text = "$\(String(format: "%.2f", product.price))"
         ratingLabel.text = "\(product.rating)"
