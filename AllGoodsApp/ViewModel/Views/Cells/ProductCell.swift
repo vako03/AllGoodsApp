@@ -184,8 +184,7 @@ class ProductCell: UICollectionViewCell {
         guard let product = product, let viewModel = viewModel else { return }
         viewModel.toggleFavorite(productId: product.id)
         isFavorite.toggle()
-        updateHeartButtonAppearance() // Directly update the button UI
-        animateHeartButton()
+        updateHeartButtonAppearance()
         NotificationCenter.default.post(name: .favoritesUpdated, object: product.id)
     }
     
@@ -193,8 +192,7 @@ class ProductCell: UICollectionViewCell {
         guard let product = product, let viewModel = viewModel else { return }
         viewModel.toggleCart(productId: product.id)
         isAddedToCart.toggle()
-        updateAddToCartButtonAppearance() // Directly update the button UI
-        animateAddToCartButton()
+        updateAddToCartButtonAppearance()
         NotificationCenter.default.post(name: .cartUpdated, object: product.id)
     }
     

@@ -21,7 +21,7 @@ class SharedStorage {
         } else {
             favoriteProductIds.insert(productId)
         }
-        NotificationCenter.default.post(name: .favoritesUpdated, object: nil)
+        NotificationCenter.default.post(name: .favoritesUpdated, object: productId)
     }
     
     func toggleCart(productId: Int) {
@@ -30,7 +30,7 @@ class SharedStorage {
         } else {
             cartProductIds.insert(productId)
         }
-        NotificationCenter.default.post(name: .cartUpdated, object: nil)
+        NotificationCenter.default.post(name: .cartUpdated, object: productId)
     }
     
     func isFavorite(productId: Int) -> Bool {
