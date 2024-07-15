@@ -57,7 +57,6 @@ class FavouriteViewController: UIViewController {
     
     private func setupNotificationObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(reloadCollectionView), name: .favoritesUpdated, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadCollectionView), name: .cartUpdated, object: nil)
     }
     
     @objc private func reloadCollectionView() {
