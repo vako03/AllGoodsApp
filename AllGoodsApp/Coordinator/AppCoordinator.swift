@@ -10,13 +10,17 @@ import FirebaseAuth
 final class AppCoordinator {
     var window: UIWindow
     var navigationController: UINavigationController
-    private let viewModel = ProductViewModel() // Add this line to create an instance of ProductViewModel
+    private let viewModel = ProductViewModel()
 
     init(window: UIWindow) {
         self.window = window
         self.navigationController = UINavigationController()
         self.window.rootViewController = navigationController
         self.window.makeKeyAndVisible()
+
+        // Load data from Firestore
+        SharedStorage.shared.loadFavoritesFromFirestore()
+        SharedStorage.shared.loadCartFromFirestore()
     }
 
     func start() {
@@ -27,6 +31,7 @@ final class AppCoordinator {
             showOnboarding()
         }
     }
+
 
     func showOnboarding() {
         let onboardingVC = OnboardingViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)

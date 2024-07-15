@@ -63,7 +63,7 @@ class SharedStorage {
         return products.filter { cartProductIds.contains($0.id) }
     }
 
-    private func saveFavoritesToFirestore() {
+    func saveFavoritesToFirestore() {
         guard let user = Auth.auth().currentUser else { return }
         let favoriteData = ["favorites": Array(favoriteProductIds)]
         db.collection("users").document(user.uid).setData(favoriteData, merge: true) { error in
@@ -73,7 +73,7 @@ class SharedStorage {
         }
     }
 
-    private func saveCartToFirestore() {
+    func saveCartToFirestore() {
         guard let user = Auth.auth().currentUser else { return }
         let cartData = ["cart": Array(cartProductIds)]
         db.collection("users").document(user.uid).setData(cartData, merge: true) { error in
@@ -83,7 +83,7 @@ class SharedStorage {
         }
     }
 
-    private func loadFavoritesFromFirestore() {
+    func loadFavoritesFromFirestore() {
         guard let user = Auth.auth().currentUser else { return }
         db.collection("users").document(user.uid).getDocument { (document, error) in
             if let document = document, document.exists {
@@ -95,7 +95,7 @@ class SharedStorage {
         }
     }
 
-    private func loadCartFromFirestore() {
+    func loadCartFromFirestore() {
         guard let user = Auth.auth().currentUser else { return }
         db.collection("users").document(user.uid).getDocument { (document, error) in
             if let document = document, document.exists {
@@ -112,3 +112,4 @@ extension Notification.Name {
     static let favoritesUpdated = Notification.Name("favoritesUpdated")
     static let cartUpdated = Notification.Name("cartUpdated")
 }
+

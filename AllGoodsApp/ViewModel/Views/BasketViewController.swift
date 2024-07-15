@@ -23,12 +23,13 @@ class BasketViewController: UIViewController {
     }
 
     private func setupCollectionView() {
-        let layout = LineFlowLayout()
+        let layout = UICollectionViewFlowLayout()
+        layout.itemSize = CGSize(width: view.frame.width, height: 150)
 
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.dataSource = self
         collectionView.delegate = self
-        collectionView.register(ProductCell.self, forCellWithReuseIdentifier: ProductCell.identifier)
+        collectionView.register(BasketProductCell.self, forCellWithReuseIdentifier: BasketProductCell.identifier)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
 
         view.addSubview(collectionView)
@@ -78,7 +79,7 @@ extension BasketViewController: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProductCell.identifier, for: indexPath) as! ProductCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BasketProductCell.identifier, for: indexPath) as! BasketProductCell
         let product = cartProducts[indexPath.row]
         cell.configure(with: product, viewModel: viewModel)
         cell.delegate = self
@@ -94,15 +95,22 @@ extension BasketViewController: UICollectionViewDelegate {
     }
 }
 
-extension BasketViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: 150)
-    }
-}
-
 extension BasketViewController: ProductSelectionDelegate {
     func didSelectProduct(_ product: Product) {
         let productDetailViewController = ProductDetailViewController(product: product)
         navigationController?.pushViewController(productDetailViewController, animated: true)
+    }
+}
+
+extension BasketViewController: BasketProductCellDelegate {
+    func didUpdateQuantity(for product: Product, quantity: Int) {
+        // Handle quantity update logic here if necessary
+    }
+
+    func didRemoveProduct(_ product: Product) {
+        viewModel.toggleCart(productId: product.id)
+        cartProducts.removeAll { $0.id == product.id }
+        collectionView.reloadData()
+        NotificationCenter.default.post(name: .cartUpdated, object: product.id)
     }
 }
