@@ -77,6 +77,7 @@ class ProductViewModel {
     // Favorite actions
     func toggleFavorite(productId: Int) {
         SharedStorage.shared.toggleFavorite(productId: productId)
+        NotificationCenter.default.post(name: .favoritesUpdated, object: productId)
     }
 
     func isFavorite(productId: Int) -> Bool {
@@ -86,6 +87,7 @@ class ProductViewModel {
     // Add-to-cart actions
     func toggleCart(productId: Int) {
         SharedStorage.shared.toggleCart(productId: productId)
+        NotificationCenter.default.post(name: .cartUpdated, object: productId)
     }
 
     func isInCart(productId: Int) -> Bool {
@@ -102,11 +104,22 @@ class ProductViewModel {
         return SharedStorage.shared.getCartProducts(from: products)
     }
     
-    @objc private func handleFavoritesUpdated() {
-        // Handle updates to the favorites list if needed
+    @objc private func handleFavoritesUpdated(notification: Notification) {
+        if let productId = notification.object as? Int {
+            // Handle favorites updated logic here
+            updateProductState(productId: productId)
+        }
     }
     
-    @objc private func handleCartUpdated() {
-        // Handle updates to the cart list if needed
+    @objc private func handleCartUpdated(notification: Notification) {
+        if let productId = notification.object as? Int {
+            // Handle cart updated logic here
+            updateProductState(productId: productId)
+        }
+    }
+    
+    private func updateProductState(productId: Int) {
+        // Update the state of the product based on the ID if needed
+        // This can include fetching the product and updating its state in the array
     }
 }

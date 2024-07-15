@@ -226,26 +226,4 @@ class ProductCell: UICollectionViewCell {
             addToCartButton.tintColor = tintColor
         }
     }
-    
-    private func animateHeartButton() {
-        UIView.animate(withDuration: 0.1, animations: {
-            self.heartButton.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
-        }) { _ in
-            UIView.animate(withDuration: 0.1) {
-                self.heartButton.transform = CGAffineTransform.identity
-            }
-        }
-    }
-    
-    private func animateAddToCartButton() {
-        UIView.animate(withDuration: 0.1, animations: {
-            self.addToCartButton.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
-            let tintColor: UIColor = self.isAddedToCart ? .black : .white
-            self.addToCartButton.tintColor = tintColor
-        }) { _ in
-            UIView.animate(withDuration: 0.1) {
-                self.addToCartButton.transform = CGAffineTransform.identity
-            }
-        }
-    }
 }

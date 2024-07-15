@@ -57,9 +57,10 @@ class BasketViewController: UIViewController {
     
     private func setupNotificationObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(reloadCollectionView), name: .cartUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadCollectionView), name: .favoritesUpdated, object: nil)
     }
     
-    @objc private func reloadCollectionView() {
+    @objc private func reloadCollectionView(notification: Notification) {
         DispatchQueue.main.async {
             self.cartProducts = self.viewModel.getCartProducts()
             self.collectionView.reloadData()
