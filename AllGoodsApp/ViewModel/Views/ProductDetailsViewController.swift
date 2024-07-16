@@ -181,10 +181,18 @@ import UIKit
 extension UIImageView {
     func load(url: URL) {
         DispatchQueue.global().async { [weak self] in
-            if let data = try? Data(contentsOf: url), let image = UIImage(data: data) {
+            do {
+                let data = try Data(contentsOf: url)
+                guard let image = UIImage(data: data) else { return }
                 DispatchQueue.main.async {
                     self?.image = image
                 }
+            } catch {
+                // Handle error
+                DispatchQueue.main.async {
+                    self?.image = UIImage(named: "placeholder") // Default placeholder image
+                }
+                print("Error loading image: \(error)")
             }
         }
     }

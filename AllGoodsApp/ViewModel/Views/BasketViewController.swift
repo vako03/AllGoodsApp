@@ -11,20 +11,13 @@ class BasketViewController: UIViewController {
     var coordinator: AppCoordinator?
     private let viewModel = ProductViewModel()
     private var collectionView: UICollectionView!
-    private var cartProducts: [(product: Product, quantity: Int)] = []
-
-    // Stack View Elements
-    private let totalPriceLabel = UILabel()
-    private let discountLabel = UILabel()
-    private let finalPriceLabel = UILabel()
-    private let checkoutButton = UIButton()
+    private var cartProducts: [Product] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         title = "Basket"
         setupCollectionView()
-        setupStackView()
         fetchCartItems()
         setupNotificationObservers()
     }
@@ -45,34 +38,8 @@ class BasketViewController: UIViewController {
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -150) // Adjust this constant to add space
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-    }
-
-    private func setupStackView() {
-        let stackView = UIStackView(arrangedSubviews: [totalPriceLabel, discountLabel, finalPriceLabel, checkoutButton])
-        stackView.axis = .vertical
-        stackView.spacing = 10
-        stackView.alignment = .center
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        view.addSubview(stackView)
-
-        NSLayoutConstraint.activate([
-            stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
-        ])
-
-        checkoutButton.setTitle("Checkout", for: .normal)
-        checkoutButton.backgroundColor = .black
-        checkoutButton.setTitleColor(.white, for: .normal)
-        checkoutButton.layer.cornerRadius = 10
-        checkoutButton.addTarget(self, action: #selector(checkoutButtonTapped), for: .touchUpInside)
-    }
-
-    @objc private func checkoutButtonTapped() {
-        // Handle checkout logic
     }
 
     private func fetchCartItems() {
@@ -80,10 +47,8 @@ class BasketViewController: UIViewController {
             switch result {
             case .success:
                 DispatchQueue.main.async {
-                    let cartProductIds = self?.viewModel.getCartProducts() ?? []
-                    self?.cartProducts = cartProductIds.map { ($0, 1) }  // Initialize all quantities to 1
+                    self?.cartProducts = self?.viewModel.getCartProducts() ?? []
                     self?.collectionView.reloadData()
-                    self?.updateStackView()
                 }
             case .failure(let error):
                 print("Failed to fetch products:", error)
@@ -98,22 +63,9 @@ class BasketViewController: UIViewController {
 
     @objc private func reloadCollectionView(notification: Notification) {
         DispatchQueue.main.async {
-            let cartProductIds = self.viewModel.getCartProducts()
-            self.cartProducts = cartProductIds.map { ($0, 1) }  // Initialize all quantities to 1
+            self.cartProducts = self.viewModel.getCartProducts()
             self.collectionView.reloadData()
-            self.updateStackView()
         }
-    }
-
-    private func updateStackView() {
-        let totalQuantity = cartProducts.reduce(0) { $0 + $1.quantity }
-        let totalPrice = cartProducts.reduce(0) { $0 + $1.product.price * Double($1.quantity) }
-        let totalDiscount = cartProducts.reduce(0) { $0 + ($1.product.price * $1.product.discountPercentage / 100) * Double($1.quantity) }
-        let finalPrice = totalPrice - totalDiscount
-
-        totalPriceLabel.text = "Products (\(totalQuantity))  \(totalPrice.currencyString)"
-        discountLabel.text = "Discount  -\(totalDiscount.currencyString)"
-        finalPriceLabel.text = "Total price  \(finalPrice.currencyString)"
     }
 
     deinit {
@@ -121,39 +73,49 @@ class BasketViewController: UIViewController {
     }
 }
 
-extension BasketViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+extension BasketViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return cartProducts.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BasketProductCell.identifier, for: indexPath) as! BasketProductCell
-        let cartProduct = cartProducts[indexPath.row]
-        cell.configure(with: cartProduct.product, viewModel: viewModel, quantity: cartProduct.quantity)
+        let product = cartProducts[indexPath.row]
+        cell.configure(with: product, viewModel: viewModel)
         cell.delegate = self
         return cell
     }
 }
 
-extension BasketViewController: BasketProductCellDelegate {
-    func didUpdateQuantity(for product: Product, quantity: Int) {
-        if let index = cartProducts.firstIndex(where: { $0.product.id == product.id }) {
-            cartProducts[index].quantity = quantity
-        }
-        updateStackView()
-    }
-
-    func didRemoveProduct(_ product: Product) {
-        viewModel.toggleCart(productId: product.id)
-        cartProducts.removeAll { $0.product.id == product.id }
-        collectionView.reloadData()
-        updateStackView()
-        NotificationCenter.default.post(name: .cartUpdated, object: product.id)
+extension BasketViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let product = cartProducts[indexPath.row]
+        let productDetailViewController = ProductDetailViewController(product: product)
+        navigationController?.pushViewController(productDetailViewController, animated: true)
     }
 }
 
-private extension Double {
-    var currencyString: String {
-        return String(format: "%.2f", self)
+extension BasketViewController: ProductSelectionDelegate {
+    func didSelectProduct(_ product: Product) {
+        let productDetailViewController = ProductDetailViewController(product: product)
+        navigationController?.pushViewController(productDetailViewController, animated: true)
+    }
+}
+
+extension BasketViewController: BasketProductCellDelegate {
+    func didUpdateQuantity(for product: Product, quantity: Int) {
+        // Handle quantity update logic here if necessary
+    }
+
+    func didRemoveProduct(_ product: Product) {
+        if let index = cartProducts.firstIndex(where: { $0.id == product.id }) {
+            viewModel.toggleCart(productId: product.id)
+            cartProducts.remove(at: index)
+            collectionView.performBatchUpdates({
+                collectionView.deleteItems(at: [IndexPath(item: index, section: 0)])
+            }, completion: { _ in
+                NotificationCenter.default.post(name: .cartUpdated, object: product.id)
+            })
+        }
     }
 }

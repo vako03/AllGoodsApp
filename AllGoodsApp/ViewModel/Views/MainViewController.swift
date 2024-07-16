@@ -12,7 +12,9 @@ extension UIColor {
 import UIKit
 import SwiftUI
 
-final class MainViewController: UIViewController {
+import UIKit
+
+class MainViewController: UIViewController {
     var coordinator: AppCoordinator?
     var username: String?
 

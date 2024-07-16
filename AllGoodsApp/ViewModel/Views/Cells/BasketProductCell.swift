@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 protocol BasketProductCellDelegate: AnyObject {
     func didUpdateQuantity(for product: Product, quantity: Int)
@@ -17,7 +18,7 @@ class BasketProductCell: UICollectionViewCell {
     weak var delegate: BasketProductCellDelegate?
     private var product: Product?
     private var viewModel: ProductViewModel?
-    private var quantity: Int = 1
+    private var currentImageUrl: URL?
 
     private let imageView: UIImageView = {
         let imageView = UIImageView()
@@ -131,34 +132,37 @@ class BasketProductCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configure(with product: Product, viewModel: ProductViewModel, quantity: Int) {
+    func configure(with product: Product, viewModel: ProductViewModel) {
         self.product = product
         self.viewModel = viewModel
-        self.quantity = quantity
-        if let url = URL(string: product.thumbnail) {
-            imageView.load(url: url)
+
+        let imageUrl = URL(string: product.thumbnail)
+        if currentImageUrl != imageUrl {
+            currentImageUrl = imageUrl
+            imageView.sd_setImage(with: imageUrl, placeholderImage: UIImage(named: "placeholder"))
         }
+        
         titleLabel.text = product.title
-        priceLabel.text = "$\(String(format: "%.2f", product.price * Double(quantity)))"
-        quantityLabel.text = "\(quantity)"
+        priceLabel.text = "$\(String(format: "%.2f", product.price))"
+        quantityLabel.text = "1" // Replace with actual quantity if needed
     }
 
     @objc private func decreaseQuantity() {
-        if quantity > 1 {
-            quantity -= 1
-            quantityLabel.text = "\(quantity)"
-            updatePrice()
-            if let product = product {
+        if let product = product {
+            var quantity = Int(quantityLabel.text ?? "1") ?? 1
+            if quantity > 1 {
+                quantity -= 1
+                quantityLabel.text = "\(quantity)"
                 delegate?.didUpdateQuantity(for: product, quantity: quantity)
             }
         }
     }
 
     @objc private func increaseQuantity() {
-        quantity += 1
-        quantityLabel.text = "\(quantity)"
-        updatePrice()
         if let product = product {
+            var quantity = Int(quantityLabel.text ?? "1") ?? 1
+            quantity += 1
+            quantityLabel.text = "\(quantity)"
             delegate?.didUpdateQuantity(for: product, quantity: quantity)
         }
     }
@@ -168,11 +172,4 @@ class BasketProductCell: UICollectionViewCell {
             delegate?.didRemoveProduct(product)
         }
     }
-
-    private func updatePrice() {
-        if let product = product {
-            priceLabel.text = "$\(String(format: "%.2f", product.price * Double(quantity)))"
-        }
-    }
 }
-

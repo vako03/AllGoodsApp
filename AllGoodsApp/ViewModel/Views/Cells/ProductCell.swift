@@ -4,7 +4,6 @@
 //
 //  Created by valeri mekhashishvili on 11.07.24.
 //
-
 import UIKit
 import SDWebImage
 
@@ -14,6 +13,7 @@ class ProductCell: UICollectionViewCell {
     public var product: Product? // Make this property public to access it outside the cell
 
     private var viewModel: ProductViewModel?
+    private var currentImageUrl: URL?
 
     private let imageView: UIImageView = {
         let imageView = UIImageView()
@@ -128,6 +128,14 @@ class ProductCell: UICollectionViewCell {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(cellTapped))
         contentView.addGestureRecognizer(tapGestureRecognizer)
         
+        setupConstraints()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0),
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
@@ -161,14 +169,16 @@ class ProductCell: UICollectionViewCell {
         ])
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     func configure(with product: Product, viewModel: ProductViewModel) {
         self.product = product
         self.viewModel = viewModel
-        imageView.sd_setImage(with: URL(string: product.thumbnail), placeholderImage: UIImage(named: "placeholder"))
+
+        let imageUrl = URL(string: product.thumbnail)
+        if currentImageUrl != imageUrl {
+            currentImageUrl = imageUrl
+            imageView.sd_setImage(with: imageUrl, placeholderImage: UIImage(named: "placeholder"))
+        }
+        
         titleLabel.text = product.title
         priceLabel.text = "$\(String(format: "%.2f", product.price))"
         ratingLabel.text = "\(product.rating)"
