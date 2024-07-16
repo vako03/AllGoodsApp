@@ -131,14 +131,15 @@ class BasketProductCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configure(with product: Product, viewModel: ProductViewModel) {
+    func configure(with product: Product, viewModel: ProductViewModel, quantity: Int) {
         self.product = product
         self.viewModel = viewModel
+        self.quantity = quantity
         if let url = URL(string: product.thumbnail) {
             imageView.load(url: url)
         }
         titleLabel.text = product.title
-        priceLabel.text = "$\(String(format: "%.2f", product.price))"
+        priceLabel.text = "$\(String(format: "%.2f", product.price * Double(quantity)))"
         quantityLabel.text = "\(quantity)"
     }
 
@@ -146,6 +147,7 @@ class BasketProductCell: UICollectionViewCell {
         if quantity > 1 {
             quantity -= 1
             quantityLabel.text = "\(quantity)"
+            updatePrice()
             if let product = product {
                 delegate?.didUpdateQuantity(for: product, quantity: quantity)
             }
@@ -155,6 +157,7 @@ class BasketProductCell: UICollectionViewCell {
     @objc private func increaseQuantity() {
         quantity += 1
         quantityLabel.text = "\(quantity)"
+        updatePrice()
         if let product = product {
             delegate?.didUpdateQuantity(for: product, quantity: quantity)
         }
@@ -163,6 +166,12 @@ class BasketProductCell: UICollectionViewCell {
     @objc private func removeProduct() {
         if let product = product {
             delegate?.didRemoveProduct(product)
+        }
+    }
+
+    private func updatePrice() {
+        if let product = product {
+            priceLabel.text = "$\(String(format: "%.2f", product.price * Double(quantity)))"
         }
     }
 }
