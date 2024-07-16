@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ExpressViewController: UIViewController {
+class ExpressViewController: UIViewController, ProductSelectionDelegate {
     var coordinator: AppCoordinator?
     private var collectionView: UICollectionView!
     private let viewModel: ProductViewModel
@@ -27,6 +27,7 @@ class ExpressViewController: UIViewController {
         view.backgroundColor = .black
         setupCollectionView()
         fetchGroceries()
+        setupNotificationObservers()
     }
 
     private func setupCollectionView() {
@@ -61,6 +62,27 @@ class ExpressViewController: UIViewController {
             }
         }
     }
+
+    private func setupNotificationObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadCollectionView), name: .favoritesUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadCollectionView), name: .cartUpdated, object: nil)
+    }
+
+    @objc private func reloadCollectionView(notification: Notification) {
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
+        }
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    // MARK: - ProductSelectionDelegate Method
+    func didSelectProduct(_ product: Product) {
+        let productDetailViewController = ProductDetailViewController(product: product)
+        navigationController?.pushViewController(productDetailViewController, animated: true)
+    }
 }
 
 extension ExpressViewController: UICollectionViewDataSource {
@@ -72,6 +94,7 @@ extension ExpressViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProductCell.identifier, for: indexPath) as! ProductCell
         let product = products[indexPath.row]
         cell.configure(with: product, viewModel: viewModel)
+        cell.delegate = self // Set the delegate
         return cell
     }
 }
