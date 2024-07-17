@@ -52,6 +52,7 @@
 		1AEF54082C45B93C009B1CFF /* SDWebImageMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 1AEF54072C45B93C009B1CFF /* SDWebImageMapKit */; };
 		1AEF540B2C45C10B009B1CFF /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 1AEF540A2C45C10B009B1CFF /* FirebaseFirestore */; };
 		1AEF540F2C45D120009B1CFF /* BasketProductCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AEF540E2C45D120009B1CFF /* BasketProductCell.swift */; };
+		1AEF54132C47BC81009B1CFF /* CheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AEF54122C47BC81009B1CFF /* CheckoutViewController.swift */; };
 		1AF97DA42C36D02E00C3E55F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1AF97DA32C36D02E00C3E55F /* GoogleService-Info.plist */; };
 		1AF97DA82C36D11900C3E55F /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 1AF97DA72C36D11900C3E55F /* FirebaseAnalytics */; };
 		1AF97DAA2C36D12A00C3E55F /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 1AF97DA92C36D12A00C3E55F /* FirebaseAuth */; };
@@ -110,6 +111,7 @@
 		1AE2969B2C433A88006224F7 /* AllProductViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllProductViewController.swift; sourceTree = "<group>"; };
 		1AE2969F2C434855006224F7 /* BrandCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandCell.swift; sourceTree = "<group>"; };
 		1AEF540E2C45D120009B1CFF /* BasketProductCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketProductCell.swift; sourceTree = "<group>"; };
+		1AEF54122C47BC81009B1CFF /* CheckoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutViewController.swift; sourceTree = "<group>"; };
 		1AF97DA32C36D02E00C3E55F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1AF97DAB2C36D1ED00C3E55F /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		1AF97DAD2C36D1FC00C3E55F /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
@@ -289,6 +291,7 @@
 				1A284E7B2C400C5C00DB27FF /* ProductDetailsViewController.swift */,
 				1A5F28972C40874200FFBAE3 /* CategoryViewController.swift */,
 				1AE2969B2C433A88006224F7 /* AllProductViewController.swift */,
+				1AEF54122C47BC81009B1CFF /* CheckoutViewController.swift */,
 				1A6FE1F32C3BFB9600F6D5B4 /* Cells */,
 			);
 			name = Views;
@@ -406,6 +409,7 @@
 				1A284E262C3E9A4A00DB27FF /* ExpressViewController.swift in Sources */,
 				1AB695FD2C37196000EA6F49 /* SecondOnboardingPageViewController.swift in Sources */,
 				1A5F28A92C41276F00FFBAE3 /* AllCategoryCell.swift in Sources */,
+				1AEF54132C47BC81009B1CFF /* CheckoutViewController.swift in Sources */,
 				1A6FE1C22C3B53C000F6D5B4 /* CustomLoader.swift in Sources */,
 				1A6FE1A02C3B3DC700F6D5B4 /* CustomTextField.swift in Sources */,
 				1AA582352C3D70090081A410 /* CustomImageView.swift in Sources */,
