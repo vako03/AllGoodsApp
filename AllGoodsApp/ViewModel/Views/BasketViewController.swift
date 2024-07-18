@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import SwiftUI
+import FirebaseAuth
 
 class BasketViewController: UIViewController {
     var coordinator: AppCoordinator?
@@ -13,14 +15,10 @@ class BasketViewController: UIViewController {
     private var collectionView: UICollectionView!
     private var cartProducts: [CartProduct] = []
 
-    // Scroll view and content view
     private let scrollView = UIScrollView()
     private let contentView = UIView()
-    
-    // Height constraint for collection view
     private var collectionViewHeightConstraint: NSLayoutConstraint!
 
-    // Payment details UI elements
     private let titleLabel = UILabel()
     private let productCountLabel = UILabel()
     private let sumPriceLabel = UILabel()
@@ -29,7 +27,6 @@ class BasketViewController: UIViewController {
     private let checkoutButton = UIButton(type: .system)
     private let paymentDetailsStack = UIStackView()
 
-    // Empty cart UI elements
     private let emptyCartView = UIView()
     private let emptyCartIcon = UIImageView(image: UIImage(named: "shopping"))
     private let emptyCartLabel = UILabel()
@@ -207,7 +204,6 @@ class BasketViewController: UIViewController {
             sumPriceLabel.trailingAnchor.constraint(equalTo: productCountSumPriceStack.trailingAnchor)
         ])
         
-        // Initially hide the payment details and checkout button
         paymentDetailsStack.isHidden = true
         checkoutButton.isHidden = true
     }
@@ -302,8 +298,21 @@ class BasketViewController: UIViewController {
     }
 
     @objc private func checkoutButtonTapped() {
-        let checkoutViewController = CheckoutViewController()
-        navigationController?.pushViewController(checkoutViewController, animated: true)
+        guard let currentUser = Auth.auth().currentUser else { return }
+        let nickname = currentUser.displayName ?? "Guest"
+        let email = currentUser.email ?? ""
+        
+        guard nickname != "Guest" else {
+            // Show alert that guests cannot proceed to checkout
+            let alert = UIAlertController(title: "Access Denied", message: "Guests cannot proceed to checkout. Please log in.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            present(alert, animated: true, completion: nil)
+            return
+        }
+        
+        let contactInformationView = ContactInformationView(nickname: nickname, email: email)
+        let hostingController = UIHostingController(rootView: contactInformationView)
+        navigationController?.pushViewController(hostingController, animated: true)
     }
 
     @objc private func addProductsButtonTapped() {
