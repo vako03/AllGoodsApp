@@ -15,7 +15,8 @@ class BasketViewController: UIViewController {
 
     // Payment details UI elements
     private let titleLabel = UILabel()
-    private let productCountSumPriceLabel = UILabel()
+    private let productCountLabel = UILabel()
+    private let sumPriceLabel = UILabel()
     private let discountLabel = UILabel()
     private let totalLabel = UILabel()
     private let checkoutButton = UIButton(type: .system)
@@ -56,9 +57,14 @@ class BasketViewController: UIViewController {
         titleLabel.textColor = .black
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        productCountSumPriceLabel.font = UIFont.systemFont(ofSize: 16)
-        productCountSumPriceLabel.textColor = .black
-        productCountSumPriceLabel.translatesAutoresizingMaskIntoConstraints = false
+        productCountLabel.font = UIFont.systemFont(ofSize: 16)
+        productCountLabel.textColor = .black
+        productCountLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        sumPriceLabel.font = UIFont.systemFont(ofSize: 16)
+        sumPriceLabel.textColor = .black
+        sumPriceLabel.textAlignment = .right
+        sumPriceLabel.translatesAutoresizingMaskIntoConstraints = false
 
         discountLabel.font = UIFont.systemFont(ofSize: 16)
         discountLabel.textColor = .black
@@ -70,7 +76,12 @@ class BasketViewController: UIViewController {
         totalLabel.textAlignment = .right
         totalLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        let productCountSumPriceStack = createPaymentDetailStack(title: "", valueLabel: productCountSumPriceLabel)
+        let productCountSumPriceStack = UIStackView(arrangedSubviews: [productCountLabel, sumPriceLabel])
+        productCountSumPriceStack.axis = .horizontal
+        productCountSumPriceStack.distribution = .fill
+        productCountSumPriceStack.alignment = .fill
+        productCountSumPriceStack.translatesAutoresizingMaskIntoConstraints = false
+
         let discountStack = createPaymentDetailStack(title: "Discount:", valueLabel: discountLabel)
         let totalStack = createPaymentDetailStack(title: "Total price:", valueLabel: totalLabel, isBold: true)
 
@@ -98,6 +109,11 @@ class BasketViewController: UIViewController {
             checkoutButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             checkoutButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
             checkoutButton.heightAnchor.constraint(equalToConstant: 50)
+        ])
+
+        NSLayoutConstraint.activate([
+            productCountLabel.leadingAnchor.constraint(equalTo: productCountSumPriceStack.leadingAnchor),
+            sumPriceLabel.trailingAnchor.constraint(equalTo: productCountSumPriceStack.trailingAnchor)
         ])
     }
 
@@ -150,7 +166,8 @@ class BasketViewController: UIViewController {
         let discount = cartProducts.reduce(0) { $0 + (($1.product.price * $1.product.discountPercentage / 100) * Double($1.quantity)) }
         let total = sumPrice - discount
 
-        productCountSumPriceLabel.text = "Products (\(productCount))   $\(String(format: "%.2f", sumPrice))"
+        productCountLabel.text = "Products (\(productCount))"
+        sumPriceLabel.text = "$\(String(format: "%.2f", sumPrice))"
         discountLabel.text = String(format: "$%.2f", discount)
         totalLabel.text = String(format: "$%.2f", total)
     }
