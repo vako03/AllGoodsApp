@@ -11,7 +11,7 @@ class BasketViewController: UIViewController {
     var coordinator: AppCoordinator?
     private let viewModel = ProductViewModel()
     private var collectionView: UICollectionView!
-    private var cartProducts: [Product] = []
+    private var cartProducts: [CartProduct] = []
 
     // Payment details UI elements
     private let titleLabel = UILabel()
@@ -51,30 +51,25 @@ class BasketViewController: UIViewController {
     }
 
     private func setupPaymentDetailsView() {
-        // Title label
         titleLabel.text = "Payment"
         titleLabel.font = UIFont.boldSystemFont(ofSize: 18)
         titleLabel.textColor = .black
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        // Product count and sum price label
         productCountSumPriceLabel.font = UIFont.systemFont(ofSize: 16)
         productCountSumPriceLabel.textColor = .black
         productCountSumPriceLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        // Discount label
         discountLabel.font = UIFont.systemFont(ofSize: 16)
         discountLabel.textColor = .black
         discountLabel.textAlignment = .right
         discountLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        // Total label
         totalLabel.font = UIFont.boldSystemFont(ofSize: 16)
         totalLabel.textColor = .black
         totalLabel.textAlignment = .right
         totalLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        // Stacks and separators
         let productCountSumPriceStack = createPaymentDetailStack(title: "", valueLabel: productCountSumPriceLabel)
         let discountStack = createPaymentDetailStack(title: "Discount:", valueLabel: discountLabel)
         let totalStack = createPaymentDetailStack(title: "Total price:", valueLabel: totalLabel, isBold: true)
@@ -85,7 +80,6 @@ class BasketViewController: UIViewController {
         paymentDetailsStack.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(paymentDetailsStack)
 
-        // Checkout button
         checkoutButton.setTitle("Checkout", for: .normal)
         checkoutButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
         checkoutButton.backgroundColor = .black
@@ -151,9 +145,9 @@ class BasketViewController: UIViewController {
     }
 
     private func updatePaymentDetails() {
-        let productCount = cartProducts.count
-        let sumPrice = cartProducts.reduce(0) { $0 + $1.price }
-        let discount = cartProducts.reduce(0) { $0 + ($1.price * $1.discountPercentage / 100) }
+        let productCount = cartProducts.reduce(0) { $0 + $1.quantity }
+        let sumPrice = cartProducts.reduce(0) { $0 + ($1.product.price * Double($1.quantity)) }
+        let discount = cartProducts.reduce(0) { $0 + (($1.product.price * $1.product.discountPercentage / 100) * Double($1.quantity)) }
         let total = sumPrice - discount
 
         productCountSumPriceLabel.text = "Products (\(productCount))   $\(String(format: "%.2f", sumPrice))"
@@ -175,7 +169,6 @@ class BasketViewController: UIViewController {
     }
 
     @objc private func checkoutButtonTapped() {
-        // Navigate to the checkout page
         let checkoutViewController = CheckoutViewController()
         navigationController?.pushViewController(checkoutViewController, animated: true)
     }
@@ -192,8 +185,8 @@ extension BasketViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BasketProductCell.identifier, for: indexPath) as! BasketProductCell
-        let product = cartProducts[indexPath.row]
-        cell.configure(with: product, viewModel: viewModel)
+        let cartProduct = cartProducts[indexPath.row]
+        cell.configure(with: cartProduct, viewModel: viewModel)
         cell.delegate = self
         return cell
     }
@@ -201,27 +194,23 @@ extension BasketViewController: UICollectionViewDataSource {
 
 extension BasketViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let product = cartProducts[indexPath.row]
-        let productDetailViewController = ProductDetailViewController(product: product)
-        navigationController?.pushViewController(productDetailViewController, animated: true)
-    }
-}
-
-extension BasketViewController: ProductSelectionDelegate {
-    func didSelectProduct(_ product: Product) {
-        let productDetailViewController = ProductDetailViewController(product: product)
+        let cartProduct = cartProducts[indexPath.row]
+        let productDetailViewController = ProductDetailViewController(product: cartProduct.product)
         navigationController?.pushViewController(productDetailViewController, animated: true)
     }
 }
 
 extension BasketViewController: BasketProductCellDelegate {
     func didUpdateQuantity(for product: Product, quantity: Int) {
-        // Handle quantity update logic here if necessary
-        updatePaymentDetails()
+        if let index = cartProducts.firstIndex(where: { $0.product.id == product.id }) {
+            cartProducts[index].quantity = quantity
+            collectionView.reloadItems(at: [IndexPath(item: index, section: 0)])
+            updatePaymentDetails()
+        }
     }
 
     func didRemoveProduct(_ product: Product) {
-        if let index = cartProducts.firstIndex(where: { $0.id == product.id }) {
+        if let index = cartProducts.firstIndex(where: { $0.product.id == product.id }) {
             viewModel.toggleCart(productId: product.id)
             cartProducts.remove(at: index)
             collectionView.performBatchUpdates({

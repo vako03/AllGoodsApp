@@ -16,7 +16,7 @@ protocol BasketProductCellDelegate: AnyObject {
 class BasketProductCell: UICollectionViewCell {
     static let identifier = "BasketProductCell"
     weak var delegate: BasketProductCellDelegate?
-    private var product: Product?
+    private var cartProduct: CartProduct?
     private var viewModel: ProductViewModel?
     private var currentImageUrl: URL?
 
@@ -132,44 +132,44 @@ class BasketProductCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configure(with product: Product, viewModel: ProductViewModel) {
-        self.product = product
+    func configure(with cartProduct: CartProduct, viewModel: ProductViewModel) {
+        self.cartProduct = cartProduct
         self.viewModel = viewModel
 
-        let imageUrl = URL(string: product.thumbnail)
+        let imageUrl = URL(string: cartProduct.product.thumbnail)
         if currentImageUrl != imageUrl {
             currentImageUrl = imageUrl
             imageView.sd_setImage(with: imageUrl, placeholderImage: UIImage(named: "placeholder"))
         }
         
-        titleLabel.text = product.title
-        priceLabel.text = "$\(String(format: "%.2f", product.price))"
-        quantityLabel.text = "1" // Replace with actual quantity if needed
+        titleLabel.text = cartProduct.product.title
+        priceLabel.text = "$\(String(format: "%.2f", cartProduct.product.price))"
+        quantityLabel.text = "\(cartProduct.quantity)" // Use actual quantity
     }
 
     @objc private func decreaseQuantity() {
-        if let product = product {
-            var quantity = Int(quantityLabel.text ?? "1") ?? 1
+        if let cartProduct = cartProduct {
+            var quantity = cartProduct.quantity
             if quantity > 1 {
                 quantity -= 1
                 quantityLabel.text = "\(quantity)"
-                delegate?.didUpdateQuantity(for: product, quantity: quantity)
+                delegate?.didUpdateQuantity(for: cartProduct.product, quantity: quantity)
             }
         }
     }
 
     @objc private func increaseQuantity() {
-        if let product = product {
-            var quantity = Int(quantityLabel.text ?? "1") ?? 1
+        if let cartProduct = cartProduct {
+            var quantity = cartProduct.quantity
             quantity += 1
             quantityLabel.text = "\(quantity)"
-            delegate?.didUpdateQuantity(for: product, quantity: quantity)
+            delegate?.didUpdateQuantity(for: cartProduct.product, quantity: quantity)
         }
     }
 
     @objc private func removeProduct() {
-        if let product = product {
-            delegate?.didRemoveProduct(product)
+        if let cartProduct = cartProduct {
+            delegate?.didRemoveProduct(cartProduct.product)
         }
     }
 }

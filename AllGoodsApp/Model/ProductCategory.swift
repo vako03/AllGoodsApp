@@ -59,3 +59,9 @@ struct ProductResponse: Codable {
     let skip: Int
     let limit: Int
 }
+
+
+struct CartProduct {
+    let product: Product
+    var quantity: Int
+}

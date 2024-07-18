@@ -100,8 +100,8 @@ class ProductViewModel {
     }
 
     // Fetch cart products
-    func getCartProducts() -> [Product] {
-        return SharedStorage.shared.getCartProducts(from: products)
+    func getCartProducts() -> [CartProduct] {
+        return SharedStorage.shared.getCartProducts(from: products).map { CartProduct(product: $0, quantity: 1) } // Assuming quantity 1 for now
     }
     
     @objc private func handleFavoritesUpdated(notification: Notification) {
