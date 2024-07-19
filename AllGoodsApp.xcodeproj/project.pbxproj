@@ -54,6 +54,8 @@
 		1AEF540F2C45D120009B1CFF /* BasketProductCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AEF540E2C45D120009B1CFF /* BasketProductCell.swift */; };
 		1AEF54132C47BC81009B1CFF /* CheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AEF54122C47BC81009B1CFF /* CheckoutViewController.swift */; };
 		1AEF54292C49B673009B1CFF /* ContactInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AEF54282C49B673009B1CFF /* ContactInformationView.swift */; };
+		1AEF542D2C49CB8F009B1CFF /* AddressInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AEF542C2C49CB8F009B1CFF /* AddressInformationView.swift */; };
+		1AEF54312C49E592009B1CFF /* AddAddressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AEF54302C49E592009B1CFF /* AddAddressView.swift */; };
 		1AF97DA42C36D02E00C3E55F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1AF97DA32C36D02E00C3E55F /* GoogleService-Info.plist */; };
 		1AF97DA82C36D11900C3E55F /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 1AF97DA72C36D11900C3E55F /* FirebaseAnalytics */; };
 		1AF97DAA2C36D12A00C3E55F /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 1AF97DA92C36D12A00C3E55F /* FirebaseAuth */; };
@@ -114,6 +116,8 @@
 		1AEF540E2C45D120009B1CFF /* BasketProductCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketProductCell.swift; sourceTree = "<group>"; };
 		1AEF54122C47BC81009B1CFF /* CheckoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutViewController.swift; sourceTree = "<group>"; };
 		1AEF54282C49B673009B1CFF /* ContactInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactInformationView.swift; sourceTree = "<group>"; };
+		1AEF542C2C49CB8F009B1CFF /* AddressInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressInformationView.swift; sourceTree = "<group>"; };
+		1AEF54302C49E592009B1CFF /* AddAddressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAddressView.swift; sourceTree = "<group>"; };
 		1AF97DA32C36D02E00C3E55F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1AF97DAB2C36D1ED00C3E55F /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		1AF97DAD2C36D1FC00C3E55F /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
@@ -280,6 +284,8 @@
 			isa = PBXGroup;
 			children = (
 				1AEF54282C49B673009B1CFF /* ContactInformationView.swift */,
+				1AEF542C2C49CB8F009B1CFF /* AddressInformationView.swift */,
+				1AEF54302C49E592009B1CFF /* AddAddressView.swift */,
 				1A6FE1962C3B3D9B00F6D5B4 /* CustomComponents */,
 				1A6FE1A12C3B3DCD00F6D5B4 /* Onboarding */,
 				1AF97DAF2C36D20700C3E55F /* LoginViewController.swift */,
@@ -395,9 +401,11 @@
 				1A6FE19E2C3B3DC000F6D5B4 /* CustomStack.swift in Sources */,
 				1AA582332C3D5F590081A410 /* ProfileViewController.swift in Sources */,
 				1AF97DB82C36D30600C3E55F /* RegisterViewController.swift in Sources */,
+				1AEF54312C49E592009B1CFF /* AddAddressView.swift in Sources */,
 				1A6FE19A2C3B3DB100F6D5B4 /* CustomButton.swift in Sources */,
 				1A5F28982C40874200FFBAE3 /* CategoryViewController.swift in Sources */,
 				1A284E782C400C2800DB27FF /* NetworkManager.swift in Sources */,
+				1AEF542D2C49CB8F009B1CFF /* AddressInformationView.swift in Sources */,
 				1AF97DB02C36D20700C3E55F /* LoginViewController.swift in Sources */,
 				1A284E7A2C400C4200DB27FF /* ProductCell.swift in Sources */,
 				1AA5822F2C3D5F2E0081A410 /* FavouriteViewController.swift in Sources */,
