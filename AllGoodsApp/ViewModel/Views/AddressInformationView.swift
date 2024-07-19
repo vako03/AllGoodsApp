@@ -13,6 +13,7 @@ struct AddressInformationView: View {
     @State private var addresses: [String] = []
     @State private var selectedAddress: String? = nil
     @State private var showingAddAddressView = false
+    @State private var navigateToCheckout = false
 
     var body: some View {
         VStack {
@@ -50,8 +51,7 @@ struct AddressInformationView: View {
 
                 if selectedAddress != nil {
                     Button(action: {
-                        // Navigate to the Check and Pay page
-                        // Add your navigation logic here
+                        navigateToCheckout = true
                     }) {
                         Text("Continue")
                             .frame(maxWidth: .infinity)
@@ -61,6 +61,13 @@ struct AddressInformationView: View {
                             .cornerRadius(8)
                     }
                     .padding()
+                    .background(
+                        NavigationLink(
+                            destination: CheckoutView(email: "test@example.com", phoneNumber: "+995 123 45 67 89", address: selectedAddress ?? ""),
+                            isActive: $navigateToCheckout,
+                            label: { EmptyView() }
+                        )
+                    )
                 } else {
                     Button(action: {
                         showingAddAddressView.toggle()
