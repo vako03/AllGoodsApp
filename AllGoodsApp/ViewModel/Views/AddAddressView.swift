@@ -7,11 +7,13 @@
 
 import SwiftUI
 import MapKit
+import Combine
 
 struct AddAddressView: View {
     @Binding var addresses: [String]
-    @State private var newAddress: String = ""
+    @Binding var selectedAddress: String?
     @State private var title: String = ""
+    @State private var searchText: String = ""
     @State private var region = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194),
         span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
@@ -21,93 +23,92 @@ struct AddAddressView: View {
     @State private var showingAlert = false
     @State private var userTrackingMode: MapUserTrackingMode = .follow
     @StateObject private var searchViewModel = AddressSearchViewModel()
-    @State private var searchText = ""
+    @Environment(\.presentationMode) private var presentationMode
 
     var body: some View {
-        VStack {
-            TextField("Enter title (e.g., Home)", text: $title)
-                .padding()
-                .background(Color(.systemGray6))
-                .cornerRadius(8)
-                .padding()
-            
-            TextField("Search for address", text: $searchText, onCommit: {
-                searchViewModel.search(query: searchText)
-            })
-            .padding()
-            .background(Color(.systemGray6))
-            .cornerRadius(8)
-            .padding()
+        ScrollView {
+            VStack(spacing: 16) {
+                TextField("Enter title (e.g., Home)", text: $title)
+                    .padding()
+                    .background(Color(.systemGray6))
+                    .cornerRadius(8)
+                    .padding(.horizontal)
 
-            List(searchViewModel.searchResults, id: \.self) { item in
-                VStack(alignment: .leading) {
-                    Text(item.name ?? "No name")
-                        .font(.headline)
-                    Text(item.placemark.title ?? "No address")
-                        .font(.subheadline)
-                }
-                .onTapGesture {
-                    if let coordinate = item.placemark.location?.coordinate {
-                        region.center = coordinate
-                        fetchAddress(for: coordinate)
-                        location = coordinate
-                        searchText = ""
-                        searchViewModel.searchResults = []
+                TextField("Search for address", text: $searchViewModel.searchQuery)
+                    .padding()
+                    .background(Color(.systemGray6))
+                    .cornerRadius(8)
+                    .padding(.horizontal)
+
+                List(searchViewModel.searchResults, id: \.self) { item in
+                    VStack(alignment: .leading) {
+                        Text(item.name ?? "No name")
+                            .font(.headline)
+                        Text(item.placemark.title ?? "No address")
+                            .font(.subheadline)
+                    }
+                    .onTapGesture {
+                        if let coordinate = item.placemark.location?.coordinate {
+                            region.center = coordinate
+                            fetchAddress(for: coordinate)
+                            location = coordinate
+                            searchViewModel.searchQuery = ""
+                            searchViewModel.searchResults = []
+                        }
                     }
                 }
-            }
-            
-            Map(coordinateRegion: $region, interactionModes: .all, showsUserLocation: true, userTrackingMode: $userTrackingMode, annotationItems: location == nil ? [] : [location!]) { loc in
-                MapAnnotation(coordinate: loc) {
-                    Image(systemName: "mappin.circle.fill")
-                        .foregroundColor(.red)
-                        .imageScale(.large)
-                }
-            }
-            .frame(height: 300)
-            .onChange(of: region.center) { newCenter in
-                fetchAddress(for: newCenter)
-            }
-            
-            TextField("Address will appear here", text: $address)
-                .padding()
-                .background(Color(.systemGray6))
-                .cornerRadius(8)
-                .padding()
-                .disabled(true)
+                .frame(height: 100) // Smaller height for the search results
 
-            Button(action: {
-                if !title.isEmpty && location != nil {
-                    let fullAddress = "\(title): \(address)"
-                    addresses.append(fullAddress)
-                    title = ""
-                    address = ""
-                    location = nil
-                } else {
-                    showingAlert = true
+                Map(coordinateRegion: $region, interactionModes: .all, showsUserLocation: true, userTrackingMode: $userTrackingMode, annotationItems: location == nil ? [] : [location!]) { loc in
+                    MapAnnotation(coordinate: loc) {
+                        Image(systemName: "mappin.circle.fill")
+                            .foregroundColor(.red)
+                            .imageScale(.large)
+                    }
                 }
-            }) {
-                Text("Save Address")
-                    .frame(maxWidth: .infinity)
+                .frame(height: 300)
+                .onChange(of: region.center) { newCenter in
+                    fetchAddress(for: newCenter)
+                }
+
+                TextField("Address will appear here", text: $address)
                     .padding()
-                    .background(Color.black)
-                    .foregroundColor(.white)
+                    .background(Color(.systemGray6))
                     .cornerRadius(8)
-            }
-            .padding()
-            .alert(isPresented: $showingAlert) {
-                Alert(title: Text("Error"), message: Text("Please enter a title and select a location on the map."), dismissButton: .default(Text("OK")))
-            }
+                    .padding(.horizontal)
+                    .disabled(true)
 
-            Spacer()
+                Button(action: {
+                    if !title.isEmpty && location != nil {
+                        let fullAddress = "\(title): \(address)"
+                        addresses.append(fullAddress)
+                        presentationMode.wrappedValue.dismiss()
+                    } else {
+                        showingAlert = true
+                    }
+                }) {
+                    Text("Save Address")
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.black)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                        .padding(.horizontal)
+                }
+                .alert(isPresented: $showingAlert) {
+                    Alert(title: Text("Error"), message: Text("Please enter a title and select a location on the map."), dismissButton: .default(Text("OK")))
+                }
+
+                Spacer()
+            }
         }
-        .padding()
+        .padding(.top)
     }
 
     private func fetchAddress(for location: CLLocationCoordinate2D) {
         let geocoder = CLGeocoder()
         let location = CLLocation(latitude: location.latitude, longitude: location.longitude)
-        
+
         geocoder.reverseGeocodeLocation(location) { placemarks, error in
             if let placemark = placemarks?.first {
                 self.address = [
@@ -126,7 +127,6 @@ struct AddAddressView: View {
         }
     }
 }
-
 
 import MapKit
 
@@ -147,12 +147,28 @@ import Combine
 
 class AddressSearchViewModel: ObservableObject {
     @Published var searchResults: [MKMapItem] = []
+    @Published var searchQuery: String = ""
     private var cancellables = Set<AnyCancellable>()
-    
-    func search(query: String) {
+
+    init() {
+        $searchQuery
+            .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
+            .removeDuplicates()
+            .sink { [weak self] query in
+                self?.search(query: query)
+            }
+            .store(in: &cancellables)
+    }
+
+    private func search(query: String) {
+        guard !query.isEmpty else {
+            searchResults = []
+            return
+        }
+
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = query
-        
+
         let search = MKLocalSearch(request: request)
         search.start { [weak self] response, error in
             guard let self = self else { return }
