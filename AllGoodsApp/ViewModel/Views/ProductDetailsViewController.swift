@@ -5,10 +5,15 @@
 //  Created by valeri mekhashishvili on 11.07.24.
 //
 import UIKit
+import SwiftUI
 
 class ProductDetailViewController: UIViewController {
     private let product: Product
-    
+    private var heartButton: UIButton!
+    private var addToCartButton: UIButton!
+    private var proceedToCheckoutButton: UIButton!
+    private let viewModel = ProductViewModel()
+
     init(product: Product) {
         self.product = product
         super.init(nibName: nil, bundle: nil)
@@ -23,6 +28,8 @@ class ProductDetailViewController: UIViewController {
         title = product.title
         view.backgroundColor = .white
         setupUI()
+        updateFavoriteStatus()
+        updateCartStatus()
     }
 
     private func setupUI() {
@@ -61,46 +68,42 @@ class ProductDetailViewController: UIViewController {
         priceLabel.attributedText = getPriceAttributedText(for: product)
         priceLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        let brandLabel = UILabel()
-        brandLabel.font = UIFont.systemFont(ofSize: 16)
-        brandLabel.text = "Brand: \(product.brand ?? "N/A")"
-        brandLabel.translatesAutoresizingMaskIntoConstraints = false
+        let detailsLabel = UILabel()
+        detailsLabel.font = UIFont.systemFont(ofSize: 14)
+        detailsLabel.numberOfLines = 0
+        detailsLabel.text = getDetailsText(for: product)
+        detailsLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        let categoryLabel = UILabel()
-        categoryLabel.font = UIFont.systemFont(ofSize: 16)
-        categoryLabel.text = "Category: \(product.category)"
-        categoryLabel.translatesAutoresizingMaskIntoConstraints = false
+        heartButton = UIButton(type: .system)
+        heartButton.setImage(UIImage(systemName: "heart"), for: .normal)
+        heartButton.tintColor = .red
+        heartButton.translatesAutoresizingMaskIntoConstraints = false
+        heartButton.addTarget(self, action: #selector(addToFavorites), for: .touchUpInside)
 
-        let stockLabel = UILabel()
-        stockLabel.font = UIFont.systemFont(ofSize: 16)
-        stockLabel.text = "Stock: \(product.stock)"
-        stockLabel.translatesAutoresizingMaskIntoConstraints = false
+        addToCartButton = UIButton(type: .system)
+        addToCartButton.setTitle("Add to Cart", for: .normal)
+        addToCartButton.setTitleColor(.white, for: .normal)
+        addToCartButton.backgroundColor = .systemBlue
+        addToCartButton.layer.cornerRadius = 10
+        addToCartButton.translatesAutoresizingMaskIntoConstraints = false
+        addToCartButton.addTarget(self, action: #selector(addToCart), for: .touchUpInside)
 
-        let availabilityLabel = UILabel()
-        availabilityLabel.font = UIFont.systemFont(ofSize: 16)
-        availabilityLabel.text = "Availability: \(product.availabilityStatus ?? "N/A")"
-        availabilityLabel.translatesAutoresizingMaskIntoConstraints = false
-
-        let ratingLabel = UILabel()
-        ratingLabel.font = UIFont.systemFont(ofSize: 16)
-        ratingLabel.text = "Rating: \(product.rating)"
-        ratingLabel.translatesAutoresizingMaskIntoConstraints = false
-
-        let tagsLabel = UILabel()
-        tagsLabel.font = UIFont.systemFont(ofSize: 16)
-        tagsLabel.text = "Tags: \(product.tags?.joined(separator: ", ") ?? "N/A")"
-        tagsLabel.translatesAutoresizingMaskIntoConstraints = false
+        proceedToCheckoutButton = UIButton(type: .system)
+        proceedToCheckoutButton.setTitle("Proceed to Checkout", for: .normal)
+        proceedToCheckoutButton.setTitleColor(.white, for: .normal)
+        proceedToCheckoutButton.backgroundColor = .systemGreen
+        proceedToCheckoutButton.layer.cornerRadius = 10
+        proceedToCheckoutButton.translatesAutoresizingMaskIntoConstraints = false
+        proceedToCheckoutButton.addTarget(self, action: #selector(proceedToCheckout), for: .touchUpInside)
 
         contentView.addSubview(imageView)
         contentView.addSubview(titleLabel)
         contentView.addSubview(descriptionLabel)
         contentView.addSubview(priceLabel)
-        contentView.addSubview(brandLabel)
-        contentView.addSubview(categoryLabel)
-        contentView.addSubview(stockLabel)
-        contentView.addSubview(availabilityLabel)
-        contentView.addSubview(ratingLabel)
-        contentView.addSubview(tagsLabel)
+        contentView.addSubview(detailsLabel)
+        contentView.addSubview(heartButton)
+        contentView.addSubview(addToCartButton)
+        contentView.addSubview(proceedToCheckoutButton)
 
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -119,6 +122,9 @@ class ProductDetailViewController: UIViewController {
             imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             imageView.heightAnchor.constraint(equalToConstant: 300),
 
+            heartButton.topAnchor.constraint(equalTo: imageView.topAnchor, constant: 20),
+            heartButton.trailingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: -20),
+
             titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 16),
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
@@ -131,31 +137,49 @@ class ProductDetailViewController: UIViewController {
             priceLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             priceLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
 
-            brandLabel.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 16),
-            brandLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            brandLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            addToCartButton.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 16),
+            addToCartButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            addToCartButton.widthAnchor.constraint(equalToConstant: 160),
+            addToCartButton.heightAnchor.constraint(equalToConstant: 50),
 
-            categoryLabel.topAnchor.constraint(equalTo: brandLabel.bottomAnchor, constant: 16),
-            categoryLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            categoryLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            proceedToCheckoutButton.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 16),
+            proceedToCheckoutButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            proceedToCheckoutButton.widthAnchor.constraint(equalToConstant: 160),
+            proceedToCheckoutButton.heightAnchor.constraint(equalToConstant: 50),
 
-            stockLabel.topAnchor.constraint(equalTo: categoryLabel.bottomAnchor, constant: 16),
-            stockLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            stockLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-
-            availabilityLabel.topAnchor.constraint(equalTo: stockLabel.bottomAnchor, constant: 16),
-            availabilityLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            availabilityLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-
-            ratingLabel.topAnchor.constraint(equalTo: availabilityLabel.bottomAnchor, constant: 16),
-            ratingLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            ratingLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-
-            tagsLabel.topAnchor.constraint(equalTo: ratingLabel.bottomAnchor, constant: 16),
-            tagsLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            tagsLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            tagsLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
+            detailsLabel.topAnchor.constraint(equalTo: addToCartButton.bottomAnchor, constant: 16),
+            detailsLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            detailsLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            detailsLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
         ])
+    }
+
+    @objc private func addToFavorites() {
+        SharedStorage.shared.toggleFavorite(productId: product.id)
+        updateFavoriteStatus()
+    }
+
+    @objc private func addToCart() {
+        SharedStorage.shared.toggleCart(productId: product.id)
+        updateCartStatus()
+    }
+
+    @objc private func proceedToCheckout() {
+        let contactInformationView = ContactInformationView(nickname: "User", email: "test@example.com")
+        let hostingController = UIHostingController(rootView: contactInformationView)
+        navigationController?.pushViewController(hostingController, animated: true)
+    }
+
+    private func updateFavoriteStatus() {
+        let isFavorite = SharedStorage.shared.isFavorite(productId: product.id)
+        let heartImage = isFavorite ? UIImage(systemName: "heart.fill") : UIImage(systemName: "heart")
+        heartButton.setImage(heartImage, for: .normal)
+    }
+
+    private func updateCartStatus() {
+        let isInCart = SharedStorage.shared.isInCart(productId: product.id)
+        let buttonTitle = isInCart ? "Remove from Cart" : "Add to Cart"
+        addToCartButton.setTitle(buttonTitle, for: .normal)
     }
 
     private func getPriceAttributedText(for product: Product) -> NSAttributedString {
@@ -174,6 +198,47 @@ class ProductDetailViewController: UIViewController {
         
         return attributedText
     }
+
+    private func getDetailsText(for product: Product) -> String {
+        var details = ""
+
+        if let brand = product.brand {
+            details += "Brand: \(brand)\n"
+        }
+        details += "Category: \(product.category)\n"
+        details += "Stock: \(product.stock)\n"
+        if let sku = product.sku {
+            details += "SKU: \(sku)\n"
+        }
+        if let weight = product.weight {
+            details += "Weight: \(weight) kg\n"
+        }
+        if let dimensions = product.dimensions {
+            details += "Dimensions: \(dimensions.width) x \(dimensions.height) x \(dimensions.depth) cm\n"
+        }
+        if let warrantyInformation = product.warrantyInformation {
+            details += "Warranty: \(warrantyInformation)\n"
+        }
+        if let shippingInformation = product.shippingInformation {
+            details += "Shipping: \(shippingInformation)\n"
+        }
+        if let availabilityStatus = product.availabilityStatus {
+            details += "Availability: \(availabilityStatus)\n"
+        }
+        if let returnPolicy = product.returnPolicy {
+            details += "Return Policy: \(returnPolicy)\n"
+        }
+        if let minimumOrderQuantity = product.minimumOrderQuantity {
+            details += "Minimum Order Quantity: \(minimumOrderQuantity)\n"
+        }
+        if let meta = product.meta {
+            details += "Created At: \(meta.createdAt)\n"
+            details += "Updated At: \(meta.updatedAt)\n"
+            details += "Barcode: \(meta.barcode)\n"
+            details += "QR Code: \(meta.qrCode)\n"
+        }
+        return details
+    }
 }
 
 import UIKit
@@ -181,19 +246,14 @@ import UIKit
 extension UIImageView {
     func load(url: URL) {
         DispatchQueue.global().async { [weak self] in
-            do {
-                let data = try Data(contentsOf: url)
-                guard let image = UIImage(data: data) else { return }
-                DispatchQueue.main.async {
-                    self?.image = image
+            if let data = try? Data(contentsOf: url) {
+                if let image = UIImage(data: data) {
+                    DispatchQueue.main.async {
+                        self?.image = image
+                    }
                 }
-            } catch {
-                // Handle error
-                DispatchQueue.main.async {
-                    self?.image = UIImage(named: "placeholder") // Default placeholder image
-                }
-                print("Error loading image: \(error)")
             }
         }
     }
 }
+ 
