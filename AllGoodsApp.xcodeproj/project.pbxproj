@@ -42,6 +42,7 @@
 		1AA582332C3D5F590081A410 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA582322C3D5F590081A410 /* ProfileViewController.swift */; };
 		1AA582352C3D70090081A410 /* CustomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA582342C3D70090081A410 /* CustomImageView.swift */; };
 		1AA97AC02C403BDD003DA15C /* AllCategoriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA97ABF2C403BDD003DA15C /* AllCategoriesViewController.swift */; };
+		1AB183152C4D8DC1008E47A3 /* GoogleMaps in Frameworks */ = {isa = PBXBuildFile; productRef = 1AB183142C4D8DC1008E47A3 /* GoogleMaps */; };
 		1AB695FB2C37195300EA6F49 /* FirstOnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB695FA2C37195300EA6F49 /* FirstOnboardingPageViewController.swift */; };
 		1AB695FD2C37196000EA6F49 /* SecondOnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB695FC2C37196000EA6F49 /* SecondOnboardingPageViewController.swift */; };
 		1AB695FF2C37196C00EA6F49 /* ThirdOnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB695FE2C37196C00EA6F49 /* ThirdOnboardingPageViewController.swift */; };
@@ -136,6 +137,7 @@
 				1AF97DA82C36D11900C3E55F /* FirebaseAnalytics in Frameworks */,
 				1AEF54062C45B93C009B1CFF /* SDWebImage in Frameworks */,
 				1AF97DAA2C36D12A00C3E55F /* FirebaseAuth in Frameworks */,
+				1AB183152C4D8DC1008E47A3 /* GoogleMaps in Frameworks */,
 				1AEF540B2C45C10B009B1CFF /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -327,6 +329,7 @@
 				1AEF54052C45B93C009B1CFF /* SDWebImage */,
 				1AEF54072C45B93C009B1CFF /* SDWebImageMapKit */,
 				1AEF540A2C45C10B009B1CFF /* FirebaseFirestore */,
+				1AB183142C4D8DC1008E47A3 /* GoogleMaps */,
 			);
 			productName = AllGoodsApp;
 			productReference = 1A12092E2C35D59300FDC9BE /* AllGoodsApp.app */;
@@ -359,6 +362,7 @@
 			packageReferences = (
 				1AF97DA52C36D0B100C3E55F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				1AEF54042C45B93C009B1CFF /* XCRemoteSwiftPackageReference "SDWebImage" */,
+				1AB183132C4D8DC1008E47A3 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */,
 			);
 			productRefGroup = 1A12092F2C35D59300FDC9BE /* Products */;
 			projectDirPath = "";
@@ -649,6 +653,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		1AB183132C4D8DC1008E47A3 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googlemaps/ios-maps-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.0.0;
+			};
+		};
 		1AEF54042C45B93C009B1CFF /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImage";
@@ -668,6 +680,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		1AB183142C4D8DC1008E47A3 /* GoogleMaps */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1AB183132C4D8DC1008E47A3 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */;
+			productName = GoogleMaps;
+		};
 		1AEF54052C45B93C009B1CFF /* SDWebImage */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 1AEF54042C45B93C009B1CFF /* XCRemoteSwiftPackageReference "SDWebImage" */;

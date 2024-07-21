@@ -4,105 +4,113 @@
 //
 //  Created by valeri mekhashishvili on 19.07.24.
 //
-
 import SwiftUI
 import MapKit
 import Combine
+import GoogleMaps
+import UIKit
+import CoreLocation
 
 struct AddAddressView: View {
     @Binding var addresses: [String]
     @Binding var selectedAddress: String?
     @State private var title: String = ""
     @State private var searchText: String = ""
-    @State private var region = MKCoordinateRegion(
-        center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194),
-        span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
-    )
+    @State private var coordinate = CLLocationCoordinate2D(latitude: 41.7151, longitude: 44.8271) // Tbilisi coordinates
     @State private var address: String = ""
-    @State private var location: CLLocationCoordinate2D?
     @State private var showingAlert = false
-    @State private var userTrackingMode: MapUserTrackingMode = .follow
     @StateObject private var searchViewModel = AddressSearchViewModel()
+    @StateObject private var locationManager = LocationManager()
     @Environment(\.presentationMode) private var presentationMode
 
+    private var exampleMarkers: [GMSMarker] {
+        [
+            createMarker(at: CLLocationCoordinate2D(latitude: 41.7151, longitude: 44.8271), title: "Tbilisi"),
+            createMarker(at: CLLocationCoordinate2D(latitude: 41.7301, longitude: 44.8251), title: "Another Place")
+        ]
+    }
+
     var body: some View {
-        ScrollView {
-            VStack(spacing: 16) {
-                TextField("Enter title (e.g., Home)", text: $title)
-                    .padding()
-                    .background(Color(.systemGray6))
-                    .cornerRadius(8)
-                    .padding(.horizontal)
+        VStack {
+                   HStack {
+                       Image(systemName: "magnifyingglass")
+                           .foregroundColor(.gray)
+                       TextField("Search for address", text: $searchViewModel.searchQuery)
+                           .padding(.vertical, 8)
+                   }
+                   .padding(.horizontal)
+                   .background(Color(.systemGray6))
+                   .cornerRadius(8)
+                   .padding(.horizontal)
 
-                TextField("Search for address", text: $searchViewModel.searchQuery)
-                    .padding()
-                    .background(Color(.systemGray6))
-                    .cornerRadius(8)
-                    .padding(.horizontal)
-
-                List(searchViewModel.searchResults, id: \.self) { item in
-                    VStack(alignment: .leading) {
-                        Text(item.name ?? "No name")
-                            .font(.headline)
-                        Text(item.placemark.title ?? "No address")
-                            .font(.subheadline)
-                    }
-                    .onTapGesture {
-                        if let coordinate = item.placemark.location?.coordinate {
-                            region.center = coordinate
-                            fetchAddress(for: coordinate)
-                            location = coordinate
-                            searchViewModel.searchQuery = ""
-                            searchViewModel.searchResults = []
-                        }
+            List(searchViewModel.searchResults, id: \.self) { item in
+                VStack(alignment: .leading) {
+                    Text(item.name ?? "No name")
+                        .font(.headline)
+                    Text(item.placemark.title ?? "No address")
+                        .font(.subheadline)
+                }
+                .onTapGesture {
+                    if let newCoordinate = item.placemark.location?.coordinate {
+                        self.coordinate = newCoordinate
+                        fetchAddress(for: newCoordinate)
+                        searchViewModel.searchQuery = ""
+                        searchViewModel.searchResults = []
                     }
                 }
-                .frame(height: 100) // Smaller height for the search results
-
-                Map(coordinateRegion: $region, interactionModes: .all, showsUserLocation: true, userTrackingMode: $userTrackingMode, annotationItems: location == nil ? [] : [location!]) { loc in
-                    MapAnnotation(coordinate: loc) {
-                        Image(systemName: "mappin.circle.fill")
-                            .foregroundColor(.red)
-                            .imageScale(.large)
-                    }
-                }
-                .frame(height: 300)
-                .onChange(of: region.center) { newCenter in
-                    fetchAddress(for: newCenter)
-                }
-
-                TextField("Address will appear here", text: $address)
-                    .padding()
-                    .background(Color(.systemGray6))
-                    .cornerRadius(8)
-                    .padding(.horizontal)
-                    .disabled(true)
-
-                Button(action: {
-                    if !title.isEmpty && location != nil {
-                        let fullAddress = "\(title): \(address)"
-                        addresses.append(fullAddress)
-                        presentationMode.wrappedValue.dismiss()
-                    } else {
-                        showingAlert = true
-                    }
-                }) {
-                    Text("Save Address")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.black)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
-                        .padding(.horizontal)
-                }
-                .alert(isPresented: $showingAlert) {
-                    Alert(title: Text("Error"), message: Text("Please enter a title and select a location on the map."), dismissButton: .default(Text("OK")))
-                }
-
-                Spacer()
             }
+            .frame(height: 100)
+
+            GoogleMapView(coordinate: coordinate, markers: exampleMarkers)
+                .frame(height: 350)
+                .edgesIgnoringSafeArea(.bottom)
+
+            Text("\(address)")
+                .padding()
+                .background(Color(.white))
+                .cornerRadius(8)
+                .padding(.horizontal)
+                .padding(.bottom, 12)
+
+            TextField("Enter title (e.g., Home)", text: $title)
+                .padding()
+                .background(Color(.systemGray6))
+                .cornerRadius(8)
+                .padding(.horizontal)
+                .padding(.bottom, 12)
+
+            Button(action: {
+                if !title.isEmpty && !address.isEmpty {
+                    let fullAddress = "\(title): \(address)"
+                    addresses.append(fullAddress)
+                    presentationMode.wrappedValue.dismiss()
+                } else {
+                    showingAlert = true
+                }
+            }) {
+                Text("Save Address")
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.black)
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
+                    .padding(.horizontal)
+            }
+            .alert(isPresented: $showingAlert) {
+                Alert(title: Text("Error"), message: Text("Please enter a title and select a location on the map."), dismissButton: .default(Text("OK")))
+            }
+            .padding(.bottom, 20)
         }
         .padding(.top)
+        .onAppear {
+            locationManager.requestLocation()
+        }
+        .onChange(of: locationManager.location) { newLocation in
+            if let location = newLocation {
+                self.coordinate = location.coordinate
+                fetchAddress(for: location.coordinate)
+            }
+        }
     }
 
     private func fetchAddress(for location: CLLocationCoordinate2D) {
@@ -120,19 +128,17 @@ struct AddAddressView: View {
                 ]
                 .compactMap { $0 }
                 .joined(separator: ", ")
-                self.location = location.coordinate
             } else {
                 self.address = "Unable to determine address."
             }
         }
     }
-}
 
-import MapKit
-
-extension CLLocationCoordinate2D: Identifiable {
-    public var id: CLLocationDegrees {
-        self.latitude + self.longitude
+    private func createMarker(at coordinate: CLLocationCoordinate2D, title: String) -> GMSMarker {
+        let marker = GMSMarker()
+        marker.position = coordinate
+        marker.title = title
+        return marker
     }
 }
 
@@ -141,9 +147,35 @@ extension CLLocationCoordinate2D: Equatable {
         lhs.latitude == rhs.latitude && lhs.longitude == rhs.longitude
     }
 }
-import Foundation
-import MapKit
-import Combine
+
+struct GoogleMapView: UIViewRepresentable {
+    var coordinate: CLLocationCoordinate2D
+    var markers: [GMSMarker] = []
+    var zoomLevel: Float = 15.0 // Default zoom level
+
+    func makeUIView(context: Context) -> GMSMapView {
+        let camera = GMSCameraPosition.camera(withLatitude: coordinate.latitude, longitude: coordinate.longitude, zoom: zoomLevel)
+        let mapView = GMSMapView(frame: .zero, camera: camera)
+        return mapView
+    }
+
+    func updateUIView(_ uiView: GMSMapView, context: Context) {
+        uiView.clear()
+        
+        // Add markers to the map
+        for marker in markers {
+            marker.map = uiView
+        }
+        
+        // Center the map on the marker and set zoom level
+        if let firstMarker = markers.first {
+            let camera = GMSCameraPosition.camera(withLatitude: firstMarker.position.latitude, longitude: firstMarker.position.longitude, zoom: zoomLevel)
+            uiView.animate(to: camera)
+        }
+    }
+}
+
+
 
 class AddressSearchViewModel: ObservableObject {
     @Published var searchResults: [MKMapItem] = []
@@ -179,5 +211,35 @@ class AddressSearchViewModel: ObservableObject {
                 self.searchResults = []
             }
         }
+    }
+}
+
+class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
+    private let locationManager = CLLocationManager()
+    @Published var location: CLLocation?
+    @Published var authorizationStatus: CLAuthorizationStatus = .notDetermined
+    
+    override init() {
+        super.init()
+        locationManager.delegate = self
+        requestLocation()
+    }
+    
+    func requestLocation() {
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.requestLocation()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let newLocation = locations.last else { return }
+        location = newLocation
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("Failed to find user's location: \(error.localizedDescription)")
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        authorizationStatus = status
     }
 }
