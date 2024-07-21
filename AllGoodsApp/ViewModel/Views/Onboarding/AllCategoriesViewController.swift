@@ -64,7 +64,7 @@ extension AllCategoriesViewController: UITableViewDelegate {
             case .success(let products):
                 DispatchQueue.main.async {
                     let productListVC = ProductListViewController(category: selectedCategory, products: products, viewModel: self?.viewModel ?? ProductViewModel())
-                    productListVC.delegate = self?.delegate as? ProductSelectionDelegate
+                    productListVC.delegate = self?.delegate as? ProductSelectionDelegate // Set the delegate
                     self?.navigationController?.pushViewController(productListVC, animated: true)
                 }
             case .failure(let error):
