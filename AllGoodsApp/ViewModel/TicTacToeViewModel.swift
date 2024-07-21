@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 class TicTacToeViewModel: ObservableObject {
     @Published var board: [[Character?]] = Array(repeating: Array(repeating: nil, count: 3), count: 3)
@@ -14,6 +15,7 @@ class TicTacToeViewModel: ObservableObject {
     @Published var winner: Character? = nil
     @Published var isGameOver = false
     @Published var showPromo = false
+    @Published var alertItem: AlertItem? // This is a Published property
     var username: String?
 
     var onGameEnded: (() -> Void)?
@@ -42,8 +44,10 @@ class TicTacToeViewModel: ObservableObject {
                 if winner == "X" {
                     showPromo = true
                 }
+                updateAlertItem()
             } else if tries == 9 {
                 isGameOver = true
+                updateAlertItem()
             } else {
                 player = (player == "X") ? "O" : "X"
             }
@@ -69,6 +73,36 @@ class TicTacToeViewModel: ObservableObject {
         isGameOver = false
         showPromo = false
         winner = nil
+        alertItem = nil // Clear alert when resetting the game
+    }
+
+    func updateAlertItem() {
+        if showPromo {
+            alertItem = AlertItem(
+                title: "Congratulations!",
+                message: "You've won! Use promo code GET10.",
+                primaryButton: .default(Text("Copy Code"), action: {
+                    UIPasteboard.general.string = "GET10"
+                    self.onPromoDismissed?()
+                }),
+                secondaryButton: .default(Text("OK"), action: self.onPromoDismissed)
+            )
+        } else if isGameOver {
+            alertItem = AlertItem(
+                title: "Game Over",
+                message: {
+                    if winner == nil {
+                        return "It's a draw. Try again or cancel."
+                    } else if winner == "O" {
+                        return "\(username ?? "Player") didn't win. Try again or cancel."
+                    } else {
+                        return "\(String(winner!)) won"
+                    }
+                }(),
+                primaryButton: .default(Text("Try Again"), action: resetGame),
+                secondaryButton: .cancel(Text("Cancel"), action: onGameEnded)
+            )
+        }
     }
 
     func checkWinner(board: [[Character?]]) -> Character? {
@@ -102,4 +136,12 @@ class TicTacToeViewModel: ObservableObject {
 
         return nil
     }
+}
+
+struct AlertItem: Identifiable {
+    let id = UUID() // Conform to Identifiable
+    let title: String
+    let message: String
+    let primaryButton: Alert.Button
+    let secondaryButton: Alert.Button
 }

@@ -43,8 +43,6 @@ struct Row: View {
     }
 }
 
-import SwiftUI
-
 struct TicTacToeGameView: View {
     @ObservedObject var viewModel: TicTacToeViewModel
 
@@ -67,31 +65,12 @@ struct TicTacToeGameView: View {
             .background(Color.gray.opacity(0.3))
             .aspectRatio(1.0, contentMode: .fill)
         }
-        .alert(isPresented: $viewModel.isGameOver) {
+        .alert(item: $viewModel.alertItem) { alertItem in
             Alert(
-                title: Text("Game Over"),
-                message: {
-                    if viewModel.winner == nil {
-                        return Text("It's a draw. Try again or cancel.")
-                    } else if viewModel.winner == "O" {
-                        return Text("\(viewModel.username ?? "Player") didn't win. Try again or cancel.")
-                    } else {
-                        return Text("\(String(viewModel.winner!)) won")
-                    }
-                }(),
-                primaryButton: .default(Text("Try Again"), action: viewModel.resetGame),
-                secondaryButton: .cancel(Text("Cancel"), action: viewModel.onGameEnded)
-            )
-        }
-        .alert(isPresented: $viewModel.showPromo) {
-            Alert(
-                title: Text("Congratulations!"),
-                message: Text("You've won! Use promo code GET10."),
-                primaryButton: .default(Text("Copy Code"), action: {
-                    UIPasteboard.general.string = "GET10"
-                    viewModel.onPromoDismissed?()
-                }),
-                secondaryButton: .default(Text("OK"), action: viewModel.onPromoDismissed)
+                title: Text(alertItem.title),
+                message: Text(alertItem.message),
+                primaryButton: alertItem.primaryButton,
+                secondaryButton: alertItem.secondaryButton
             )
         }
     }
