@@ -100,6 +100,13 @@ class ProductCell: UICollectionViewCell {
         return button
     }()
     
+    private let separatorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .black
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     public var isFavorite: Bool = false { // Make this property public to access it outside the cell
         didSet {
             updateHeartButtonAppearance()
@@ -121,6 +128,7 @@ class ProductCell: UICollectionViewCell {
         contentView.addSubview(ratingLabel)
         contentView.addSubview(heartButton)
         contentView.addSubview(addToCartButton)
+        contentView.addSubview(separatorView)
         
         heartButton.addTarget(self, action: #selector(heartButtonTapped), for: .touchUpInside)
         addToCartButton.addTarget(self, action: #selector(addToCartButtonTapped), for: .touchUpInside)
@@ -137,7 +145,7 @@ class ProductCell: UICollectionViewCell {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0),
+            imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
             imageView.widthAnchor.constraint(equalToConstant: 100), // Adjust width as needed
             imageView.heightAnchor.constraint(equalToConstant: 100), // Adjust height as needed
@@ -165,7 +173,12 @@ class ProductCell: UICollectionViewCell {
             addToCartButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             addToCartButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20),
             addToCartButton.heightAnchor.constraint(equalToConstant: 25),
-            addToCartButton.widthAnchor.constraint(equalToConstant: 95) // Adjust width as needed
+            addToCartButton.widthAnchor.constraint(equalToConstant: 95), // Adjust width as needed
+            
+            separatorView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            separatorView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            separatorView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            separatorView.heightAnchor.constraint(equalToConstant: 1) // Height of the separator
         ])
     }
     

@@ -80,6 +80,13 @@ class BasketProductCell: UICollectionViewCell {
         return button
     }()
     
+    private let separatorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .black
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.addSubview(imageView)
@@ -89,11 +96,20 @@ class BasketProductCell: UICollectionViewCell {
         contentView.addSubview(quantityLabel)
         contentView.addSubview(plusButton)
         contentView.addSubview(trashButton)
+        contentView.addSubview(separatorView)
 
         minusButton.addTarget(self, action: #selector(decreaseQuantity), for: .touchUpInside)
         plusButton.addTarget(self, action: #selector(increaseQuantity), for: .touchUpInside)
         trashButton.addTarget(self, action: #selector(removeProduct), for: .touchUpInside)
 
+        setupConstraints()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
@@ -125,11 +141,12 @@ class BasketProductCell: UICollectionViewCell {
             trashButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             trashButton.widthAnchor.constraint(equalToConstant: 30),
             trashButton.heightAnchor.constraint(equalToConstant: 30),
+            
+            separatorView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            separatorView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            separatorView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            separatorView.heightAnchor.constraint(equalToConstant: 1)
         ])
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 
     func configure(with cartProduct: CartProduct, viewModel: ProductViewModel) {

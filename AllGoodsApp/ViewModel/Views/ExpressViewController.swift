@@ -32,7 +32,8 @@ class ExpressViewController: UIViewController, ProductSelectionDelegate {
 
     private func setupCollectionView() {
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: 150, height: 200)
+        layout.itemSize = CGSize(width: view.bounds.width, height: 200)  // Make the cell width equal to the view's width
+        layout.minimumLineSpacing = 10 // Add some spacing between cells
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.dataSource = self
         collectionView.delegate = self
