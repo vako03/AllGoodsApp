@@ -1,38 +1,34 @@
 //
-//  AllProductViewController.swift
+//  SearchViewController.swift
 //  AllGoodsApp
 //
-//  Created by valeri mekhashishvili on 14.07.24.
+//  Created by valeri mekhashishvili on 22.07.24.
 //
+
 import UIKit
 
-class AllProductViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, ProductSelectionDelegate {
+class SearchViewController: UIViewController, UISearchBarDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    private var searchBar: UISearchBar!
     private var collectionView: UICollectionView!
-    private var products: [Product]
-    private var sortedProducts: [Product]
-    private var currentPage = 0
-    private let itemsPerPage = 20
-    private var sortCriteria: SortCriteria
-    private let viewModel: ProductViewModel
-
-    init(products: [Product], sortCriteria: SortCriteria, viewModel: ProductViewModel) {
-        self.products = products
-        self.sortCriteria = sortCriteria
-        self.viewModel = viewModel
-        self.sortedProducts = products
-        super.init(nibName: nil, bundle: nil)
-        sortProducts()
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    private var products: [Product] = []
+    private var viewModel = ProductViewModel()
+    private var sortButton: UIBarButtonItem!
+    private var sortCriteria: SortCriteria = .priceAscending
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        setupSearchBar()
         setupCollectionView()
         setupNavigationItems()
+    }
+
+    private func setupSearchBar() {
+        searchBar = UISearchBar()
+        searchBar.delegate = self
+        searchBar.placeholder = "Search for products"
+        searchBar.inputAccessoryView = createToolbar()  // Add the toolbar to the search bar
+        navigationItem.titleView = searchBar
     }
 
     private func setupCollectionView() {
@@ -40,15 +36,14 @@ class AllProductViewController: UIViewController, UICollectionViewDataSource, UI
         layout.scrollDirection = .vertical
         layout.itemSize = CGSize(width: view.frame.width - 20, height: 150)
         layout.minimumLineSpacing = 10
-
+        
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(ProductCell.self, forCellWithReuseIdentifier: ProductCell.identifier)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-
         view.addSubview(collectionView)
-
+        
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
@@ -58,9 +53,31 @@ class AllProductViewController: UIViewController, UICollectionViewDataSource, UI
     }
 
     private func setupNavigationItems() {
+        // Custom back button
+        let backButton = UIBarButtonItem(image: UIImage(systemName: "chevron.left"), style: .plain, target: self, action: #selector(backButtonTapped))
+        backButton.tintColor = .black
+        navigationItem.leftBarButtonItem = backButton
+        
         // Sort button
-        let sortButton = UIBarButtonItem(image: UIImage(systemName: "arrow.up.arrow.down"), style: .plain, target: self, action: #selector(sortButtonTapped))
+        sortButton = UIBarButtonItem(image: UIImage(systemName: "arrow.up.arrow.down"), style: .plain, target: self, action: #selector(sortButtonTapped))
         navigationItem.rightBarButtonItem = sortButton
+    }
+
+    private func createToolbar() -> UIToolbar {
+        let toolbar = UIToolbar()
+        toolbar.sizeToFit()
+        let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonTapped))
+        toolbar.items = [flexSpace, doneButton]
+        return toolbar
+    }
+
+    @objc private func doneButtonTapped() {
+        searchBar.resignFirstResponder()
+    }
+
+    @objc private func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
     }
 
     @objc private func sortButtonTapped() {
@@ -94,7 +111,7 @@ class AllProductViewController: UIViewController, UICollectionViewDataSource, UI
     }
 
     private func sortProducts() {
-        sortedProducts = products.sorted(by: { (p1, p2) -> Bool in
+        products.sort(by: { (p1, p2) -> Bool in
             switch sortCriteria {
             case .priceAscending:
                 return p1.price < p2.price
@@ -113,36 +130,56 @@ class AllProductViewController: UIViewController, UICollectionViewDataSource, UI
         collectionView.reloadData()
     }
 
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        searchProducts(with: searchText)
+    }
+
+    private func searchProducts(with query: String) {
+        viewModel.fetchAllProducts { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    self?.products = self?.viewModel.products.filter { $0.title.lowercased().contains(query.lowercased()) } ?? []
+                    self?.sortProducts()
+                    self?.collectionView.reloadData()
+                case .failure(let error):
+                    print("Failed to fetch products:", error)
+                }
+            }
+        }
+    }
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let startIndex = currentPage * itemsPerPage
-        let endIndex = min(startIndex + itemsPerPage, sortedProducts.count)
-        return endIndex - startIndex
+        return products.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProductCell.identifier, for: indexPath) as! ProductCell
-        let startIndex = currentPage * itemsPerPage
-        let product = sortedProducts[startIndex + indexPath.row]
+        let product = products[indexPath.row]
         cell.configure(with: product, viewModel: viewModel)
         cell.delegate = self
         return cell
     }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: 150)
-    }
-
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let startIndex = currentPage * itemsPerPage
-        let selectedProduct = sortedProducts[startIndex + indexPath.row]
+        let selectedProduct = products[indexPath.row]
         let productDetailViewController = ProductDetailViewController(product: selectedProduct)
         navigationController?.pushViewController(productDetailViewController, animated: true)
     }
+}
 
+extension SearchViewController: ProductSelectionDelegate {
     func didSelectProduct(_ product: Product) {
         let productDetailViewController = ProductDetailViewController(product: product)
         navigationController?.pushViewController(productDetailViewController, animated: true)
     }
+}
 
-    // Implement pagination logic if necessary
+enum SortCriteria {
+    case priceAscending
+    case priceDescending
+    case headlineAZ
+    case headlineZA
+    case discount
+    case rating
 }

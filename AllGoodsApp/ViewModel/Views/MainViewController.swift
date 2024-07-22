@@ -11,8 +11,7 @@ extension UIColor {
 
 import UIKit
 import SwiftUI
-
-
+import SDWebImage
 
 class MainViewController: UIViewController {
     var coordinator: AppCoordinator?
@@ -91,6 +90,7 @@ class MainViewController: UIViewController {
         // Setup Search Bar
         let nickname = username ?? "User"
         searchBar.placeholder = "Hi \(nickname), search for anything"
+        searchBar.delegate = self
         searchBar.backgroundImage = UIImage() // Remove the background of the search bar
         searchBar.barTintColor = .white // Set the search bar background color to white
         searchBar.tintColor = .black // Set the search bar text and icons color to black
@@ -461,6 +461,14 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
 
     func collectionView(_ collectionView: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 20 // Define the spacing between cells
+    }
+}
+
+extension MainViewController: UISearchBarDelegate {
+    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        let searchVC = SearchViewController()
+        navigationController?.pushViewController(searchVC, animated: true)
+        return false
     }
 }
 
