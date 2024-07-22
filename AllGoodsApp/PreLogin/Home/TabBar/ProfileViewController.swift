@@ -11,61 +11,75 @@ class ProfileViewController: UIViewController {
     var coordinator: AppCoordinator?
     var username: String?
 
-    private let nameLabel = CustomLabel(text: "", fontSize: 24, alignment: .center)
+    private lazy var favouriteButton: CustomButton = {
+        let button = CustomButton(title: "Favourite") { [weak self] in
+            self?.handleFavouriteTapped()
+        }
+        return button
+    }()
 
-    private lazy var authorizationButton: CustomButton = {
-        let button = CustomButton(title: "Authorization") { [weak self] in
-            self?.handleAuthorizationTapped()
+    private lazy var cartButton: CustomButton = {
+        let button = CustomButton(title: "Cart") { [weak self] in
+            self?.handleCartTapped()
+        }
+        return button
+    }()
+
+    private lazy var ordersButton: CustomButton = {
+        let button = CustomButton(title: "Orders") { [weak self] in
+            self?.handleOrdersTapped()
         }
         return button
     }()
 
     private lazy var logoutButton: CustomButton = {
-        let button = CustomButton(title: "Logout") { [weak self] in
+        let button = CustomButton(title: "Log out") { [weak self] in
             self?.handleLogoutTapped()
         }
         return button
+    }()
+
+    private lazy var buttonStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [favouriteButton, cartButton, ordersButton, logoutButton])
+        stackView.axis = .vertical
+        stackView.spacing = 20
+        stackView.distribution = .fillEqually
+        return stackView
     }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         title = "Profile"
-        setupUI()
+        setupViews()
     }
 
-    private func setupUI() {
-        view.addSubview(nameLabel)
+    private func setupViews() {
+        view.addSubview(buttonStackView)
 
-        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        buttonStackView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            nameLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            nameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20)
+            buttonStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            buttonStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            buttonStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            buttonStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
-
-        if let username = username {
-            nameLabel.text = "Hi, \(username)"
-            if username == "Guest" {
-                view.addSubview(authorizationButton)
-                authorizationButton.translatesAutoresizingMaskIntoConstraints = false
-                NSLayoutConstraint.activate([
-                    authorizationButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                    authorizationButton.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 20)
-                ])
-            } else {
-                view.addSubview(logoutButton)
-                logoutButton.translatesAutoresizingMaskIntoConstraints = false
-                NSLayoutConstraint.activate([
-                    logoutButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                    logoutButton.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 20)
-                ])
-            }
-        }
     }
 
-    private func handleAuthorizationTapped() {
-        coordinator?.showLogin()
+    private func handleFavouriteTapped() {
+        guard let tabBarVC = coordinator?.navigationController.viewControllers.first as? UITabBarController else { return }
+        tabBarVC.selectedIndex = 1 // Assuming FavouriteViewController is at index 1
+    }
+
+    private func handleCartTapped() {
+        guard let tabBarVC = coordinator?.navigationController.viewControllers.first as? UITabBarController else { return }
+        tabBarVC.selectedIndex = 3 // Assuming BasketViewController is at index 3
+    }
+
+    private func handleOrdersTapped() {
+        let myOrderVC = OrderViewController()
+        navigationController?.pushViewController(myOrderVC, animated: true)
     }
 
     private func handleLogoutTapped() {

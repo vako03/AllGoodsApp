@@ -6,18 +6,18 @@
 //
 
 import SwiftUI
-import Combine
 
 struct CheckoutView: View {
-    @State var email: String
-    @State var phoneNumber: String
-    @State var address: String
+    @State var email: String = ""
+    @State var phoneNumber: String = ""
+    @State var address: String = ""
     @State private var cartProducts: [CartProduct] = []
     @State private var subtotal: Double = 0.0
     @State private var discount: Double = 0.0
     @State private var total: Double = 0.0
     @State private var promoCode: String = ""
     @State private var navigateToSuccess = false
+    @State private var orderNumber: String = ""
 
     private let viewModel = ProductViewModel()
 
@@ -35,7 +35,7 @@ struct CheckoutView: View {
         .navigationTitle("Checkout")
         .onAppear(perform: fetchCartItems)
         .background(
-            NavigationLink(destination: SuccessView(), isActive: $navigateToSuccess) {
+            NavigationLink(destination: SuccessView(orderNumber: orderNumber), isActive: $navigateToSuccess) {
                 EmptyView()
             }
         )
@@ -180,6 +180,16 @@ struct CheckoutView: View {
 
     private var payButton: some View {
         Button(action: {
+            // Handle payment
+            orderNumber = generateOrderNumber()
+            let order = Order(orderNumber: orderNumber,
+                              productThumbnail: cartProducts.first?.product.thumbnail ?? "",
+                              customerEmail: email,
+                              customerPhoneNumber: phoneNumber,
+                              date: getCurrentDate(),
+                              amount: String(format: "%.2f₾", total))
+
+            SharedStorage.shared.addOrder(order)
             navigateToSuccess = true
         }) {
             Text("Pay")
@@ -210,5 +220,15 @@ struct CheckoutView: View {
         subtotal = cartProducts.reduce(0) { $0 + ($1.product.price * Double($1.quantity)) }
         discount = cartProducts.reduce(0) { $0 + (($1.product.price * $1.product.discountPercentage / 100) * Double($1.quantity)) }
         total = subtotal - discount
+    }
+
+    private func generateOrderNumber() -> String {
+        return String(format: "%04d", Int.random(in: 0...9999))
+    }
+
+    private func getCurrentDate() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm"
+        return formatter.string(from: Date())
     }
 }

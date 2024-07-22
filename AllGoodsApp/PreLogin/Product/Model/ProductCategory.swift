@@ -65,3 +65,51 @@ struct CartProduct {
     let product: Product
     var quantity: Int
 }
+
+
+struct Order {
+    let orderNumber: String
+    let productThumbnail: String
+    let customerEmail: String
+    let customerPhoneNumber: String
+    let date: String
+    let amount: String
+
+    init(orderNumber: String, productThumbnail: String, customerEmail: String, customerPhoneNumber: String, date: String, amount: String) {
+        self.orderNumber = orderNumber
+        self.productThumbnail = productThumbnail
+        self.customerEmail = customerEmail
+        self.customerPhoneNumber = customerPhoneNumber
+        self.date = date
+        self.amount = amount
+    }
+
+    init?(dictionary: [String: Any]) {
+        guard
+            let orderNumber = dictionary["orderNumber"] as? String,
+            let productThumbnail = dictionary["productThumbnail"] as? String,
+            let customerEmail = dictionary["customerEmail"] as? String,
+            let customerPhoneNumber = dictionary["customerPhoneNumber"] as? String,
+            let date = dictionary["date"] as? String,
+            let amount = dictionary["amount"] as? String
+        else { return nil }
+        
+        self.orderNumber = orderNumber
+        self.productThumbnail = productThumbnail
+        self.customerEmail = customerEmail
+        self.customerPhoneNumber = customerPhoneNumber
+        self.date = date
+        self.amount = amount
+    }
+
+    func toDictionary() -> [String: Any] {
+        return [
+            "orderNumber": orderNumber,
+            "productThumbnail": productThumbnail,
+            "customerEmail": customerEmail,
+            "customerPhoneNumber": customerPhoneNumber,
+            "date": date,
+            "amount": amount
+        ]
+    }
+}

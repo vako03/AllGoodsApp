@@ -32,7 +32,6 @@ final class AppCoordinator {
         }
     }
 
-
     func showOnboarding() {
         let onboardingVC = OnboardingViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
         onboardingVC.coordinator = self
@@ -61,7 +60,7 @@ final class AppCoordinator {
         let favouriteVC = FavouriteViewController()
         favouriteVC.coordinator = self
         
-        let expressVC = ExpressViewController(viewModel: viewModel) // Pass viewModel here
+        let expressVC = ExpressViewController(viewModel: viewModel)
         expressVC.coordinator = self
 
         let basketVC = BasketViewController()
@@ -82,5 +81,11 @@ final class AppCoordinator {
         tabBarVC.setValue(TabBar(), forKey: "tabBar")
 
         navigationController.setViewControllers([tabBarVC], animated: true)
+    }
+    
+    func showOrderViewController(with order: Order) {
+        SharedStorage.shared.addOrder(order)
+        let orderVC = OrderViewController()
+        navigationController.pushViewController(orderVC, animated: true)
     }
 }
