@@ -52,7 +52,7 @@ final class AppCoordinator {
     }
 
     func showMainTabBar(username: String) {
-        let tabBarVC = CustomTabBarController()
+        let tabBarVC = TabBarController()
 
         let mainVC = MainViewController()
         mainVC.coordinator = self
@@ -79,7 +79,7 @@ final class AppCoordinator {
 
         tabBarVC.viewControllers = [mainVC, favouriteVC, expressVC, basketVC, profileVC]
         
-        tabBarVC.setValue(CustomTabBar(), forKey: "tabBar")
+        tabBarVC.setValue(TabBar(), forKey: "tabBar")
 
         navigationController.setViewControllers([tabBarVC], animated: true)
     }

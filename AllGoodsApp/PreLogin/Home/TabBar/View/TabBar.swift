@@ -1,5 +1,5 @@
 //
-//  CustomTabBar.swift
+//  TabBar.swift
 //  AllGoodsApp
 //
 //  Created by valeri mekhashishvili on 10.07.24.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CustomTabBar: UITabBar {
+class TabBar: UITabBar {
     private var shapeLayer: CALayer?
 
     override func draw(_ rect: CGRect) {

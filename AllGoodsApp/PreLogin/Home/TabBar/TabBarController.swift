@@ -1,5 +1,5 @@
 //
-//  CustomTabBarController.swift
+//  TabBarController.swift
 //  AllGoodsApp
 //
 //  Created by valeri mekhashishvili on 10.07.24.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CustomTabBarController: UITabBarController {
+class TabBarController: UITabBarController {
     private var middleButton: UIButton!
 
     override func viewDidLoad() {

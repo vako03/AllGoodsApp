@@ -34,9 +34,9 @@ struct SuccessView: View {
                 basketVC.tabBarItem = UITabBarItem(title: "Basket", image: UIImage(systemName: "cart"), tag: 3)
                 profileVC.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person"), tag: 4)
 
-                let tabBarController = CustomTabBarController()
+                let tabBarController = TabBarController()
                 tabBarController.viewControllers = [mainVC, favouriteVC, expressVC, basketVC, profileVC]
-                tabBarController.setValue(CustomTabBar(), forKey: "tabBar")
+                tabBarController.setValue(TabBar(), forKey: "tabBar")
 
                 UIApplication.shared.windows.first?.rootViewController = UINavigationController(rootViewController: tabBarController)
             }) {
