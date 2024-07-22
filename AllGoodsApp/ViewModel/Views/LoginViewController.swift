@@ -23,7 +23,7 @@ final class LoginViewController: UIViewController {
                 CustomTextFieldHandlers.handleEmailTextChange(textField: self.emailTextField, text: text)
             }
         )
-        textField.inputAccessoryView = createToolbar()
+        textField.autocorrectionType = .no
         return textField
     }()
     
@@ -41,8 +41,8 @@ final class LoginViewController: UIViewController {
                 CustomTextFieldHandlers.togglePasswordVisibility(textField: self.passwordTextField)
             }
         )
+        textField.autocorrectionType = .no
         textField.textContentType = .oneTimeCode // Disable strong password suggestion
-        textField.inputAccessoryView = createToolbar()
         return textField
     }()
     
@@ -99,15 +99,6 @@ final class LoginViewController: UIViewController {
             buttonStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
             buttonStack.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
         ])
-    }
-
-    private func createToolbar() -> UIToolbar {
-        let toolbar = UIToolbar()
-        toolbar.sizeToFit()
-        let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(dismissKeyboard))
-        toolbar.items = [flexSpace, doneButton]
-        return toolbar
     }
 
     @objc private func dismissKeyboard() {
