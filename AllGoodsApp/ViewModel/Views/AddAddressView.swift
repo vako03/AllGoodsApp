@@ -54,7 +54,7 @@ struct AddAddressView: View {
             }
             .frame(height: 100)
 
-            GoogleMapView(coordinate: coordinate)
+            GoogleMapView(coordinate: coordinate, isMyLocationEnabled: true)
                 .frame(height: 350)
                 .edgesIgnoringSafeArea(.bottom)
 
@@ -128,15 +128,30 @@ struct AddAddressView: View {
     }
 }
 
+struct UserLocationView: View {
+    var body: some View {
+        ZStack {
+            Circle()
+                .fill(Color.blue.opacity(0.5))
+                .frame(width: 30, height: 30)
+            Circle()
+                .fill(Color.blue)
+                .frame(width: 15, height: 15)
+        }
+    }
+}
 
 struct GoogleMapView: UIViewRepresentable {
     var coordinate: CLLocationCoordinate2D
     var markers: [GMSMarker] = []
     var zoomLevel: Float = 15.0 // Default zoom level
+    var isMyLocationEnabled: Bool = false
 
     func makeUIView(context: Context) -> GMSMapView {
         let camera = GMSCameraPosition.camera(withLatitude: coordinate.latitude, longitude: coordinate.longitude, zoom: zoomLevel)
         let mapView = GMSMapView(frame: .zero, camera: camera)
+        mapView.isMyLocationEnabled = isMyLocationEnabled
+        mapView.settings.myLocationButton = isMyLocationEnabled
         return mapView
     }
 
@@ -149,12 +164,20 @@ struct GoogleMapView: UIViewRepresentable {
         }
         
         // Center the map on the marker and set zoom level
-        if let firstMarker = markers.first {
-            let camera = GMSCameraPosition.camera(withLatitude: firstMarker.position.latitude, longitude: firstMarker.position.longitude, zoom: zoomLevel)
-            uiView.animate(to: camera)
+        let camera = GMSCameraPosition.camera(withLatitude: coordinate.latitude, longitude: coordinate.longitude, zoom: zoomLevel)
+        uiView.animate(to: camera)
+
+        // Add the custom view for user location
+        if isMyLocationEnabled {
+            let userLocationView = UserLocationView().frame(width: 50, height: 50)
+            let hostingController = UIHostingController(rootView: userLocationView)
+            hostingController.view.backgroundColor = .clear
+            hostingController.view.frame = CGRect(x: uiView.center.x - 25, y: uiView.center.y - 25, width: 50, height: 50)
+            uiView.addSubview(hostingController.view)
         }
     }
 }
+
 
 
 
@@ -207,8 +230,8 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     func requestLocation() {
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.requestLocation()
+        locationManager.requestAlwaysAuthorization()
+        locationManager.startUpdatingLocation()
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -222,5 +245,10 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         authorizationStatus = status
+        if status == .authorizedAlways || status == .authorizedWhenInUse {
+            locationManager.startUpdatingLocation()
+        } else {
+            locationManager.stopUpdatingLocation()
+        }
     }
 }
