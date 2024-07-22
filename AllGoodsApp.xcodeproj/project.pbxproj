@@ -68,6 +68,7 @@
 		1AF97DBF2C36D8C800C3E55F /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF97DBE2C36D8C800C3E55F /* UserModel.swift */; };
 		1AF97DC22C36D8DA00C3E55F /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF97DC12C36D8DA00C3E55F /* AuthViewModel.swift */; };
 		1AFFA1A12C4DE2190062979A /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AFFA1A02C4DE2190062979A /* SearchViewController.swift */; };
+		1AFFA1A92C4E68FC0062979A /* SuccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AFFA1A82C4E68FC0062979A /* SuccessView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -127,6 +128,7 @@
 		1AF97DBE2C36D8C800C3E55F /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		1AF97DC12C36D8DA00C3E55F /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		1AFFA1A02C4DE2190062979A /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		1AFFA1A82C4E68FC0062979A /* SuccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -288,6 +290,7 @@
 				1AEF542C2C49CB8F009B1CFF /* AddressInformationView.swift */,
 				1AEF54302C49E592009B1CFF /* AddAddressView.swift */,
 				1A9287B52C4B11180000EDD6 /* CheckoutView.swift */,
+				1AFFA1A82C4E68FC0062979A /* SuccessView.swift */,
 				1A6FE1962C3B3D9B00F6D5B4 /* CustomComponents */,
 				1A6FE1A12C3B3DCD00F6D5B4 /* Onboarding */,
 				1AF97DAF2C36D20700C3E55F /* LoginViewController.swift */,
@@ -398,6 +401,7 @@
 				1A6FE1C02C3B52A500F6D5B4 /* CustomTextFieldHandlers.swift in Sources */,
 				1A284E282C3E9B9A00DB27FF /* CustomTabBarController.swift in Sources */,
 				1AFFA1A12C4DE2190062979A /* SearchViewController.swift in Sources */,
+				1AFFA1A92C4E68FC0062979A /* SuccessView.swift in Sources */,
 				1AA582312C3D5F440081A410 /* BasketViewController.swift in Sources */,
 				1A6FE1952C3B380300F6D5B4 /* SharedLogic.swift in Sources */,
 				1AEF540F2C45D120009B1CFF /* BasketProductCell.swift in Sources */,

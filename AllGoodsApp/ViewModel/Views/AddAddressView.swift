@@ -23,25 +23,18 @@ struct AddAddressView: View {
     @StateObject private var locationManager = LocationManager()
     @Environment(\.presentationMode) private var presentationMode
 
-    private var exampleMarkers: [GMSMarker] {
-        [
-            createMarker(at: CLLocationCoordinate2D(latitude: 41.7151, longitude: 44.8271), title: "Tbilisi"),
-            createMarker(at: CLLocationCoordinate2D(latitude: 41.7301, longitude: 44.8251), title: "Another Place")
-        ]
-    }
-
     var body: some View {
         VStack {
-                   HStack {
-                       Image(systemName: "magnifyingglass")
-                           .foregroundColor(.gray)
-                       TextField("Search for address", text: $searchViewModel.searchQuery)
-                           .padding(.vertical, 8)
-                   }
-                   .padding(.horizontal)
-                   .background(Color(.systemGray6))
-                   .cornerRadius(8)
-                   .padding(.horizontal)
+            HStack {
+                Image(systemName: "magnifyingglass")
+                    .foregroundColor(.gray)
+                TextField("Search for address", text: $searchViewModel.searchQuery)
+                    .padding(.vertical, 8)
+            }
+            .padding(.horizontal)
+            .background(Color(.systemGray6))
+            .cornerRadius(8)
+            .padding(.horizontal)
 
             List(searchViewModel.searchResults, id: \.self) { item in
                 VStack(alignment: .leading) {
@@ -61,7 +54,7 @@ struct AddAddressView: View {
             }
             .frame(height: 100)
 
-            GoogleMapView(coordinate: coordinate, markers: exampleMarkers)
+            GoogleMapView(coordinate: coordinate)
                 .frame(height: 350)
                 .edgesIgnoringSafeArea(.bottom)
 
@@ -133,20 +126,8 @@ struct AddAddressView: View {
             }
         }
     }
-
-    private func createMarker(at coordinate: CLLocationCoordinate2D, title: String) -> GMSMarker {
-        let marker = GMSMarker()
-        marker.position = coordinate
-        marker.title = title
-        return marker
-    }
 }
 
-extension CLLocationCoordinate2D: Equatable {
-    public static func == (lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool {
-        lhs.latitude == rhs.latitude && lhs.longitude == rhs.longitude
-    }
-}
 
 struct GoogleMapView: UIViewRepresentable {
     var coordinate: CLLocationCoordinate2D

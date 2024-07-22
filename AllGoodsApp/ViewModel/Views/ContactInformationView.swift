@@ -4,7 +4,6 @@
 //
 //  Created by valeri mekhashishvili on 19.07.24.
 //
-
 import SwiftUI
 
 struct ContactInformationView: View {
@@ -77,7 +76,7 @@ struct ContactInformationView: View {
             }
             .padding(.horizontal)
 
-            NavigationLink(destination: AddressInformationView(), isActive: $showingAddressInformationView) {
+            NavigationLink(destination: AddressInformationView(email: email, phoneNumber: phoneNumber), isActive: $showingAddressInformationView) {
                 Button(action: {
                     if isValidPhoneNumber() {
                         showingAddressInformationView.toggle()

@@ -17,6 +17,7 @@ struct CheckoutView: View {
     @State private var discount: Double = 0.0
     @State private var total: Double = 0.0
     @State private var promoCode: String = ""
+    @State private var navigateToSuccess = false
 
     private let viewModel = ProductViewModel()
 
@@ -33,6 +34,11 @@ struct CheckoutView: View {
         }
         .navigationTitle("Checkout")
         .onAppear(perform: fetchCartItems)
+        .background(
+            NavigationLink(destination: SuccessView(), isActive: $navigateToSuccess) {
+                EmptyView()
+            }
+        )
     }
 
     private var userInfoSection: some View {
@@ -174,7 +180,7 @@ struct CheckoutView: View {
 
     private var payButton: some View {
         Button(action: {
-            // Handle pay action
+            navigateToSuccess = true
         }) {
             Text("Pay")
                 .frame(maxWidth: .infinity)
@@ -204,15 +210,5 @@ struct CheckoutView: View {
         subtotal = cartProducts.reduce(0) { $0 + ($1.product.price * Double($1.quantity)) }
         discount = cartProducts.reduce(0) { $0 + (($1.product.price * $1.product.discountPercentage / 100) * Double($1.quantity)) }
         total = subtotal - discount
-    }
-}
-
-struct CheckoutView_Previews: PreviewProvider {
-    static var previews: some View {
-        CheckoutView(
-            email: "test@example.com",
-            phoneNumber: "+995 123 45 67 89",
-            address: "7 Zaza Panaskertel-Tsitsishvili St, T'bilisi 0163, Georgia"
-        )
     }
 }

@@ -106,7 +106,14 @@ class SharedStorage {
             }
         }
     }
+
+    func clearCart() {
+        cartProductIds.removeAll()
+        saveCartToFirestore()
+        NotificationCenter.default.post(name: .cartUpdated, object: nil)
+    }
 }
+
 
 extension Notification.Name {
     static let favoritesUpdated = Notification.Name("favoritesUpdated")
