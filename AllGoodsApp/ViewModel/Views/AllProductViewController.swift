@@ -58,7 +58,6 @@ class AllProductViewController: UIViewController, UICollectionViewDataSource, UI
     }
 
     private func setupNavigationItems() {
-        // Sort button
         let sortButton = UIBarButtonItem(image: UIImage(systemName: "arrow.up.arrow.down"), style: .plain, target: self, action: #selector(sortButtonTapped))
         navigationItem.rightBarButtonItem = sortButton
     }
@@ -110,7 +109,9 @@ class AllProductViewController: UIViewController, UICollectionViewDataSource, UI
                 return p1.rating > p2.rating
             }
         })
-        collectionView.reloadData()
+        DispatchQueue.main.async {
+            self.collectionView?.reloadData()
+        }
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -143,6 +144,4 @@ class AllProductViewController: UIViewController, UICollectionViewDataSource, UI
         let productDetailViewController = ProductDetailViewController(product: product)
         navigationController?.pushViewController(productDetailViewController, animated: true)
     }
-
-    // Implement pagination logic if necessary
 }
