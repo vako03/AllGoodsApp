@@ -11,16 +11,27 @@ struct SuccessView: View {
     var orderNumber: String
 
     var body: some View {
-        VStack {
-            Text("Payment Successful!")
-                .font(.largeTitle)
+        VStack(spacing: 20) {
+            Image(systemName: "checkmark.circle.fill")
+                .resizable()
+                .scaledToFit()
+                .foregroundColor(.green)
+                .frame(width: 80, height: 80)
                 .padding()
+
+            Text("Order successfully!")
+                .font(.title)
+                .fontWeight(.bold)
+                .foregroundColor(.primary)
+                .padding(.bottom, 10)
+
             Text("Thank you for your purchase.")
                 .font(.headline)
-                .padding()
+                .foregroundColor(.secondary)
+
             Text("Your order number is \(orderNumber).")
                 .font(.headline)
-                .padding()
+                .foregroundColor(.secondary)
 
             Button(action: {
                 // Clear the cart
@@ -49,13 +60,25 @@ struct SuccessView: View {
                 }
             }) {
                 Text("Go to Main Page")
+                    .fontWeight(.semibold)
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(Color.green)
                     .foregroundColor(.white)
                     .cornerRadius(8)
             }
-            .padding()
+            .padding(.horizontal, 20)
+            .padding(.bottom, 20)
         }
+        .padding()
+        .background(Color(UIColor.systemGroupedBackground))
+        .cornerRadius(12)
+        .shadow(radius: 10)
+    }
+}
+
+struct SuccessView_Previews: PreviewProvider {
+    static var previews: some View {
+        SuccessView(orderNumber: "123456")
     }
 }
