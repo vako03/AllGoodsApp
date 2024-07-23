@@ -24,6 +24,7 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
     }
     private lazy var skipButton = CustomButton(title: "Skip") { [weak self] in
         self?.skipTapped()
+        
     }
 
     override func viewDidLoad() {
@@ -79,6 +80,11 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
     private func setupButtons() {
         view.addSubview(skipButton)
         view.addSubview(nextButton)
+        
+        // Set width constraints for the buttons
+        skipButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
+        nextButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
+
 
         NSLayoutConstraint.activate([
             skipButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
