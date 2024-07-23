@@ -1,0 +1,22 @@
+{
+  "images" : [
+    {
+      "filename" : "allgoodsapp-high-resolution-logo.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "allgoodsapp-high-resolution-logo-black.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

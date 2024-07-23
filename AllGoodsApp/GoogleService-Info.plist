@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyAPP1CKiNeE-tokol6WjkX_Mn4MN-Zz76s</string>
+	<key>GCM_SENDER_ID</key>
+	<string>60623483663</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>-.AllGoodsApp</string>
+	<key>PROJECT_ID</key>
+	<string>allgoodsapp</string>
+	<key>STORAGE_BUCKET</key>
+	<string>allgoodsapp.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false/>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false/>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true/>
+	<key>IS_GCM_ENABLED</key>
+	<true/>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true/>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:60623483663:ios:b09b4a30318508107fc47a</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>All goods app need access to location </string>
+</dict>
+</plist>
