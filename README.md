@@ -16,6 +16,9 @@ UIKit and SwiftUI Integration: AllGoodsApp leverages both UIKit and SwiftUI to d
 2. Location-Based Services:
 Google Maps Integration:  View location-specific adress with our Google Maps integration.
 
+![IMG_1019](https://github.com/user-attachments/assets/87837881-e9e7-4089-ad1b-40739ef1b8cf)
+
+
 3. Real-Time Data Management:
 Firebase Integration: AllGoodsApp uses Firebase for real-time data synchronization and seamless user authentication. Enjoy secure and efficient user account management, instant updates on order status, and push notifications for promotions and alerts.
 
