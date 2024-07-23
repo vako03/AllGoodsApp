@@ -16,7 +16,7 @@ import CoreLocation
 struct GoogleMapView: UIViewRepresentable {
     var coordinate: CLLocationCoordinate2D
     var markers: [GMSMarker] = []
-    var zoomLevel: Float = 15.0
+    var zoomLevel: Float = 15.0 // Default zoom level
     var isMyLocationEnabled: Bool = false
 
     func makeUIView(context: Context) -> GMSMapView {
@@ -30,15 +30,18 @@ struct GoogleMapView: UIViewRepresentable {
     func updateUIView(_ uiView: GMSMapView, context: Context) {
         uiView.clear()
         
+        // Add markers to the map
         for marker in markers {
             marker.map = uiView
         }
         
+        // Center the map on the marker and set zoom level
         let camera = GMSCameraPosition.camera(withLatitude: coordinate.latitude, longitude: coordinate.longitude, zoom: zoomLevel)
         uiView.animate(to: camera)
-        
+
+        // Add the custom view for user location
         if isMyLocationEnabled {
-            let userLocationView = MapAddressView().frame(width: 50, height: 50)
+            let userLocationView = UserLocationView().frame(width: 50, height: 50)
             let hostingController = UIHostingController(rootView: userLocationView)
             hostingController.view.backgroundColor = .clear
             hostingController.view.frame = CGRect(x: uiView.center.x - 25, y: uiView.center.y - 25, width: 50, height: 50)
@@ -46,8 +49,20 @@ struct GoogleMapView: UIViewRepresentable {
         }
     }
 }
-
 struct MapAddressView: View {
+    var body: some View {
+        ZStack {
+            Circle()
+                .fill(Color.blue.opacity(0.5))
+                .frame(width: 30, height: 30)
+            Circle()
+                .fill(Color.blue)
+                .frame(width: 15, height: 15)
+        }
+    }
+}
+
+struct UserLocationView: View {
     var body: some View {
         ZStack {
             Circle()

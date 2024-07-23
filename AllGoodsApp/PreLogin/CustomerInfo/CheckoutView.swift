@@ -24,25 +24,25 @@ struct CheckoutView: View {
     private let viewModel = ProductViewModel()
 
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    userInfoSection
-                    cartSection
-                    paymentInformationSection
-                    promoCodeSection
-                    payButton
-                }
-                .padding()
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                userInfoSection
+                cartSection
+                paymentInformationSection
+                promoCodeSection
+                payButton
             }
-            .navigationTitle("Checkout")
-            .onAppear(perform: updatePaymentDetails)
-            .alert(isPresented: $showAlert) {
-                Alert(title: Text("Payment Method Required"), message: Text("Please choose a payment method."), dismissButton: .default(Text("OK")))
+            .padding()
+        }
+        .navigationTitle("Checkout")
+        .onAppear(perform: updatePaymentDetails)
+        .background(
+            NavigationLink(destination: SuccessView(orderNumber: orderNumber), isActive: $navigateToSuccess) {
+                EmptyView()
             }
-            .navigationDestination(isPresented: $navigateToSuccess) {
-                SuccessView(orderNumber: orderNumber)
-            }
+        )
+        .alert(isPresented: $showAlert) {
+            Alert(title: Text("Payment Method Required"), message: Text("Please choose a payment method."), dismissButton: .default(Text("OK")))
         }
     }
 
@@ -211,7 +211,7 @@ struct CheckoutView: View {
     private func updatePaymentDetails() {
         subtotal = cartProducts.reduce(0) { $0 + ($1.product.price * Double($1.quantity)) }
         discount = cartProducts.reduce(0) { $0 + (($1.product.price * $1.product.discountPercentage / 100) * Double($1.quantity)) }
-        total = subtotal - discount
+        total = subtotal + discount
     }
 
     private func applyPromoCode() {

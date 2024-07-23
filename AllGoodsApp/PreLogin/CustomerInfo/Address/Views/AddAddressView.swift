@@ -16,7 +16,7 @@ struct AddAddressView: View {
     @Binding var selectedAddress: String?
     @State private var title: String = ""
     @State private var searchText: String = ""
-    @State private var coordinate = CLLocationCoordinate2D(latitude: 41.7151, longitude: 44.8271)
+    @State private var coordinate = CLLocationCoordinate2D(latitude: 41.7151, longitude: 44.8271) // Tbilisi coordinates
     @State private var address: String = ""
     @State private var showingAlert = false
     @StateObject private var searchViewModel = AddressSearchViewModel()
