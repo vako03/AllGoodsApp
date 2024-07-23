@@ -11,8 +11,6 @@ import UIKit
 protocol ProductSelectionDelegate: AnyObject {
     func didSelectProduct(_ product: Product)
 }
-
-
 import UIKit
 
 class CategoryViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, ProductSelectionDelegate {
@@ -26,6 +24,9 @@ class CategoryViewController: UIViewController, UICollectionViewDataSource, UICo
         self.products = products
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(updateUIForFavoriteChanges(_:)), name: .favoritesUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateUIForCartChanges(_:)), name: .cartUpdated, object: nil)
     }
 
     required init?(coder: NSCoder) {
@@ -83,5 +84,21 @@ class CategoryViewController: UIViewController, UICollectionViewDataSource, UICo
     func didSelectProduct(_ product: Product) {
         let productDetailViewController = ProductDetailViewController(product: product)
         navigationController?.pushViewController(productDetailViewController, animated: true)
+    }
+
+    @objc private func updateUIForFavoriteChanges(_ notification: Notification) {
+        guard let productId = notification.object as? Int else { return }
+        if let index = products.firstIndex(where: { $0.id == productId }) {
+            let indexPath = IndexPath(item: index, section: 0)
+            collectionView.reloadItems(at: [indexPath])
+        }
+    }
+
+    @objc private func updateUIForCartChanges(_ notification: Notification) {
+        guard let productId = notification.object as? Int else { return }
+        if let index = products.firstIndex(where: { $0.id == productId }) {
+            let indexPath = IndexPath(item: index, section: 0)
+            collectionView.reloadItems(at: [indexPath])
+        }
     }
 }

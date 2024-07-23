@@ -241,8 +241,6 @@ class ProductDetailViewController: UIViewController {
     }
 }
 
-import UIKit
-
 extension UIImageView {
     func load(url: URL) {
         DispatchQueue.global().async { [weak self] in
@@ -256,4 +254,3 @@ extension UIImageView {
         }
     }
 }
- 
