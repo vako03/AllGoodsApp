@@ -47,14 +47,16 @@ struct TicTacToeGameView: View {
     @ObservedObject var viewModel: TicTacToeViewModel
 
     var body: some View {
-        VStack(spacing: 80) {
-            VStack(spacing: 20) {
+        VStack(spacing: 20) {
+            VStack(spacing: 10) {
                 Text("TicTacToe")
                     .font(.system(size: 60))
                     .fontWeight(.bold)
 
-                Text("\(viewModel.username ?? "Player")'s turn")
-                    .font(.system(size: 30))
+                Text("Play the game 'TicTacToe' and get a promo code that you can use on the payment page. -10% up to $300")
+                    .font(.system(size: 20))
+                    .multilineTextAlignment(.center)
+                    .padding()
             }
 
             VStack(spacing: 5) {
@@ -64,7 +66,10 @@ struct TicTacToeGameView: View {
             }
             .background(Color.gray.opacity(0.3))
             .aspectRatio(1.0, contentMode: .fill)
+            
+            Spacer()
         }
+        .padding()
         .alert(item: $viewModel.alertItem) { alertItem in
             Alert(
                 title: Text(alertItem.title),

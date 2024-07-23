@@ -11,8 +11,7 @@ extension UIColor {
 import UIKit
 import SwiftUI
 import SDWebImage
-
-
+import FirebaseAuth
 
 class MainViewController: UIViewController {
     var coordinator: AppCoordinator?
@@ -270,6 +269,8 @@ class MainViewController: UIViewController {
             ratedProductCollectionView.heightAnchor.constraint(equalToConstant: ratedCellHeight),
             ratedProductCollectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -50)
         ])
+
+        playGameButton.addTarget(self, action: #selector(playGameButtonTapped), for: .touchUpInside)
     }
 
     private func setupNotificationObservers() {
@@ -329,18 +330,21 @@ class MainViewController: UIViewController {
         }
     }
 
-    private func playGameButtonTapped() {
-        // Placeholder for play game logic
+    @objc private func playGameButtonTapped() {
+        guard let currentUser = Auth.auth().currentUser, currentUser.displayName != "Guest" else {
+            showLoginAlert()
+            return
+        }
         navigateToTicTacToe()
     }
 
     private func showLoginAlert() {
-        let alertController = UIAlertController(title: "Login Required", message: "Please login or register to play the game.", preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        alertController.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+        let alert = UIAlertController(title: "Login Required", message: "Please log in to continue.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Login", style: .default, handler: { [weak self] _ in
             self?.coordinator?.showLogin()
-        })
-        present(alertController, animated: true, completion: nil)
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
 
     private func allCategoriesTapped() {

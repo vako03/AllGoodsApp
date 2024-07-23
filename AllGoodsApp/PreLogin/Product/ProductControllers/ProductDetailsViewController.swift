@@ -6,8 +6,10 @@
 //
 import UIKit
 import SwiftUI
+import FirebaseAuth
 
 class ProductDetailViewController: UIViewController {
+    var coordinator: AppCoordinator?
     private let product: Product
     private var heartButton: UIButton!
     private var addToCartButton: UIButton!
@@ -165,9 +167,25 @@ class ProductDetailViewController: UIViewController {
     }
 
     @objc private func proceedToCheckout() {
-        let contactInformationView = ContactInformationView(nickname: "User", email: "test@example.com")
+        guard let currentUser = Auth.auth().currentUser, currentUser.displayName != "Guest" else {
+            showLoginAlert()
+            return
+        }
+        let nickname = currentUser.displayName ?? "Guest"
+        let email = currentUser.email ?? ""
+        
+        let contactInformationView = ContactInformationView(nickname: nickname, email: email)
         let hostingController = UIHostingController(rootView: contactInformationView)
         navigationController?.pushViewController(hostingController, animated: true)
+    }
+
+    private func showLoginAlert() {
+        let alert = UIAlertController(title: "Login Required", message: "Please log in to continue.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Login", style: .default, handler: { [weak self] _ in
+            self?.coordinator?.showLogin()
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
 
     private func updateFavoriteStatus() {

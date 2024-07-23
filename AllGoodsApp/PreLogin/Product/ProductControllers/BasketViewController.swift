@@ -9,8 +9,6 @@ import UIKit
 import SwiftUI
 import FirebaseAuth
 
-
-
 class BasketViewController: UIViewController {
     var coordinator: AppCoordinator?
     private let viewModel = ProductViewModel()
@@ -300,17 +298,12 @@ class BasketViewController: UIViewController {
     }
 
     @objc private func checkoutButtonTapped() {
-        guard let currentUser = Auth.auth().currentUser else { return }
-        let nickname = currentUser.displayName ?? "Guest"
-        let email = currentUser.email ?? ""
-        
-        guard nickname != "Guest" else {
-            // Show alert that guests cannot proceed to checkout
-            let alert = UIAlertController(title: "Access Denied", message: "Guests cannot proceed to checkout. Please log in.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            present(alert, animated: true, completion: nil)
+        guard let currentUser = Auth.auth().currentUser, currentUser.displayName != "Guest" else {
+            coordinator?.showLoginAlert()
             return
         }
+        let nickname = currentUser.displayName ?? "Guest"
+        let email = currentUser.email ?? ""
         
         let contactInformationView = ContactInformationView(nickname: nickname, email: email)
         let hostingController = UIHostingController(rootView: contactInformationView)
