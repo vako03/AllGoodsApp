@@ -5,32 +5,32 @@
 //  Created by valeri mekhashishvili on 11.07.24.
 //
 
-import Foundation
+    import Foundation
 
-struct Product: Codable {
-    let id: Int
-    let title: String
-    let description: String
-    let price: Double
-    let discountPercentage: Double
-    let rating: Double
-    let stock: Int
-    let brand: String?
-    let category: String
-    let thumbnail: String
-    let images: [String]
-    let tags: [String]?
-    let sku: String?
-    let weight: Double?
-    let dimensions: Dimensions?
-    let warrantyInformation: String?
-    let shippingInformation: String?
-    let availabilityStatus: String?
-    let reviews: [Review]?
-    let returnPolicy: String?
-    let minimumOrderQuantity: Int?
-    let meta: Meta?
-}
+    struct Product: Codable {
+        let id: Int
+        let title: String
+        let description: String
+        let price: Double
+        let discountPercentage: Double
+        let rating: Double
+        let stock: Int
+        let brand: String?
+        let category: String
+        let thumbnail: String
+        let images: [String]
+        let tags: [String]?
+        let sku: String?
+        let weight: Double?
+        let dimensions: Dimensions?
+        let warrantyInformation: String?
+        let shippingInformation: String?
+        let availabilityStatus: String?
+        let reviews: [Review]?
+        let returnPolicy: String?
+        let minimumOrderQuantity: Int?
+        let meta: Meta?
+    }
 
 struct Dimensions: Codable {
     let width: Double
@@ -61,10 +61,12 @@ struct ProductResponse: Codable {
 }
 
 
-struct CartProduct {
-    let product: Product
+struct CartProduct: Identifiable {
+    var id: Int { product.id }
+    var product: Product
     var quantity: Int
 }
+
 
 
 struct Order {

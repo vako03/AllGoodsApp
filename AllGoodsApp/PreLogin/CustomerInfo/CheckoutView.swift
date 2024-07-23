@@ -2,7 +2,7 @@
 //  CheckoutView.swift
 //  AllGoodsApp
 //
-//  Created by valeri mekhashishvili on 20.07.24.
+//  Created by valeri mekhashishvili on 23.07.24.
 //
 
 import SwiftUI
@@ -16,6 +16,7 @@ struct CheckoutView: View {
     @State private var discount: Double = 0.0
     @State private var total: Double = 0.0
     @State private var promoCode: String = ""
+    @State private var selectedPaymentMethod: String = ""
     @State private var navigateToSuccess = false
     @State private var orderNumber: String = ""
 
@@ -126,26 +127,25 @@ struct CheckoutView: View {
 
     private var paymentInformationSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("PAYMENT INFORMATION")
+            Text("Choose a payment method")
                 .font(.headline)
 
             HStack {
-                Image("bankLogo") // Replace with your bank logo image
-                    .resizable()
-                    .frame(width: 40, height: 40)
-                    .cornerRadius(8)
-                VStack(alignment: .leading) {
-                    Text("BANK OF GEORGIA")
-                        .font(.headline)
-                    Text("VISA / MASTERCARD / AMEX")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                }
+                Text("Payment to the courier by card")
                 Spacer()
                 Button(action: {
-                    // Edit payment method action
+                    selectedPaymentMethod = "card"
                 }) {
-                    Image(systemName: "pencil")
+                    Image(systemName: selectedPaymentMethod == "card" ? "checkmark.circle.fill" : "circle")
+                }
+            }
+            HStack {
+                Text("Payment to the courier in cash")
+                Spacer()
+                Button(action: {
+                    selectedPaymentMethod = "cash"
+                }) {
+                    Image(systemName: selectedPaymentMethod == "cash" ? "checkmark.circle.fill" : "circle")
                 }
             }
         }
@@ -159,13 +159,11 @@ struct CheckoutView: View {
             Text("Promo Code")
                 .font(.headline)
             HStack {
-                TextField("Enter promo code", text: $promoCode)
+                TextField("Enter promo code", text: $promoCode, onCommit: applyPromoCode)
                     .padding()
                     .background(Color(.systemGray6))
                     .cornerRadius(8)
-                Button(action: {
-                    // Apply promo code action
-                }) {
+                Button(action: applyPromoCode) {
                     Image(systemName: "tag")
                 }
                 .padding()
@@ -192,7 +190,7 @@ struct CheckoutView: View {
             SharedStorage.shared.addOrder(order)
             navigateToSuccess = true
         }) {
-            Text("Pay")
+            Text("Pay \(String(format: "%.2f₾", total))")
                 .frame(maxWidth: .infinity)
                 .padding()
                 .background(Color.green)
@@ -220,6 +218,16 @@ struct CheckoutView: View {
         subtotal = cartProducts.reduce(0) { $0 + ($1.product.price * Double($1.quantity)) }
         discount = cartProducts.reduce(0) { $0 + (($1.product.price * $1.product.discountPercentage / 100) * Double($1.quantity)) }
         total = subtotal - discount
+    }
+
+    private func applyPromoCode() {
+        if promoCode == "Get10" {
+            discount = min(subtotal * 0.1, 300.0)
+            total = subtotal - discount
+        } else {
+            discount = 0.0
+            total = subtotal
+        }
     }
 
     private func generateOrderNumber() -> String {

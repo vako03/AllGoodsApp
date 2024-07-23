@@ -82,7 +82,7 @@ class TicTacToeViewModel: ObservableObject {
                 title: "Congratulations!",
                 message: "You've won! Use promo code GET10.",
                 primaryButton: .default(Text("Copy Code"), action: {
-                    UIPasteboard.general.string = "GET10"
+                    UIPasteboard.general.string = "Get10"
                     self.onPromoDismissed?()
                 }),
                 secondaryButton: .default(Text("OK"), action: self.onPromoDismissed)
