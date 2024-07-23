@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class ProfileViewController: UIViewController {
     var coordinator: AppCoordinator?
@@ -33,7 +34,7 @@ class ProfileViewController: UIViewController {
     }()
 
     private lazy var logoutButton: CustomButton = {
-        let button = CustomButton(title: "Log out") { [weak self] in
+        let button = CustomButton(title: isLoggedIn ? "Log out" : "Log in") { [weak self] in
             self?.handleLogoutTapped()
         }
         return button
@@ -52,6 +53,7 @@ class ProfileViewController: UIViewController {
         view.backgroundColor = .white
         title = "Profile"
         setupViews()
+        updateLogoutButtonTitle()
     }
 
     private func setupViews() {
@@ -65,6 +67,15 @@ class ProfileViewController: UIViewController {
             buttonStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             buttonStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
+    }
+
+    private func updateLogoutButtonTitle() {
+        let newTitle = isLoggedIn ? "Log out" : "Log in"
+        logoutButton.setTitle(newTitle, for: .normal)
+    }
+
+    private var isLoggedIn: Bool {
+        return AuthViewModel().isLoggedIn
     }
 
     private func handleFavouriteTapped() {
@@ -87,6 +98,7 @@ class ProfileViewController: UIViewController {
             switch result {
             case .success:
                 self?.coordinator?.showLogin()
+                self?.updateLogoutButtonTitle() // Update button title after logout
             case .failure(let error):
                 showAlert(on: self!, message: error.localizedDescription)
             }
