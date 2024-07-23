@@ -23,7 +23,7 @@ class FavouriteViewController: UIViewController {
     }
 
     private func setupCollectionView() {
-        let layout = LineFlowLayout()
+        let layout = SeparatorLine()
 
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.dataSource = self

@@ -18,6 +18,7 @@
 		1A24837D2C50467800D3C53F /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A24837C2C50467800D3C53F /* LocationManager.swift */; };
 		1A24837F2C5046EF00D3C53F /* GoogleMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A24837E2C5046EF00D3C53F /* GoogleMapView.swift */; };
 		1A2483812C50479B00D3C53F /* SearchAddressViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2483802C50479B00D3C53F /* SearchAddressViewModel.swift */; };
+		1A2483832C504A9A00D3C53F /* SeparatorLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2483822C504A9A00D3C53F /* SeparatorLine.swift */; };
 		1A284E262C3E9A4A00DB27FF /* ExpressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A284E252C3E9A4A00DB27FF /* ExpressViewController.swift */; };
 		1A284E282C3E9B9A00DB27FF /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A284E272C3E9B9A00DB27FF /* TabBarController.swift */; };
 		1A284E2A2C3E9C2600DB27FF /* TabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A284E292C3E9C2600DB27FF /* TabBar.swift */; };
@@ -90,6 +91,7 @@
 		1A24837C2C50467800D3C53F /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		1A24837E2C5046EF00D3C53F /* GoogleMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleMapView.swift; sourceTree = "<group>"; };
 		1A2483802C50479B00D3C53F /* SearchAddressViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAddressViewModel.swift; sourceTree = "<group>"; };
+		1A2483822C504A9A00D3C53F /* SeparatorLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorLine.swift; sourceTree = "<group>"; };
 		1A284E252C3E9A4A00DB27FF /* ExpressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpressViewController.swift; sourceTree = "<group>"; };
 		1A284E272C3E9B9A00DB27FF /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		1A284E292C3E9C2600DB27FF /* TabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBar.swift; sourceTree = "<group>"; };
@@ -366,6 +368,7 @@
 				1A6FE1C12C3B53C000F6D5B4 /* CustomLoader.swift */,
 				1AA582342C3D70090081A410 /* CustomImageView.swift */,
 				1A6FE1BF2C3B52A500F6D5B4 /* CustomTextFieldHandlers.swift */,
+				1A2483822C504A9A00D3C53F /* SeparatorLine.swift */,
 			);
 			path = ReusableComponents;
 			sourceTree = "<group>";
@@ -544,6 +547,7 @@
 				1A1209322C35D59300FDC9BE /* AppDelegate.swift in Sources */,
 				1AA97AC02C403BDD003DA15C /* AllCategoriesViewController.swift in Sources */,
 				1A284E732C400BED00DB27FF /* ProductCategory.swift in Sources */,
+				1A2483832C504A9A00D3C53F /* SeparatorLine.swift in Sources */,
 				1A284E262C3E9A4A00DB27FF /* ExpressViewController.swift in Sources */,
 				1AB695FD2C37196000EA6F49 /* SecondOnboardingPageViewController.swift in Sources */,
 				1A5F28A92C41276F00FFBAE3 /* AllCategoryCell.swift in Sources */,
