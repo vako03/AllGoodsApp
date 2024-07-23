@@ -55,7 +55,7 @@ struct AddAddressView: View {
             .frame(height: 100)
 
             GoogleMapView(coordinate: coordinate, isMyLocationEnabled: true)
-                .frame(height: 350)
+                .frame(maxHeight: 350)
                 .edgesIgnoringSafeArea(.bottom)
 
             Text("\(address)")
@@ -177,9 +177,6 @@ struct GoogleMapView: UIViewRepresentable {
         }
     }
 }
-
-
-
 
 class AddressSearchViewModel: ObservableObject {
     @Published var searchResults: [MKMapItem] = []

@@ -23,8 +23,13 @@ struct Tile: View {
                 .font(.system(size: 75))
                 .fontWeight(.bold)
                 .frame(width: 100, height: 100)
-                .background(Color.gray.opacity(0.3))
-                .foregroundColor(.black)
+                .background(Color.blue.opacity(0.3))
+                .cornerRadius(10)
+                .foregroundColor(.blue)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(Color.blue, lineWidth: 2)
+                )
         }
     }
 }
@@ -35,7 +40,7 @@ struct Row: View {
     var rowIndex: Int
 
     var body: some View {
-        HStack(spacing: 5) {
+        HStack(spacing: 10) {
             ForEach(0..<3, id: \.self) { colIndex in
                 Tile(marker: $row[colIndex], viewModel: viewModel, row: rowIndex, col: colIndex)
             }
@@ -52,23 +57,33 @@ struct TicTacToeGameView: View {
                 Text("TicTacToe")
                     .font(.system(size: 60))
                     .fontWeight(.bold)
-
-                Text("Play the game 'TicTacToe' and get a promo code that you can use on the payment page. -10% up to $300")
-                    .font(.system(size: 20))
-                    .multilineTextAlignment(.center)
+                    .foregroundColor(.blue)
                     .padding()
-            }
 
-            VStack(spacing: 5) {
+                Text("Play and get promocode -10% up to $300")
+                    .font(.system(size: 12))
+                    .foregroundColor(.gray)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+                    .frame(maxWidth: .infinity)
+            }
+            .padding(.top, 40)
+            
+            VStack(spacing: 10) {
                 ForEach(0..<3, id: \.self) { rowIndex in
                     Row(row: self.$viewModel.board[rowIndex], viewModel: viewModel, rowIndex: rowIndex)
                 }
             }
-            .background(Color.gray.opacity(0.3))
-            .aspectRatio(1.0, contentMode: .fill)
+            .background(Color.gray.opacity(0.1))
+            .cornerRadius(20)
+            .padding(.horizontal, 20)
             
             Spacer()
         }
+        .padding()
+        .background(Color.white)
+        .cornerRadius(20)
+        .shadow(radius: 10)
         .padding()
         .alert(item: $viewModel.alertItem) { alertItem in
             Alert(
