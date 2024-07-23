@@ -54,7 +54,8 @@ struct SuccessView: View {
                 tabBarController.viewControllers = [mainVC, favouriteVC, expressVC, basketVC, profileVC]
                 tabBarController.setValue(TabBar(), forKey: "tabBar")
 
-                if let window = UIApplication.shared.windows.first {
+                if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                   let window = scene.windows.first {
                     window.rootViewController = UINavigationController(rootViewController: tabBarController)
                     window.makeKeyAndVisible()
                 }

@@ -16,68 +16,68 @@ struct ContactInformationView: View {
     var cartProducts: [CartProduct]
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text("Contact Information")
-                .font(.largeTitle)
-                .padding()
-
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Nickname*")
-                    .font(.headline)
-
-                TextField("Nickname", text: $nickname)
+        NavigationStack {
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Contact Information")
+                    .font(.largeTitle)
                     .padding()
-                    .background(Color(.systemGray6))
-                    .cornerRadius(8)
-                    .disabled(true)
-            }
-            .padding(.horizontal)
 
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Email*")
-                    .font(.headline)
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Nickname*")
+                        .font(.headline)
 
-                TextField("Email", text: $email)
-                    .padding()
-                    .background(Color(.systemGray6))
-                    .cornerRadius(8)
-                    .disabled(true)
-            }
-            .padding(.horizontal)
+                    TextField("Nickname", text: $nickname)
+                        .padding()
+                        .background(Color(.systemGray6))
+                        .cornerRadius(8)
+                        .disabled(true)
+                }
+                .padding(.horizontal)
 
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Phone Number*")
-                    .font(.headline)
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Email*")
+                        .font(.headline)
 
-                ZStack(alignment: .leading) {
-                    if !isEditingPhoneNumber && phoneNumber == "+995 " {
-                        Text("000 00 00 00")
-                            .foregroundColor(.gray)
-                            .padding(.leading, 8)
+                    TextField("Email", text: $email)
+                        .padding()
+                        .background(Color(.systemGray6))
+                        .cornerRadius(8)
+                        .disabled(true)
+                }
+                .padding(.horizontal)
+
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Phone Number*")
+                        .font(.headline)
+
+                    ZStack(alignment: .leading) {
+                        if !isEditingPhoneNumber && phoneNumber == "+995 " {
+                            Text("000 00 00 00")
+                                .foregroundColor(.gray)
+                                .padding(.leading, 8)
+                        }
+
+                        TextField("", text: $phoneNumber, onEditingChanged: { isEditing in
+                            isEditingPhoneNumber = isEditing
+                        })
+                        .padding()
+                        .background(Color(.systemGray6))
+                        .cornerRadius(8)
+                        .keyboardType(.numberPad)
+                        .onChange(of: phoneNumber) { oldValue, newValue in
+                            formatPhoneNumber()
+                        }
                     }
 
-                    TextField("", text: $phoneNumber, onEditingChanged: { isEditing in
-                        isEditingPhoneNumber = isEditing
-                    })
-                    .padding()
-                    .background(Color(.systemGray6))
-                    .cornerRadius(8)
-                    .keyboardType(.numberPad)
-                    .onChange(of: phoneNumber) { newValue in
-                        formatPhoneNumber()
+                    if let errorMessage = phoneNumberErrorMessage {
+                        Text(errorMessage)
+                            .foregroundColor(.red)
+                            .font(.caption)
+                            .padding(.top, 4)
                     }
                 }
+                .padding(.horizontal)
 
-                if let errorMessage = phoneNumberErrorMessage {
-                    Text(errorMessage)
-                        .foregroundColor(.red)
-                        .font(.caption)
-                        .padding(.top, 4)
-                }
-            }
-            .padding(.horizontal)
-
-            NavigationLink(destination: AddressInformationView(email: email, phoneNumber: phoneNumber, cartProducts: cartProducts), isActive: $showingAddressInformationView) {
                 Button(action: {
                     if isValidPhoneNumber() {
                         showingAddressInformationView.toggle()
@@ -91,9 +91,19 @@ struct ContactInformationView: View {
                         .cornerRadius(8)
                 }
                 .padding(.horizontal)
-            }
+                .background(
+                    NavigationLink(
+                        destination: EmptyView(),
+                        isActive: $showingAddressInformationView,
+                        label: { EmptyView() }
+                    )
+                )
 
-            Spacer()
+                Spacer()
+            }
+            .navigationDestination(isPresented: $showingAddressInformationView) {
+                AddressInformationView(email: email, phoneNumber: phoneNumber, cartProducts: cartProducts)
+            }
         }
     }
 
@@ -128,3 +138,4 @@ struct ContactInformationView: View {
         return true
     }
 }
+
