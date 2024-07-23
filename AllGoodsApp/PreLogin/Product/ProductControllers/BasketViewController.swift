@@ -30,7 +30,6 @@ class BasketViewController: UIViewController {
     private let emptyCartView = UIView()
     private let emptyCartIcon = UIImageView(image: UIImage(named: "shopping"))
     private let emptyCartLabel = UILabel()
-    private let addProductsButton = UIButton(type: .system)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,17 +76,8 @@ class BasketViewController: UIViewController {
         emptyCartLabel.textAlignment = .center
         emptyCartLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        addProductsButton.setTitle("Add products", for: .normal)
-        addProductsButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-        addProductsButton.backgroundColor = .black
-        addProductsButton.setTitleColor(.white, for: .normal)
-        addProductsButton.layer.cornerRadius = 25
-        addProductsButton.addTarget(self, action: #selector(addProductsButtonTapped), for: .touchUpInside)
-        addProductsButton.translatesAutoresizingMaskIntoConstraints = false
-
         emptyCartView.addSubview(emptyCartIcon)
         emptyCartView.addSubview(emptyCartLabel)
-        emptyCartView.addSubview(addProductsButton)
         contentView.addSubview(emptyCartView)
 
         NSLayoutConstraint.activate([
@@ -103,11 +93,7 @@ class BasketViewController: UIViewController {
             emptyCartLabel.leadingAnchor.constraint(equalTo: emptyCartView.leadingAnchor),
             emptyCartLabel.trailingAnchor.constraint(equalTo: emptyCartView.trailingAnchor),
             
-            addProductsButton.topAnchor.constraint(equalTo: emptyCartLabel.bottomAnchor, constant: 16),
-            addProductsButton.leadingAnchor.constraint(equalTo: emptyCartView.leadingAnchor),
-            addProductsButton.trailingAnchor.constraint(equalTo: emptyCartView.trailingAnchor),
-            addProductsButton.heightAnchor.constraint(equalToConstant: 50),
-            addProductsButton.bottomAnchor.constraint(equalTo: emptyCartView.bottomAnchor)
+            emptyCartLabel.bottomAnchor.constraint(equalTo: emptyCartView.bottomAnchor)
         ])
     }
 
@@ -308,11 +294,6 @@ class BasketViewController: UIViewController {
         let contactInformationView = ContactInformationView(nickname: nickname, email: email)
         let hostingController = UIHostingController(rootView: contactInformationView)
         navigationController?.pushViewController(hostingController, animated: true)
-    }
-
-    @objc private func addProductsButtonTapped() {
-        let mainViewController = MainViewController()
-        navigationController?.pushViewController(mainViewController, animated: true)
     }
 
     deinit {
