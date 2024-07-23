@@ -45,7 +45,7 @@ class MainViewController: UIViewController {
     private let seeMoreBestPriceButton: UIButton = {
          let button = UIButton(type: .system)
          button.setTitle("See More >", for: .normal)
-         button.tintColor = .black  // Set button text color to black
+         button.tintColor = .black
          button.translatesAutoresizingMaskIntoConstraints = false
          button.addTarget(MainViewController.self, action: #selector(seeMoreBestPriceTapped), for: .touchUpInside)
          return button
@@ -54,7 +54,7 @@ class MainViewController: UIViewController {
      private let seeMoreBestRatingButton: UIButton = {
          let button = UIButton(type: .system)
          button.setTitle("See More >", for: .normal)
-         button.tintColor = .black  // Set button text color to black
+         button.tintColor = .black
          button.translatesAutoresizingMaskIntoConstraints = false
          button.addTarget(MainViewController.self, action: #selector(seeMoreBestRatingTapped), for: .touchUpInside)
          return button
@@ -62,7 +62,6 @@ class MainViewController: UIViewController {
     
     init() {
         self.playGameButton = CustomButton(title: "Play Game") {
-            // Action for play game button
         }
         super.init(nibName: nil, bundle: nil)
     }
