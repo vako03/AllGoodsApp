@@ -4,9 +4,10 @@ Description:
 AllGoodsApp is a e-commerce platform designed to provide a seamless and intuitive shopping experience on iOS. Built using the latest technologies, AllGoodsApp integrates powerful features that make online shopping easy and enjoyable.
 
 Technologies Used
-1. UIKit and SwiftUI: For a hybrid approach to building a flexible and dynamic user interface.
-2. Google Maps SDK: For integrating map functionalities and enhancing location-based services.
-3. Firebase: For user authentication, real-time database, cloud storage, and push notifications.
+1. UIKit and SwiftUI: For a hybrid approach to building a flexible and dynamic user interface;
+3. Firebase, FirebaseAuth: For secure and seamless user authentication with multiple sign-in methods.
+4. SDWebImage: For efficient image loading and caching, enhancing the user experience with fast image display.
+5. Google Maps SDK: For integrating map functionalities and enhancing location-based services;
 
 Key Features
 1. Modern User Interface:
