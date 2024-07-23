@@ -13,6 +13,7 @@ struct ContactInformationView: View {
     @State private var isEditingPhoneNumber = false
     @State private var showingAddressInformationView = false
     @State private var phoneNumberErrorMessage: String?
+    var cartProducts: [CartProduct]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -76,7 +77,7 @@ struct ContactInformationView: View {
             }
             .padding(.horizontal)
 
-            NavigationLink(destination: AddressInformationView(email: email, phoneNumber: phoneNumber), isActive: $showingAddressInformationView) {
+            NavigationLink(destination: AddressInformationView(email: email, phoneNumber: phoneNumber, cartProducts: cartProducts), isActive: $showingAddressInformationView) {
                 Button(action: {
                     if isValidPhoneNumber() {
                         showingAddressInformationView.toggle()

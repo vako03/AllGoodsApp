@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct CheckoutView: View {
-    @State var email: String = ""
-    @State var phoneNumber: String = ""
-    @State var address: String = ""
-    @State private var cartProducts: [CartProduct] = []
+    @State var email: String
+    @State var phoneNumber: String
+    @State var address: String
+    @State var cartProducts: [CartProduct]
     @State private var subtotal: Double = 0.0
     @State private var discount: Double = 0.0
     @State private var total: Double = 0.0
@@ -19,6 +19,7 @@ struct CheckoutView: View {
     @State private var selectedPaymentMethod: String = ""
     @State private var navigateToSuccess = false
     @State private var orderNumber: String = ""
+    @State private var showAlert = false
 
     private let viewModel = ProductViewModel()
 
@@ -34,12 +35,15 @@ struct CheckoutView: View {
             .padding()
         }
         .navigationTitle("Checkout")
-        .onAppear(perform: fetchCartItems)
+        .onAppear(perform: updatePaymentDetails)
         .background(
             NavigationLink(destination: SuccessView(orderNumber: orderNumber), isActive: $navigateToSuccess) {
                 EmptyView()
             }
         )
+        .alert(isPresented: $showAlert) {
+            Alert(title: Text("Payment Method Required"), message: Text("Please choose a payment method."), dismissButton: .default(Text("OK")))
+        }
     }
 
     private var userInfoSection: some View {
@@ -178,17 +182,21 @@ struct CheckoutView: View {
 
     private var payButton: some View {
         Button(action: {
-            // Handle payment
-            orderNumber = generateOrderNumber()
-            let order = Order(orderNumber: orderNumber,
-                              productThumbnail: cartProducts.first?.product.thumbnail ?? "",
-                              customerEmail: email,
-                              customerPhoneNumber: phoneNumber,
-                              date: getCurrentDate(),
-                              amount: String(format: "%.2f₾", total))
+            if selectedPaymentMethod.isEmpty {
+                showAlert = true
+            } else {
+                // Handle payment
+                orderNumber = generateOrderNumber()
+                let order = Order(orderNumber: orderNumber,
+                                  productThumbnail: cartProducts.first?.product.thumbnail ?? "",
+                                  customerEmail: email,
+                                  customerPhoneNumber: phoneNumber,
+                                  date: getCurrentDate(),
+                                  amount: String(format: "%.2f₾", total))
 
-            SharedStorage.shared.addOrder(order)
-            navigateToSuccess = true
+                SharedStorage.shared.addOrder(order)
+                navigateToSuccess = true
+            }
         }) {
             Text("Pay \(String(format: "%.2f₾", total))")
                 .frame(maxWidth: .infinity)
@@ -200,24 +208,10 @@ struct CheckoutView: View {
         .padding(.top)
     }
 
-    private func fetchCartItems() {
-        viewModel.fetchAllProducts { result in
-            switch result {
-            case .success:
-                DispatchQueue.main.async {
-                    cartProducts = viewModel.getCartProducts()
-                    updatePaymentDetails()
-                }
-            case .failure(let error):
-                print("Failed to fetch products:", error)
-            }
-        }
-    }
-
     private func updatePaymentDetails() {
         subtotal = cartProducts.reduce(0) { $0 + ($1.product.price * Double($1.quantity)) }
         discount = cartProducts.reduce(0) { $0 + (($1.product.price * $1.product.discountPercentage / 100) * Double($1.quantity)) }
-        total = subtotal - discount
+        total = subtotal + discount
     }
 
     private func applyPromoCode() {

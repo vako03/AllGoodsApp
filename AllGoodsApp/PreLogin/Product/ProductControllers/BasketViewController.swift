@@ -291,7 +291,7 @@ class BasketViewController: UIViewController {
         let nickname = currentUser.displayName ?? "Guest"
         let email = currentUser.email ?? ""
         
-        let contactInformationView = ContactInformationView(nickname: nickname, email: email)
+        let contactInformationView = ContactInformationView(nickname: nickname, email: email, cartProducts: cartProducts)
         let hostingController = UIHostingController(rootView: contactInformationView)
         navigationController?.pushViewController(hostingController, animated: true)
     }

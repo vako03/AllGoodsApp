@@ -15,6 +15,7 @@ struct AddressInformationView: View {
     @State private var navigateToCheckout = false
     var email: String
     var phoneNumber: String
+    var cartProducts: [CartProduct]
 
     var body: some View {
         VStack {
@@ -64,7 +65,7 @@ struct AddressInformationView: View {
                     .padding()
                     .background(
                         NavigationLink(
-                            destination: CheckoutView(email: email, phoneNumber: phoneNumber, address: selectedAddress ?? ""),
+                            destination: CheckoutView(email: email, phoneNumber: phoneNumber, address: selectedAddress ?? "", cartProducts: cartProducts),
                             isActive: $navigateToCheckout,
                             label: { EmptyView() }
                         )

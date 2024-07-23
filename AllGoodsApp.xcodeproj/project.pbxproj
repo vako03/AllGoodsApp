@@ -226,8 +226,8 @@
 				1AEF54282C49B673009B1CFF /* ContactInformationView.swift */,
 				1AEF542C2C49CB8F009B1CFF /* AddressInformationView.swift */,
 				1AEF54302C49E592009B1CFF /* AddAddressView.swift */,
-				1AFFA1A82C4E68FC0062979A /* SuccessView.swift */,
 				1A1E6F2A2C500179003CF541 /* CheckoutView.swift */,
+				1AFFA1A82C4E68FC0062979A /* SuccessView.swift */,
 			);
 			path = CustomerInfo;
 			sourceTree = "<group>";

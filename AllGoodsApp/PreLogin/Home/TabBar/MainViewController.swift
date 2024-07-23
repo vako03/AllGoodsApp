@@ -44,7 +44,7 @@ class MainViewController: UIViewController {
 
     private let seeMoreBestPriceButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("See More ->", for: .normal)
+        button.setTitle("See More >", for: .normal)
         button.tintColor = .black  // Set button text color to black
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(seeMoreBestPriceTapped), for: .touchUpInside)
@@ -53,7 +53,7 @@ class MainViewController: UIViewController {
 
     private let seeMoreBestRatingButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("See More ->", for: .normal)
+        button.setTitle("See More >", for: .normal)
         button.tintColor = .black  // Set button text color to black
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(seeMoreBestRatingTapped), for: .touchUpInside)
