@@ -14,6 +14,9 @@ class ProductDetailViewController: UIViewController {
     private var heartButton: UIButton!
     private var addToCartButton: UIButton!
     private var proceedToCheckoutButton: UIButton!
+    private var seeMoreButton: UIButton!
+    private var additionalDetailsLabel: UILabel!
+    private var isShowingMoreInfo = false
     private let viewModel = ProductViewModel()
 
     init(product: Product) {
@@ -76,6 +79,18 @@ class ProductDetailViewController: UIViewController {
         detailsLabel.text = getDetailsText(for: product)
         detailsLabel.translatesAutoresizingMaskIntoConstraints = false
 
+        additionalDetailsLabel = UILabel()
+        additionalDetailsLabel.font = UIFont.systemFont(ofSize: 14)
+        additionalDetailsLabel.numberOfLines = 1
+        additionalDetailsLabel.text = getAdditionalDetailsText(for: product)
+        additionalDetailsLabel.textColor = .lightGray
+        additionalDetailsLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        seeMoreButton = UIButton(type: .system)
+        seeMoreButton.setTitle("See More Info", for: .normal)
+        seeMoreButton.translatesAutoresizingMaskIntoConstraints = false
+        seeMoreButton.addTarget(self, action: #selector(toggleMoreInfo), for: .touchUpInside)
+
         heartButton = UIButton(type: .system)
         heartButton.setImage(UIImage(systemName: "heart"), for: .normal)
         heartButton.tintColor = .red
@@ -103,6 +118,8 @@ class ProductDetailViewController: UIViewController {
         contentView.addSubview(descriptionLabel)
         contentView.addSubview(priceLabel)
         contentView.addSubview(detailsLabel)
+        contentView.addSubview(additionalDetailsLabel)
+        contentView.addSubview(seeMoreButton)
         contentView.addSubview(heartButton)
         contentView.addSubview(addToCartButton)
         contentView.addSubview(proceedToCheckoutButton)
@@ -119,41 +136,63 @@ class ProductDetailViewController: UIViewController {
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
 
-            imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
-            imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 32),
+            imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 32),
+            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -32),
             imageView.heightAnchor.constraint(equalToConstant: 300),
 
             heartButton.topAnchor.constraint(equalTo: imageView.topAnchor, constant: 20),
             heartButton.trailingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: -20),
 
-            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 16),
-            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 32),
+            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 32),
+            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -32),
 
-            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16),
-            descriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            descriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 32),
+            descriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 32),
+            descriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -32),
 
-            priceLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
-            priceLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            priceLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            priceLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 32),
+            priceLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 32),
+            priceLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -32),
 
-            addToCartButton.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 16),
-            addToCartButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            addToCartButton.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 32),
+            addToCartButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 32),
             addToCartButton.widthAnchor.constraint(equalToConstant: 160),
             addToCartButton.heightAnchor.constraint(equalToConstant: 50),
 
-            proceedToCheckoutButton.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 16),
-            proceedToCheckoutButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            proceedToCheckoutButton.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 32),
+            proceedToCheckoutButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -32),
             proceedToCheckoutButton.widthAnchor.constraint(equalToConstant: 160),
             proceedToCheckoutButton.heightAnchor.constraint(equalToConstant: 50),
 
-            detailsLabel.topAnchor.constraint(equalTo: addToCartButton.bottomAnchor, constant: 16),
-            detailsLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            detailsLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            detailsLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
+            addToCartButton.trailingAnchor.constraint(equalTo: contentView.centerXAnchor, constant: -8),
+            proceedToCheckoutButton.leadingAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 8),
+
+            detailsLabel.topAnchor.constraint(equalTo: addToCartButton.bottomAnchor, constant: 32),
+            detailsLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 32),
+            detailsLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -32),
+
+            additionalDetailsLabel.topAnchor.constraint(equalTo: detailsLabel.bottomAnchor, constant: 8),
+            additionalDetailsLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 32),
+            additionalDetailsLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -32),
+
+            seeMoreButton.topAnchor.constraint(equalTo: additionalDetailsLabel.bottomAnchor, constant: 8),
+            seeMoreButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            seeMoreButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -32)
         ])
+    }
+
+    @objc private func toggleMoreInfo() {
+        isShowingMoreInfo.toggle()
+        additionalDetailsLabel.numberOfLines = isShowingMoreInfo ? 0 : 1
+        additionalDetailsLabel.textColor = isShowingMoreInfo ? .black : .lightGray
+        let buttonTitle = isShowingMoreInfo ? "See Less Info" : "See More Info"
+        seeMoreButton.setTitle(buttonTitle, for: .normal)
+
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
     }
 
     @objc private func addToFavorites() {
@@ -249,6 +288,12 @@ class ProductDetailViewController: UIViewController {
         if let minimumOrderQuantity = product.minimumOrderQuantity {
             details += "Minimum Order Quantity: \(minimumOrderQuantity)\n"
         }
+        return details
+    }
+
+    private func getAdditionalDetailsText(for product: Product) -> String {
+        var details = ""
+
         if let meta = product.meta {
             details += "Created At: \(meta.createdAt)\n"
             details += "Updated At: \(meta.updatedAt)\n"

@@ -39,7 +39,7 @@ class PromotionCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.backgroundColor = .customGreen
+        contentView.backgroundColor = .systemGreen
         contentView.layer.cornerRadius = 15
         contentView.addSubview(imageView)
         contentView.addSubview(topLabel)

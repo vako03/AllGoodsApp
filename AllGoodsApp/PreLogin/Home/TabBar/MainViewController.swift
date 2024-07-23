@@ -5,9 +5,7 @@
 //  Created by valeri mekhashishvili on 04.07.24.
 //
 
-extension UIColor {
-    static let customGreen = UIColor(red: 0x00 / 255.0, green: 0xCC / 255.0, blue: 0x96 / 255.0, alpha: 1.0)
-}
+
 import UIKit
 import SwiftUI
 import SDWebImage
@@ -83,7 +81,7 @@ class MainViewController: UIViewController {
 
     private func setupUI() {
         // Setup Header View
-        headerView.backgroundColor = .customGreen
+        headerView.backgroundColor = .systemGreen
         headerView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(headerView)
 
@@ -332,7 +330,7 @@ class MainViewController: UIViewController {
 
     @objc private func playGameButtonTapped() {
         guard let currentUser = Auth.auth().currentUser, currentUser.displayName != "Guest" else {
-            showLoginAlert()
+                showLoginAlert()
             return
         }
         navigateToTicTacToe()
