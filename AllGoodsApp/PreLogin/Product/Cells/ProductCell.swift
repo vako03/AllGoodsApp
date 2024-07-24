@@ -14,7 +14,7 @@ class ProductCell: UICollectionViewCell {
     public var product: Product?
     private var viewModel: ProductViewModel?
     private var currentImageUrl: URL?
-
+    
     // MARK: - UI Elements
     private let imageView: UIImageView = {
         let imageView = UIImageView()
@@ -57,14 +57,14 @@ class ProductCell: UICollectionViewCell {
     
     private let heartButton: UIButton = {
         let button = UIButton(type: .system)
-        button.tintColor = .white
-        button.backgroundColor = .lightGray
+        button.tintColor = .black
         button.layer.cornerRadius = 5
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.lightGray.cgColor
         button.translatesAutoresizingMaskIntoConstraints = false
         if #available(iOS 15.0, *) {
             var configuration = UIButton.Configuration.plain()
             configuration.image = UIImage(systemName: "heart")
-            configuration.baseBackgroundColor = .link
             configuration.imagePadding = 10
             configuration.background.cornerRadius = 5
             configuration.image = configuration.image?.withConfiguration(UIImage.SymbolConfiguration(scale: .small))
@@ -78,29 +78,35 @@ class ProductCell: UICollectionViewCell {
     
     private let addToCartButton: UIButton = {
         let button = UIButton(type: .system)
-        button.tintColor = .white
-        button.backgroundColor = .lightGray
+        button.tintColor = .black
         button.layer.cornerRadius = 5
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.lightGray.cgColor
         button.translatesAutoresizingMaskIntoConstraints = false
         if #available(iOS 15.0, *) {
             var configuration = UIButton.Configuration.plain()
             configuration.title = "Add"
             configuration.image = UIImage(systemName: "cart")
-            configuration.baseBackgroundColor = .darkGray
             configuration.imagePadding = 5
             configuration.background.cornerRadius = 5
             configuration.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
             configuration.image = configuration.image?.withConfiguration(UIImage.SymbolConfiguration(scale: .small))
+            
+            var titleAttr = AttributedString("Add")
+            titleAttr.font = UIFont.systemFont(ofSize: 12)
+            configuration.attributedTitle = titleAttr
+
             button.configuration = configuration
         } else {
             button.setTitle("Add", for: .normal)
             button.setImage(UIImage(systemName: "cart"), for: .normal)
             button.imageEdgeInsets = UIEdgeInsets(top: 5, left: -10, bottom: 5, right: 10)
             button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: -10)
+            button.titleLabel?.font = UIFont.systemFont(ofSize: 12)  // Set desired font size here
         }
         return button
     }()
-    
+
     private let separatorView: UIView = {
         let view = UIView()
         view.backgroundColor = .black
@@ -189,7 +195,7 @@ class ProductCell: UICollectionViewCell {
     func configure(with product: Product, viewModel: ProductViewModel) {
         self.product = product
         self.viewModel = viewModel
-
+        
         let imageUrl = URL(string: product.thumbnail)
         if currentImageUrl != imageUrl {
             currentImageUrl = imageUrl
@@ -205,7 +211,7 @@ class ProductCell: UICollectionViewCell {
         updateHeartButtonAppearance()
         updateAddToCartButtonAppearance()
     }
-
+    
     // MARK: - Actions
     @objc private func heartButtonTapped() {
         guard let product = product, let viewModel = viewModel else { return }
@@ -228,7 +234,7 @@ class ProductCell: UICollectionViewCell {
             delegate?.didSelectProduct(product)
         }
     }
-
+    
     // MARK: - UI Updates
     private func updateHeartButtonAppearance() {
         let iconName = isFavorite ? "heart.fill" : "heart"
@@ -236,22 +242,39 @@ class ProductCell: UICollectionViewCell {
         if #available(iOS 15.0, *) {
             var configuration = heartButton.configuration
             configuration?.image = icon?.withConfiguration(UIImage.SymbolConfiguration(scale: .small))
-            configuration?.baseForegroundColor = isFavorite ? .red : .white
+            configuration?.baseForegroundColor = isFavorite ? .red : .black
+            configuration?.background.backgroundColor = .clear
             heartButton.configuration = configuration
         } else {
             heartButton.setImage(icon, for: .normal)
-            heartButton.tintColor = isFavorite ? .red : .white
+            heartButton.tintColor = isFavorite ? .red : .black
+            heartButton.backgroundColor = .clear
         }
     }
     
     private func updateAddToCartButtonAppearance() {
-        let tintColor: UIColor = isAddedToCart ? .black : .white
+        let tintColor: UIColor = .black
+        let title: String = isAddedToCart ? "Remove" : "Add"
+        let icon = UIImage(systemName: "cart")?.withRenderingMode(.alwaysTemplate)
+        
         if #available(iOS 15.0, *) {
             var configuration = addToCartButton.configuration
             configuration?.baseForegroundColor = tintColor
+            configuration?.title = title
+            configuration?.image = icon?.withConfiguration(UIImage.SymbolConfiguration(scale: .small))
+            configuration?.background.backgroundColor = .clear
+            
+            var titleAttr = AttributedString(title)
+            titleAttr.font = UIFont.systemFont(ofSize: 12)
+            configuration?.attributedTitle = titleAttr
+            
             addToCartButton.configuration = configuration
         } else {
+            addToCartButton.setTitle(title, for: .normal)
+            addToCartButton.setImage(icon, for: .normal)
             addToCartButton.tintColor = tintColor
+            addToCartButton.backgroundColor = .clear
+            addToCartButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)  
         }
     }
 }

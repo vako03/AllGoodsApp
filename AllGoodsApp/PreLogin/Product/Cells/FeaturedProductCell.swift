@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class FeaturedProductCell: UICollectionViewCell {
     static let identifier = "FeaturedProductCell"
@@ -64,14 +65,14 @@ class FeaturedProductCell: UICollectionViewCell {
     
     private let heartButton: UIButton = {
         let button = UIButton(type: .system)
-        button.tintColor = .white
-        button.backgroundColor = .lightGray
+        button.tintColor = .black
         button.layer.cornerRadius = 5
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.lightGray.cgColor
         button.translatesAutoresizingMaskIntoConstraints = false
         if #available(iOS 15.0, *) {
             var configuration = UIButton.Configuration.plain()
             configuration.image = UIImage(systemName: "heart")
-            configuration.baseBackgroundColor = .link
             configuration.imagePadding = 10
             configuration.background.cornerRadius = 5
             configuration.image = configuration.image?.withConfiguration(UIImage.SymbolConfiguration(scale: .small))
@@ -85,27 +86,40 @@ class FeaturedProductCell: UICollectionViewCell {
     
     private let addToCartButton: UIButton = {
         let button = UIButton(type: .system)
-        button.tintColor = .white
-        button.backgroundColor = .lightGray
+        button.tintColor = .black
         button.layer.cornerRadius = 5
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.lightGray.cgColor
         button.translatesAutoresizingMaskIntoConstraints = false
         if #available(iOS 15.0, *) {
             var configuration = UIButton.Configuration.plain()
             configuration.title = "Add"
             configuration.image = UIImage(systemName: "cart")
-            configuration.baseBackgroundColor = .darkGray
             configuration.imagePadding = 5
             configuration.background.cornerRadius = 5
             configuration.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
             configuration.image = configuration.image?.withConfiguration(UIImage.SymbolConfiguration(scale: .small))
+            
+            var titleAttr = AttributedString("Add")
+            titleAttr.font = UIFont.systemFont(ofSize: 14)
+            configuration.attributedTitle = titleAttr
+
             button.configuration = configuration
         } else {
             button.setTitle("Add", for: .normal)
             button.setImage(UIImage(systemName: "cart"), for: .normal)
             button.imageEdgeInsets = UIEdgeInsets(top: 5, left: -10, bottom: 5, right: 10)
             button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: -10)
+            button.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         }
         return button
+    }()
+    
+    private let discountImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
     }()
     
     public var isFavorite: Bool = false {
@@ -131,6 +145,7 @@ class FeaturedProductCell: UICollectionViewCell {
         contentView.addSubview(ratingLabel)
         contentView.addSubview(heartButton)
         contentView.addSubview(addToCartButton)
+        contentView.addSubview(discountImageView)
         
         heartButton.addTarget(self, action: #selector(heartButtonTapped), for: .touchUpInside)
         addToCartButton.addTarget(self, action: #selector(addToCartButtonTapped), for: .touchUpInside)
@@ -171,7 +186,12 @@ class FeaturedProductCell: UICollectionViewCell {
             addToCartButton.leadingAnchor.constraint(equalTo: heartButton.trailingAnchor, constant: 5),
             addToCartButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             addToCartButton.heightAnchor.constraint(equalToConstant: 25),
-            addToCartButton.widthAnchor.constraint(equalToConstant: 95)
+            addToCartButton.widthAnchor.constraint(equalToConstant: 95),
+            
+            discountImageView.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: -10),
+            discountImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            discountImageView.widthAnchor.constraint(equalToConstant: 20),
+            discountImageView.heightAnchor.constraint(equalToConstant: 20)
         ])
     }
     
@@ -207,6 +227,7 @@ class FeaturedProductCell: UICollectionViewCell {
         isAddedToCart = viewModel.isInCart(productId: product.id)
         updateHeartButtonAppearance()
         updateAddToCartButtonAppearance()
+        updateDiscountIcon()
     }
 
     // MARK: - Actions
@@ -241,23 +262,46 @@ class FeaturedProductCell: UICollectionViewCell {
         if #available(iOS 15.0, *) {
             var configuration = heartButton.configuration
             configuration?.image = icon?.withConfiguration(UIImage.SymbolConfiguration(scale: .small))
-            configuration?.baseForegroundColor = isFavorite ? .red : .white
+            configuration?.baseForegroundColor = isFavorite ? .red : .black
+            configuration?.background.backgroundColor = .clear
             heartButton.configuration = configuration
         } else {
             heartButton.setImage(icon, for: .normal)
-            heartButton.tintColor = isFavorite ? .red : .white
+            heartButton.tintColor = isFavorite ? .red : .black
+            heartButton.backgroundColor = .clear
         }
     }
     
     private func updateAddToCartButtonAppearance() {
-        let tintColor: UIColor = isAddedToCart ? .black : .white
+        let tintColor: UIColor = .black
+        let title: String = isAddedToCart ? "Remove" : "Add"
+        let icon = UIImage(systemName: "cart")?.withRenderingMode(.alwaysTemplate)
+        
         if #available(iOS 15.0, *) {
             var configuration = addToCartButton.configuration
             configuration?.baseForegroundColor = tintColor
+            configuration?.title = title
+            configuration?.image = icon?.withConfiguration(UIImage.SymbolConfiguration(scale: .small))
+            configuration?.background.backgroundColor = .clear
+            
+            var titleAttr = AttributedString(title)
+            titleAttr.font = UIFont.systemFont(ofSize: 14)
+            configuration?.attributedTitle = titleAttr
+
             addToCartButton.configuration = configuration
         } else {
+            addToCartButton.setTitle(title, for: .normal)
+            addToCartButton.setImage(icon, for: .normal)
             addToCartButton.tintColor = tintColor
+            addToCartButton.backgroundColor = .clear
+            addToCartButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         }
+    }
+
+    private func updateDiscountIcon() {
+        let discountIcons = ["discount1", "discount2", "discount3", "discount4"]
+        let randomIcon = discountIcons.randomElement()!
+        discountImageView.image = UIImage(named: randomIcon)
     }
 
     // MARK: - Animations

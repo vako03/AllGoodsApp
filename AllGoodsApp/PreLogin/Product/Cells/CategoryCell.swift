@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import SDWebImage
+
 
 class CategoryCell: UICollectionViewCell {
     static let identifier = "CategoryCell"

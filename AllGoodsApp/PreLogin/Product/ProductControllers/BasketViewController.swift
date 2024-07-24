@@ -31,6 +31,8 @@ class BasketViewController: UIViewController {
     private let emptyCartIcon = UIImageView(image: UIImage(named: "empty-cart"))
     private let emptyCartLabel = UILabel()
 
+    private var loadingIndicator: UIActivityIndicatorView!  
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -40,6 +42,7 @@ class BasketViewController: UIViewController {
         setupEmptyCartView()
         setupCollectionView()
         setupPaymentDetailsView()
+        setupLoadingIndicator()
         fetchCartItems()
         setupNotificationObservers()
     }
@@ -224,19 +227,34 @@ class BasketViewController: UIViewController {
         return separator
     }
 
+    private func setupLoadingIndicator() {
+        loadingIndicator = UIActivityIndicatorView(style: .large)
+        loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
+        loadingIndicator.hidesWhenStopped = true
+
+        view.addSubview(loadingIndicator)
+
+        NSLayoutConstraint.activate([
+            loadingIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            loadingIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+    }
+
     // MARK: - Data Fetching
     private func fetchCartItems() {
+        loadingIndicator.startAnimating()
         viewModel.fetchAllProducts { [weak self] result in
-            switch result {
-            case .success:
-                DispatchQueue.main.async {
+            DispatchQueue.main.async {
+                self?.loadingIndicator.stopAnimating()
+                switch result {
+                case .success:
                     self?.cartProducts = self?.viewModel.getCartProducts() ?? []
                     self?.collectionView.reloadData()
                     self?.updateCollectionViewHeight()
                     self?.updatePaymentDetails()
+                case .failure(let error):
+                    print("Failed to fetch products:", error)
                 }
-            case .failure(let error):
-                print("Failed to fetch products:", error)
             }
         }
     }
