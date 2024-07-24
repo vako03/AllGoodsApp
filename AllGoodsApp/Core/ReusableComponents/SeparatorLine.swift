@@ -12,17 +12,17 @@ class SeparatorLine: UICollectionViewFlowLayout {
         super.init()
         setupLayout()
     }
-
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setupLayout()
     }
-
+    
     func setupLayout() {
         minimumLineSpacing = 0
         register(LineDecorationView.self, forDecorationViewOfKind: LineDecorationView.kind)
     }
-
+    
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         let attributes = super.layoutAttributesForElements(in: rect)
         var allAttributes = [UICollectionViewLayoutAttributes]()

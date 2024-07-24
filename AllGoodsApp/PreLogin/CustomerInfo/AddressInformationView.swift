@@ -16,14 +16,14 @@ struct AddressInformationView: View {
     var email: String
     var phoneNumber: String
     var cartProducts: [CartProduct]
-
+    
     var body: some View {
         VStack {
             if addresses.isEmpty {
                 Text("No addresses yet")
                     .font(.headline)
                     .padding()
-
+                
                 Button(action: {
                     showingAddAddressView.toggle()
                 }) {
@@ -50,7 +50,7 @@ struct AddressInformationView: View {
                         }
                     }
                 }
-
+                
                 if selectedAddress != nil {
                     Button(action: {
                         navigateToCheckout = true

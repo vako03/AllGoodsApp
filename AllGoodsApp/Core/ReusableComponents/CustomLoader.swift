@@ -8,19 +8,19 @@
 import UIKit
 
 final class CustomLoader: UIView {
-
+    
     private let activityIndicator: UIActivityIndicatorView
-
+    
     init(style: UIActivityIndicatorView.Style = .large) {
         self.activityIndicator = UIActivityIndicatorView(style: style)
         super.init(frame: .zero)
         setupView()
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     private func setupView() {
         backgroundColor = UIColor(white: 0, alpha: 0.5)
         layer.cornerRadius = 10
@@ -32,13 +32,13 @@ final class CustomLoader: UIView {
             activityIndicator.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
     }
-
+    
     func startLoading(in view: UIView) {
         frame = view.bounds
         view.addSubview(self)
         activityIndicator.startAnimating()
     }
-
+    
     func stopLoading() {
         activityIndicator.stopAnimating()
         removeFromSuperview()

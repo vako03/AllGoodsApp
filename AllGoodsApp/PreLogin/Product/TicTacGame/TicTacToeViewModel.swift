@@ -9,22 +9,26 @@ import Foundation
 import SwiftUI
 
 class TicTacToeViewModel: ObservableObject {
+    
+    // MARK: - Properties
     @Published var board: [[Character?]] = Array(repeating: Array(repeating: nil, count: 3), count: 3)
     @Published var player: Character = "X"
     @Published var tries = 0
     @Published var winner: Character? = nil
     @Published var isGameOver = false
     @Published var showPromo = false
-    @Published var alertItem: AlertItem? // This is a Published property
+    @Published var alertItem: AlertItem?
     var username: String?
-
+    
     var onGameEnded: (() -> Void)?
     var onPromoDismissed: (() -> Void)?
-
+    
+    // MARK: - Initialization
     init(username: String?) {
         self.username = username
     }
-
+    
+    // MARK: - Game Handling
     func handlePlayerMove(row: Int, col: Int) {
         makeMove(row: row, col: col)
         if player == "O" {
@@ -33,7 +37,7 @@ class TicTacToeViewModel: ObservableObject {
             }
         }
     }
-
+    
     private func makeMove(row: Int, col: Int) {
         if board[row][col] == nil {
             board[row][col] = player
@@ -53,19 +57,19 @@ class TicTacToeViewModel: ObservableObject {
             }
         }
     }
-
+    
     func playComputer() {
         let emptyTiles = board.enumerated().flatMap { (i, row) in
             row.enumerated().compactMap { (j, tile) in
                 tile == nil ? (i, j) : nil
             }
         }
-
+        
         if let (i, j) = emptyTiles.randomElement() {
             makeMove(row: i, col: j)
         }
     }
-
+    
     func resetGame() {
         player = "X"
         tries = 0
@@ -73,9 +77,9 @@ class TicTacToeViewModel: ObservableObject {
         isGameOver = false
         showPromo = false
         winner = nil
-        alertItem = nil // Clear alert when resetting the game
+        alertItem = nil
     }
-
+    
     func updateAlertItem() {
         if showPromo {
             alertItem = AlertItem(
@@ -104,42 +108,39 @@ class TicTacToeViewModel: ObservableObject {
             )
         }
     }
-
+    
     func checkWinner(board: [[Character?]]) -> Character? {
-        // Check rows
         for row in board {
             if let marker = row[0], row[1] == marker, row[2] == marker {
                 return marker
             }
         }
-
-        // Check columns
+        
         for col in 0..<3 {
             if let marker = board[0][col], board[1][col] == marker, board[2][col] == marker {
                 return marker
             }
         }
-
-        // Check diagonals
+        
         if let marker = board[0][0], board[1][1] == marker, board[2][2] == marker {
             return marker
         }
         if let marker = board[0][2], board[1][1] == marker, board[2][0] == marker {
             return marker
         }
-
-        // Check for draw scenario (no winner and all lines have different markers)
+        
         let allMarkers = board.flatMap { $0.compactMap { $0 } }
         if allMarkers.count == 9 {
-            return nil // Return nil for draw
+            return nil
         }
-
+        
         return nil
     }
 }
 
+// MARK: - Alert Item
 struct AlertItem: Identifiable {
-    let id = UUID() // Conform to Identifiable
+    let id = UUID()
     let title: String
     let message: String
     let primaryButton: Alert.Button

@@ -71,7 +71,7 @@ class ProfileViewController: UIViewController {
         let label = UILabel()
         label.text = """
         Contact Information:
-        Address: Tbilisi, 0163, 123 Main Street
+        Address: Tbilisi, 0163, Main Street
         Phone: 032 2 123 123
         Email: contact.allgoodsapp@gmail.com
         """
@@ -99,6 +99,7 @@ class ProfileViewController: UIViewController {
         return view
     }()
 
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -107,6 +108,7 @@ class ProfileViewController: UIViewController {
         updateLogoutButtonTitle()
     }
 
+    // MARK: - Setup Views
     private func setupViews() {
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
@@ -159,11 +161,13 @@ class ProfileViewController: UIViewController {
         ])
     }
 
+    // MARK: - Update UI
     private func updateLogoutButtonTitle() {
         let newTitle = isLoggedIn ? "Log out" : "Log in"
         logoutButton.setTitle(newTitle, for: .normal)
     }
 
+    // MARK: - Auth
     private var isLoggedIn: Bool {
         return AuthViewModel().isLoggedIn
     }
@@ -175,7 +179,7 @@ class ProfileViewController: UIViewController {
 
     private func handleWishlistTapped() {
         guard let tabBarVC = coordinator?.navigationController.viewControllers.first as? UITabBarController else { return }
-        tabBarVC.selectedIndex = 1 // Assuming FavouriteViewController is at index 1
+        tabBarVC.selectedIndex = 1
     }
 
     private func handlePrivacyTermsTapped() {
@@ -186,7 +190,7 @@ class ProfileViewController: UIViewController {
 
     @objc private func handleCartTapped() {
         guard let tabBarVC = coordinator?.navigationController.viewControllers.first as? UITabBarController else { return }
-        tabBarVC.selectedIndex = 3 // Assuming BasketViewController is at index 3
+        tabBarVC.selectedIndex = 3
     }
 
     private func handleLogoutTapped() {
@@ -194,7 +198,7 @@ class ProfileViewController: UIViewController {
             switch result {
             case .success:
                 self?.coordinator?.showLogin()
-                self?.updateLogoutButtonTitle() // Update button title after logout
+                self?.updateLogoutButtonTitle()
             case .failure(let error):
                 showAlert(on: self!, message: error.localizedDescription)
             }

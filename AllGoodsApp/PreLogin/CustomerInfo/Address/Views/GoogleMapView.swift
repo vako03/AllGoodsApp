@@ -16,9 +16,10 @@ import CoreLocation
 struct GoogleMapView: UIViewRepresentable {
     var coordinate: CLLocationCoordinate2D
     var markers: [GMSMarker] = []
-    var zoomLevel: Float = 15.0 // Default zoom level
+    var zoomLevel: Float = 15.0
     var isMyLocationEnabled: Bool = false
 
+    // MARK: - makeUIView
     func makeUIView(context: Context) -> GMSMapView {
         let camera = GMSCameraPosition.camera(withLatitude: coordinate.latitude, longitude: coordinate.longitude, zoom: zoomLevel)
         let mapView = GMSMapView(frame: .zero, camera: camera)
@@ -27,19 +28,17 @@ struct GoogleMapView: UIViewRepresentable {
         return mapView
     }
 
+    // MARK: - updateUIView
     func updateUIView(_ uiView: GMSMapView, context: Context) {
         uiView.clear()
         
-        // Add markers to the map
         for marker in markers {
             marker.map = uiView
         }
         
-        // Center the map on the marker and set zoom level
         let camera = GMSCameraPosition.camera(withLatitude: coordinate.latitude, longitude: coordinate.longitude, zoom: zoomLevel)
         uiView.animate(to: camera)
 
-        // Add the custom view for user location
         if isMyLocationEnabled {
             let userLocationView = UserLocationView().frame(width: 50, height: 50)
             let hostingController = UIHostingController(rootView: userLocationView)
@@ -49,6 +48,7 @@ struct GoogleMapView: UIViewRepresentable {
         }
     }
 }
+
 struct MapAddressView: View {
     var body: some View {
         ZStack {

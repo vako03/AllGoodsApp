@@ -11,7 +11,7 @@ class NetworkManager {
     static let shared = NetworkManager()
     private let baseURL = "https://dummyjson.com/products"
     private init() {}
-
+    
     func fetchAllProducts(completion: @escaping (Result<[Product], Error>) -> Void) {
         var allProducts: [Product] = []
         var skip = 0

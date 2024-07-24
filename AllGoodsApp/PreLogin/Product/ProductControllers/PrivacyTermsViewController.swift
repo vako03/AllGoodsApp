@@ -8,6 +8,8 @@
 import UIKit
 
 class PrivacyTermsViewController: UIViewController {
+    
+    // MARK: - UI Elements
     private lazy var textView: UITextView = {
         let textView = UITextView()
         textView.text = """
@@ -64,6 +66,7 @@ class PrivacyTermsViewController: UIViewController {
         return textView
     }()
 
+    // MARK: - Lifecycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -71,6 +74,7 @@ class PrivacyTermsViewController: UIViewController {
         setupViews()
     }
 
+    // MARK: - Setup Views
     private func setupViews() {
         view.addSubview(textView)
         textView.translatesAutoresizingMaskIntoConstraints = false

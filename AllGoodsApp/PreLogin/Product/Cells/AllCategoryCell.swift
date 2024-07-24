@@ -26,8 +26,8 @@ class AllCategoryCell: UICollectionViewCell {
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(systemName: "list.bullet") // Using SF Symbols
-        imageView.tintColor = .white // Set icon color to black
+        imageView.image = UIImage(systemName: "list.bullet")
+        imageView.tintColor = .white
         return imageView
     }()
     
@@ -40,9 +40,9 @@ class AllCategoryCell: UICollectionViewCell {
         
         NSLayoutConstraint.activate([
             iconImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            iconImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 30), // Adjust top spacing to 30
-            iconImageView.widthAnchor.constraint(equalToConstant: 24), // Adjust size as needed
-            iconImageView.heightAnchor.constraint(equalToConstant: 24), // Adjust size as needed
+            iconImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 30),
+            iconImageView.widthAnchor.constraint(equalToConstant: 24),
+            iconImageView.heightAnchor.constraint(equalToConstant: 24),
             
             titleLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             titleLabel.topAnchor.constraint(equalTo: iconImageView.bottomAnchor, constant: 8),

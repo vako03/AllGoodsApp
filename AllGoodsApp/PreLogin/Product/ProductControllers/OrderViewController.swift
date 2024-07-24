@@ -48,6 +48,7 @@ class OrderViewController: UIViewController, UITableViewDataSource, UITableViewD
         loadOrders()
     }
 
+    // MARK: - Setup Constraints
     private func setupConstraints() {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         noOrdersImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -70,6 +71,7 @@ class OrderViewController: UIViewController, UITableViewDataSource, UITableViewD
         ])
     }
 
+    // MARK: - Load Orders
     private func loadOrders() {
         orders = SharedStorage.shared.getOrders()
         tableView.reloadData()
@@ -84,7 +86,6 @@ class OrderViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
 
     // MARK: - UITableViewDataSource
-
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return orders.count
     }
@@ -98,7 +99,6 @@ class OrderViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
 
     // MARK: - UITableViewDelegate
-
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
     }

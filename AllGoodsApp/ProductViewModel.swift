@@ -21,7 +21,8 @@ class ProductViewModel {
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-    
+
+    // MARK: - Fetch Methods
     func fetchAllProducts(completion: @escaping (Result<Void, Error>) -> Void) {
         networkManager.fetchAllProducts { [weak self] result in
             switch result {
@@ -54,6 +55,7 @@ class ProductViewModel {
         }
     }
 
+    // MARK: - Sorting Methods
     func sortedProductsByDiscount() -> [Product] {
         return products.sorted { $0.discountPercentage > $1.discountPercentage }
     }
@@ -62,6 +64,7 @@ class ProductViewModel {
         return products.sorted { $0.rating > $1.rating }
     }
 
+    // MARK: - Categorization Methods
     private func categorizeProducts(_ products: [Product]) {
         productsByCategory = Dictionary(grouping: products, by: { $0.category })
     }
@@ -74,7 +77,7 @@ class ProductViewModel {
         }
     }
 
-    // Favorite actions
+    // MARK: - Favorite Actions
     func toggleFavorite(productId: Int) {
         SharedStorage.shared.toggleFavorite(productId: productId)
         NotificationCenter.default.post(name: .favoritesUpdated, object: productId)
@@ -84,7 +87,7 @@ class ProductViewModel {
         return SharedStorage.shared.isFavorite(productId: productId)
     }
 
-    // Add-to-cart actions
+    // MARK: - Cart Actions
     func toggleCart(productId: Int) {
         SharedStorage.shared.toggleCart(productId: productId)
         NotificationCenter.default.post(name: .cartUpdated, object: productId)
@@ -94,32 +97,29 @@ class ProductViewModel {
         return SharedStorage.shared.isInCart(productId: productId)
     }
 
-    // Fetch favorite products
+    // MARK: - Fetch Favorite and Cart Products
     func getFavoriteProducts() -> [Product] {
         return SharedStorage.shared.getFavoriteProducts(from: products)
     }
 
-    // Fetch cart products
     func getCartProducts() -> [CartProduct] {
-        return SharedStorage.shared.getCartProducts(from: products).map { CartProduct(product: $0, quantity: 1) } // Assuming quantity 1 for now
+        return SharedStorage.shared.getCartProducts(from: products).map { CartProduct(product: $0, quantity: 1) }
     }
-    
+
+    // MARK: - Notification Handlers
     @objc private func handleFavoritesUpdated(notification: Notification) {
         if let productId = notification.object as? Int {
-            // Handle favorites updated logic here
             updateProductState(productId: productId)
         }
     }
-    
+
     @objc private func handleCartUpdated(notification: Notification) {
         if let productId = notification.object as? Int {
-            // Handle cart updated logic here
             updateProductState(productId: productId)
         }
     }
-    
+
     private func updateProductState(productId: Int) {
-        // Update the state of the product based on the ID if needed
-        // This can include fetching the product and updating its state in the array
+        
     }
 }

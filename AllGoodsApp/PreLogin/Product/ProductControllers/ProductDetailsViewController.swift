@@ -4,6 +4,7 @@
 //
 //  Created by valeri mekhashishvili on 11.07.24.
 //
+
 import UIKit
 import SwiftUI
 import FirebaseAuth
@@ -21,6 +22,7 @@ class ProductDetailViewController: UIViewController {
     private let viewModel = ProductViewModel()
     private var showDetails: Bool = false
 
+    // MARK: - Initialization
     init(product: Product) {
         self.product = product
         super.init(nibName: nil, bundle: nil)
@@ -30,6 +32,7 @@ class ProductDetailViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // MARK: - Lifecycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         title = product.title
@@ -39,6 +42,7 @@ class ProductDetailViewController: UIViewController {
         updateCartStatus()
     }
 
+    // MARK: - Setup UI
     private func setupUI() {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -193,12 +197,13 @@ class ProductDetailViewController: UIViewController {
         ])
     }
 
+    // MARK: - Action Methods
     @objc private func toggleDetails() {
         showDetails.toggle()
         additionalDetailsLabel.isHidden = !showDetails
         let buttonTitle = showDetails ? "Hide Details" : "Show More Details"
         toggleDetailsButton.setTitle(buttonTitle, for: .normal)
-        additionalDetailsContainer.layoutIfNeeded() // Ensure the layout is updated
+        additionalDetailsContainer.layoutIfNeeded() 
     }
 
     @objc private func addToFavorites() {
@@ -224,6 +229,7 @@ class ProductDetailViewController: UIViewController {
         navigationController?.pushViewController(hostingController, animated: true)
     }
 
+    // MARK: - Helper Methods
     private func showLoginAlert() {
         let alert = UIAlertController(title: "Login Required", message: "Please log in to continue.", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Login", style: .default, handler: { [weak self] _ in
@@ -309,7 +315,6 @@ class ProductDetailViewController: UIViewController {
 
         let attributedText = NSMutableAttributedString(string: details)
 
-        // Make the first line light gray
         if let range = details.range(of: details.components(separatedBy: "\n").first ?? "") {
             attributedText.addAttributes([.foregroundColor: UIColor.lightGray], range: NSRange(range, in: details))
         }
@@ -318,6 +323,7 @@ class ProductDetailViewController: UIViewController {
     }
 }
 
+// MARK: - UIImageView Extension
 extension UIImageView {
     func load(url: URL) {
         DispatchQueue.global().async { [weak self] in

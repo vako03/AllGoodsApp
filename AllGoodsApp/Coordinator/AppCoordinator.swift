@@ -18,7 +18,6 @@ final class AppCoordinator {
         self.window.rootViewController = navigationController
         self.window.makeKeyAndVisible()
         
-        // Load data from Firestore
         SharedStorage.shared.loadFavoritesFromFirestore()
         SharedStorage.shared.loadCartFromFirestore()
     }
@@ -98,3 +97,4 @@ final class AppCoordinator {
         navigationController.present(alert, animated: true, completion: nil)
     }
 }
+

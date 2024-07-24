@@ -4,14 +4,16 @@
 //
 //  Created by valeri mekhashishvili on 08.07.24.
 //
+
 import UIKit
 
 class FeaturedProductCell: UICollectionViewCell {
     static let identifier = "FeaturedProductCell"
     weak var delegate: ProductSelectionDelegate?
-    public var product: Product? // Make this property public to access it outside the cell
+    public var product: Product?
     private var viewModel: ProductViewModel?
 
+    // MARK: - UI Elements
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
@@ -106,18 +108,19 @@ class FeaturedProductCell: UICollectionViewCell {
         return button
     }()
     
-    public var isFavorite: Bool = false { // Make this property public to access it outside the cell
+    public var isFavorite: Bool = false {
         didSet {
             updateHeartButtonAppearance()
         }
     }
     
-    public var isAddedToCart: Bool = false { // Make this property public to access it outside the cell
+    public var isAddedToCart: Bool = false {
         didSet {
             updateAddToCartButtonAppearance()
         }
     }
-    
+
+    // MARK: - Initializers
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.addSubview(imageView)
@@ -168,14 +171,15 @@ class FeaturedProductCell: UICollectionViewCell {
             addToCartButton.leadingAnchor.constraint(equalTo: heartButton.trailingAnchor, constant: 5),
             addToCartButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             addToCartButton.heightAnchor.constraint(equalToConstant: 25),
-            addToCartButton.widthAnchor.constraint(equalToConstant: 95) // Adjust width as needed
+            addToCartButton.widthAnchor.constraint(equalToConstant: 95)
         ])
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
+    // MARK: - Configuration
     func configure(with product: Product, viewModel: ProductViewModel) {
         self.product = product
         self.viewModel = viewModel
@@ -197,7 +201,6 @@ class FeaturedProductCell: UICollectionViewCell {
         )
         oldPriceLabel.attributedText = attributedOldPrice
         
-        // Set the rating label
         ratingLabel.text = "\(product.rating)"
         
         isFavorite = viewModel.isFavorite(productId: product.id)
@@ -205,12 +208,13 @@ class FeaturedProductCell: UICollectionViewCell {
         updateHeartButtonAppearance()
         updateAddToCartButtonAppearance()
     }
-    
+
+    // MARK: - Actions
     @objc private func heartButtonTapped() {
         guard let product = product, let viewModel = viewModel else { return }
         viewModel.toggleFavorite(productId: product.id)
         isFavorite.toggle()
-        updateHeartButtonAppearance() // Directly update the button UI
+        updateHeartButtonAppearance()
         animateHeartButton()
         NotificationCenter.default.post(name: .favoritesUpdated, object: product.id)
     }
@@ -219,7 +223,7 @@ class FeaturedProductCell: UICollectionViewCell {
         guard let product = product, let viewModel = viewModel else { return }
         viewModel.toggleCart(productId: product.id)
         isAddedToCart.toggle()
-        updateAddToCartButtonAppearance() // Directly update the button UI
+        updateAddToCartButtonAppearance()
         animateAddToCartButton()
         NotificationCenter.default.post(name: .cartUpdated, object: product.id)
     }
@@ -229,7 +233,8 @@ class FeaturedProductCell: UICollectionViewCell {
             delegate?.didSelectProduct(product)
         }
     }
-    
+
+    // MARK: - UI Updates
     private func updateHeartButtonAppearance() {
         let iconName = isFavorite ? "heart.fill" : "heart"
         let icon = UIImage(systemName: iconName)?.withRenderingMode(.alwaysTemplate)
@@ -254,7 +259,8 @@ class FeaturedProductCell: UICollectionViewCell {
             addToCartButton.tintColor = tintColor
         }
     }
-    
+
+    // MARK: - Animations
     private func animateHeartButton() {
         UIView.animate(withDuration: 0.1, animations: {
             self.heartButton.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)

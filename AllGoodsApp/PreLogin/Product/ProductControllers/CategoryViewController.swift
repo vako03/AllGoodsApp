@@ -7,11 +7,9 @@
 
 import UIKit
 
-
 protocol ProductSelectionDelegate: AnyObject {
     func didSelectProduct(_ product: Product)
 }
-import UIKit
 
 class CategoryViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, ProductSelectionDelegate {
     private var collectionView: UICollectionView!
@@ -40,9 +38,14 @@ class CategoryViewController: UIViewController, UICollectionViewDataSource, UICo
         setupCollectionView()
     }
 
+    // MARK: - UI Setup
     private func setupCollectionView() {
-        let layout = SeparatorLine()
-
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        layout.minimumLineSpacing = 10
+        layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        layout.itemSize = CGSize(width: view.frame.width - 20, height: 150)
+        
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -59,6 +62,7 @@ class CategoryViewController: UIViewController, UICollectionViewDataSource, UICo
         ])
     }
 
+    // MARK: - UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return products.count
     }
@@ -71,6 +75,7 @@ class CategoryViewController: UIViewController, UICollectionViewDataSource, UICo
         return cell
     }
 
+    // MARK: - UICollectionViewDelegateFlowLayout
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: 150)
     }
@@ -81,11 +86,13 @@ class CategoryViewController: UIViewController, UICollectionViewDataSource, UICo
         navigationController?.pushViewController(productDetailViewController, animated: true)
     }
 
+    // MARK: - ProductSelectionDelegate
     func didSelectProduct(_ product: Product) {
         let productDetailViewController = ProductDetailViewController(product: product)
         navigationController?.pushViewController(productDetailViewController, animated: true)
     }
 
+    // MARK: - Notification Handlers
     @objc private func updateUIForFavoriteChanges(_ notification: Notification) {
         guard let productId = notification.object as? Int else { return }
         if let index = products.firstIndex(where: { $0.id == productId }) {

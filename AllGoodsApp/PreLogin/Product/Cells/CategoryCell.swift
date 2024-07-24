@@ -9,7 +9,8 @@ import UIKit
 
 class CategoryCell: UICollectionViewCell {
     static let identifier = "CategoryCell"
-    
+
+    // MARK: - UI Elements
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -28,6 +29,7 @@ class CategoryCell: UICollectionViewCell {
         return label
     }()
     
+    // MARK: - Initializers
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.backgroundColor = .lightGray
@@ -36,12 +38,12 @@ class CategoryCell: UICollectionViewCell {
         contentView.addSubview(titleLabel)
         
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20), // Top spacing of 20
+            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
             
-            imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8), // Bottom spacing
-            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -2), // Trailing 0
+            imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
+            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -2),
             imageView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.5),
             imageView.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.5)
         ])
@@ -51,6 +53,7 @@ class CategoryCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Configuration
     func configure(with category: String, imageUrl: URL?, viewModel: ProductViewModel) {
         titleLabel.text = category.capitalized
         if let imageUrl = imageUrl {

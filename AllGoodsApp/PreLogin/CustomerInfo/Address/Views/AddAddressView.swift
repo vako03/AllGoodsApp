@@ -4,6 +4,7 @@
 //
 //  Created by valeri mekhashishvili on 19.07.24.
 //
+
 import SwiftUI
 import MapKit
 import Combine
@@ -16,12 +17,12 @@ struct AddAddressView: View {
     @Binding var selectedAddress: String?
     @State private var title: String = ""
     @State private var searchText: String = ""
-    @State private var coordinate = CLLocationCoordinate2D(latitude: 41.7151, longitude: 44.8271) // Tbilisi coordinates
-    @State private var address: String = ""
+    @State private var coordinate = CLLocationCoordinate2D(latitude: 41.7151, longitude: 44.8271)
+    @State private var address: String = "Address not set"
     @State private var showingAlert = false
     @StateObject private var searchViewModel = AddressSearchViewModel()
     @StateObject private var locationManager = LocationManager()
-    @Environment(\.presentationMode) private var presentationMode
+    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         VStack {
@@ -52,13 +53,14 @@ struct AddAddressView: View {
                     }
                 }
             }
-            .frame(height: 100)
+            .frame(maxHeight: searchViewModel.searchResults.isEmpty ? 0 : 100)
+            .animation(.easeInOut, value: searchViewModel.searchResults.count)
 
             GoogleMapView(coordinate: coordinate, isMyLocationEnabled: true)
                 .frame(maxHeight: 350)
                 .edgesIgnoringSafeArea(.bottom)
 
-            Text("\(address)")
+            Text(address)
                 .padding()
                 .background(Color(.white))
                 .cornerRadius(8)
@@ -73,10 +75,10 @@ struct AddAddressView: View {
                 .padding(.bottom, 12)
 
             Button(action: {
-                if !title.isEmpty && !address.isEmpty {
+                if !title.isEmpty && !address.isEmpty && address != "Address not set" {
                     let fullAddress = "\(title): \(address)"
                     addresses.append(fullAddress)
-                    presentationMode.wrappedValue.dismiss()
+                    dismiss()
                 } else {
                     showingAlert = true
                 }
