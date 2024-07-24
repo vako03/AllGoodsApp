@@ -12,19 +12,22 @@ class FavouriteViewController: UIViewController {
     private let viewModel = ProductViewModel()
     private var collectionView: UICollectionView!
     private var favoriteProducts: [Product] = []
+    private var noFavoritesImageView: UIImageView!
+    private var noFavoritesLabel: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         title = "Favourite"
         setupCollectionView()
+        setupNoFavoritesView()
         fetchFavorites()
         setupNotificationObservers()
     }
 
     private func setupCollectionView() {
-        let layout = SeparatorLine()
-
+        let layout = UICollectionViewFlowLayout()
+        layout.itemSize = CGSize(width: view.frame.width, height: 150)
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -41,18 +44,51 @@ class FavouriteViewController: UIViewController {
         ])
     }
 
+    private func setupNoFavoritesView() {
+        noFavoritesImageView = UIImageView(image: UIImage(named: "file"))
+        noFavoritesImageView.contentMode = .scaleAspectFit
+        noFavoritesImageView.translatesAutoresizingMaskIntoConstraints = false
+
+        noFavoritesLabel = UILabel()
+        noFavoritesLabel.text = "No Favorites Yet"
+        noFavoritesLabel.textAlignment = .center
+        noFavoritesLabel.textColor = .gray
+        noFavoritesLabel.font = UIFont.systemFont(ofSize: 18)
+        noFavoritesLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        view.addSubview(noFavoritesImageView)
+        view.addSubview(noFavoritesLabel)
+
+        NSLayoutConstraint.activate([
+            noFavoritesImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            noFavoritesImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -20),
+            noFavoritesImageView.widthAnchor.constraint(equalToConstant: 200),
+            noFavoritesImageView.heightAnchor.constraint(equalToConstant: 200),
+            
+            noFavoritesLabel.topAnchor.constraint(equalTo: noFavoritesImageView.bottomAnchor, constant: 10),
+            noFavoritesLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        ])
+    }
+
     private func fetchFavorites() {
         viewModel.fetchAllProducts { [weak self] result in
             switch result {
             case .success:
                 DispatchQueue.main.async {
                     self?.favoriteProducts = self?.viewModel.getFavoriteProducts() ?? []
-                    self?.collectionView.reloadData()
+                    self?.updateUI()
                 }
             case .failure(let error):
                 print("Failed to fetch products:", error)
             }
         }
+    }
+
+    private func updateUI() {
+        collectionView.reloadData()
+        let hasFavorites = !favoriteProducts.isEmpty
+        noFavoritesImageView.isHidden = hasFavorites
+        noFavoritesLabel.isHidden = hasFavorites
     }
 
     private func setupNotificationObservers() {
@@ -63,7 +99,7 @@ class FavouriteViewController: UIViewController {
     @objc private func reloadCollectionView(notification: Notification) {
         DispatchQueue.main.async {
             self.favoriteProducts = self.viewModel.getFavoriteProducts()
-            self.collectionView.reloadData()
+            self.updateUI()
         }
     }
 
