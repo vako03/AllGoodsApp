@@ -12,10 +12,12 @@ class ThirdOnboardingPageViewController: UIViewController {
     var descriptionText: String?
     var coordinator: AppCoordinator?
 
+    // MARK: - UI Elements
     private let titleLabel = CustomLabel(text: "", fontSize: 24, textColor: .black, alignment: .center)
     private let descriptionLabel = CustomLabel(text: "", fontSize: 16, textColor: .gray, alignment: .center)
     private let imageViewShopping = CustomImageView(image: UIImage(named: "ThirdOnboard"))
 
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -27,6 +29,7 @@ class ThirdOnboardingPageViewController: UIViewController {
         animateShoppingImage()
     }
 
+    // MARK: - Setup UI
     private func setupUI() {
         titleLabel.text = titleText
         descriptionLabel.text = descriptionText
@@ -52,6 +55,7 @@ class ThirdOnboardingPageViewController: UIViewController {
         ])
     }
 
+    // MARK: - Animations
     private func animateShoppingImage() {
         imageViewShopping.transform = CGAffineTransform(translationX: 0, y: -view.bounds.height)
         UIView.animate(withDuration: 2.0, delay: 0, options: [.curveEaseInOut], animations: {
@@ -71,4 +75,3 @@ class ThirdOnboardingPageViewController: UIViewController {
         })
     }
 }
-

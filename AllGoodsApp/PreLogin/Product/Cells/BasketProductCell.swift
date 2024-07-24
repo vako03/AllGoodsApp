@@ -8,18 +8,22 @@
 import UIKit
 import SDWebImage
 
+// MARK: - BasketProductCellDelegate Protocol
 protocol BasketProductCellDelegate: AnyObject {
     func didUpdateQuantity(for product: Product, quantity: Int)
     func didRemoveProduct(_ product: Product)
 }
 
+// MARK: - BasketProductCell Class
 class BasketProductCell: UICollectionViewCell {
+    // MARK: - Properties
     static let identifier = "BasketProductCell"
     weak var delegate: BasketProductCellDelegate?
     private var cartProduct: CartProduct?
     private var viewModel: ProductViewModel?
     private var currentImageUrl: URL?
 
+    // MARK: - UI Elements
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
@@ -87,6 +91,7 @@ class BasketProductCell: UICollectionViewCell {
         return view
     }()
     
+    // MARK: - Initialization
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.addSubview(imageView)
@@ -109,6 +114,7 @@ class BasketProductCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // MARK: - Constraints Setup
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
@@ -149,6 +155,7 @@ class BasketProductCell: UICollectionViewCell {
         ])
     }
 
+    // MARK: - Configuration
     func configure(with cartProduct: CartProduct, viewModel: ProductViewModel) {
         self.cartProduct = cartProduct
         self.viewModel = viewModel
@@ -161,9 +168,10 @@ class BasketProductCell: UICollectionViewCell {
         
         titleLabel.text = cartProduct.product.title
         priceLabel.text = "$\(String(format: "%.2f", cartProduct.product.price))"
-        quantityLabel.text = "\(cartProduct.quantity)" // Use actual quantity
+        quantityLabel.text = "\(cartProduct.quantity)" 
     }
 
+    // MARK: - Actions
     @objc private func decreaseQuantity() {
         if let cartProduct = cartProduct {
             var quantity = cartProduct.quantity

@@ -5,6 +5,7 @@
 //  Created by valeri mekhashishvili on 11.07.24.
 //
 //
+
 import UIKit
 
 protocol CategorySelectionDelegate: AnyObject {
@@ -42,6 +43,7 @@ class AllCategoriesViewController: UIViewController {
     }
 }
 
+// MARK: - UITableViewDataSource
 extension AllCategoriesViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return categories.count
@@ -51,11 +53,12 @@ extension AllCategoriesViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
         let category = categories[indexPath.row]
         cell.textLabel?.text = category.capitalized
-        cell.imageView?.image = UIImage(named: "placeholder") // Replace with actual category image
+        cell.imageView?.image = UIImage(named: "placeholder")
         return cell
     }
 }
 
+// MARK: - UITableViewDelegate
 extension AllCategoriesViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedCategory = categories[indexPath.row]
@@ -64,12 +67,11 @@ extension AllCategoriesViewController: UITableViewDelegate {
             case .success(let products):
                 DispatchQueue.main.async {
                     let productListVC = ProductListViewController(category: selectedCategory, products: products, viewModel: self?.viewModel ?? ProductViewModel())
-                    productListVC.delegate = self?.delegate as? ProductSelectionDelegate // Set the delegate
+                    productListVC.delegate = self?.delegate as? ProductSelectionDelegate
                     self?.navigationController?.pushViewController(productListVC, animated: true)
                 }
             case .failure(let error):
                 print("Failed to fetch products:", error)
-                // Show an error message to the user if needed
             }
         }
     }

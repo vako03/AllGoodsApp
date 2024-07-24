@@ -6,7 +6,7 @@
 //
 import UIKit
 
-class AllProductViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, ProductSelectionDelegate {
+class AllProductViewController: UIViewController {
     private var collectionView: UICollectionView!
     private var products: [Product]
     private var sortedProducts: [Product]
@@ -35,6 +35,7 @@ class AllProductViewController: UIViewController, UICollectionViewDataSource, UI
         setupNavigationItems()
     }
 
+    // MARK: - Setup Methods
     private func setupCollectionView() {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -62,6 +63,7 @@ class AllProductViewController: UIViewController, UICollectionViewDataSource, UI
         navigationItem.rightBarButtonItem = sortButton
     }
 
+    // MARK: - Sorting Methods
     @objc private func sortButtonTapped() {
         let alertController = UIAlertController(title: "Sort By", message: nil, preferredStyle: .actionSheet)
         alertController.addAction(UIAlertAction(title: "Price: Ascending", style: .default, handler: { _ in
@@ -113,7 +115,10 @@ class AllProductViewController: UIViewController, UICollectionViewDataSource, UI
             self.collectionView?.reloadData()
         }
     }
+}
 
+// MARK: - UICollectionViewDataSource
+extension AllProductViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let startIndex = currentPage * itemsPerPage
         let endIndex = min(startIndex + itemsPerPage, sortedProducts.count)
@@ -128,7 +133,10 @@ class AllProductViewController: UIViewController, UICollectionViewDataSource, UI
         cell.delegate = self
         return cell
     }
+}
 
+// MARK: - UICollectionViewDelegateFlowLayout
+extension AllProductViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: 150)
     }
@@ -139,7 +147,10 @@ class AllProductViewController: UIViewController, UICollectionViewDataSource, UI
         let productDetailViewController = ProductDetailViewController(product: selectedProduct)
         navigationController?.pushViewController(productDetailViewController, animated: true)
     }
+}
 
+// MARK: - ProductSelectionDelegate
+extension AllProductViewController: ProductSelectionDelegate {
     func didSelectProduct(_ product: Product) {
         let productDetailViewController = ProductDetailViewController(product: product)
         navigationController?.pushViewController(productDetailViewController, animated: true)

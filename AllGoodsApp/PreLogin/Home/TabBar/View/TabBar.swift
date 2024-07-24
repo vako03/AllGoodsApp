@@ -10,18 +10,18 @@ import UIKit
 class TabBar: UITabBar {
     private var shapeLayer: CALayer?
 
+    // MARK: - Lifecycle
     override func draw(_ rect: CGRect) {
         addShape()
     }
 
+    // MARK: - Shape Handling
     private func addShape() {
         let shapeLayer = CAShapeLayer()
         shapeLayer.path = createPath()
-
         shapeLayer.strokeColor = UIColor.clear.cgColor
         shapeLayer.fillColor = UIColor.white.cgColor
         shapeLayer.lineWidth = 1.0
-
         shapeLayer.shadowColor = UIColor.black.cgColor
         shapeLayer.shadowOffset = CGSize(width: 0, height: -3)
         shapeLayer.shadowRadius = 5
@@ -37,9 +37,9 @@ class TabBar: UITabBar {
     }
 
     private func createPath() -> CGPath {
-        let height: CGFloat = 60.5  // Increase height of the arch
+        let height: CGFloat = 60.5
         let centerWidth = self.frame.width / 2
-        let width: CGFloat = 45  // Decrease width of the arch
+        let width: CGFloat = 45
 
         let path = UIBezierPath()
         path.move(to: CGPoint(x: 0, y: 0))
@@ -53,6 +53,7 @@ class TabBar: UITabBar {
         return path.cgPath
     }
 
+    // MARK: - Hit Testing
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         guard !clipsToBounds && !isHidden && alpha > 0 else { return nil }
         for member in subviews.reversed() {

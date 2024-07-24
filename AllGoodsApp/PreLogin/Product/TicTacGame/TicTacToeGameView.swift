@@ -34,6 +34,7 @@ struct Tile: View {
     }
 }
 
+// MARK: - Row
 struct Row: View {
     @Binding var row: [Character?]
     @ObservedObject var viewModel: TicTacToeViewModel
@@ -48,11 +49,13 @@ struct Row: View {
     }
 }
 
+// MARK: - TicTacToeGameView
 struct TicTacToeGameView: View {
     @ObservedObject var viewModel: TicTacToeViewModel
 
     var body: some View {
         VStack(spacing: 20) {
+            // Header
             VStack(spacing: 10) {
                 Text("TicTacToe")
                     .font(.system(size: 60))

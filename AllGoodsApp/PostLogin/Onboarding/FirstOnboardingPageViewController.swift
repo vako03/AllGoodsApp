@@ -11,10 +11,12 @@ class FirstOnboardingPageViewController: UIViewController {
     var titleText: String?
     var descriptionText: String?
 
+    // MARK: - UI Elements
     private let titleLabel = CustomLabel(text: "", fontSize: 24, textColor: .black, alignment: .center)
     private let descriptionLabel = CustomLabel(text: "", fontSize: 16, textColor: .gray, alignment: .center)
     private let parcelImageView = CustomImageView(image: UIImage(named: "FirstOnboard"))
 
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -22,6 +24,7 @@ class FirstOnboardingPageViewController: UIViewController {
         animateParcelImage()
     }
 
+    // MARK: - Setup UI
     private func setupUI() {
         titleLabel.text = titleText
         descriptionLabel.text = descriptionText
@@ -47,6 +50,7 @@ class FirstOnboardingPageViewController: UIViewController {
         ])
     }
 
+    // MARK: - Animations
     private func animateParcelImage() {
         parcelImageView.transform = CGAffineTransform(translationX: 0, y: -view.bounds.height)
         UIView.animate(withDuration: 2.0, delay: 0, options: [.curveEaseInOut], animations: {

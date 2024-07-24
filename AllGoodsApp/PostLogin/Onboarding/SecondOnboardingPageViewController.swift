@@ -10,10 +10,12 @@ class SecondOnboardingPageViewController: UIViewController {
     var titleText: String?
     var descriptionText: String?
 
+    // MARK: - UI Elements
     private let titleLabel = CustomLabel(text: "", fontSize: 24, textColor: .black, alignment: .center)
     private let descriptionLabel = CustomLabel(text: "", fontSize: 16, textColor: .gray, alignment: .center)
     private let imageView3D = CustomImageView(image: UIImage(named: "SecondOnboard"))
 
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -25,6 +27,7 @@ class SecondOnboardingPageViewController: UIViewController {
         animateImage3D()
     }
 
+    // MARK: - Setup UI
     private func setupUI() {
         titleLabel.text = titleText
         descriptionLabel.text = descriptionText
@@ -50,6 +53,7 @@ class SecondOnboardingPageViewController: UIViewController {
         ])
     }
 
+    // MARK: - Animations
     private func animateImage3D() {
         imageView3D.transform = CGAffineTransform(translationX: view.bounds.width, y: 0)
         UIView.animate(withDuration: 2.0, delay: 0, options: [.curveEaseInOut], animations: {
@@ -69,3 +73,4 @@ class SecondOnboardingPageViewController: UIViewController {
         })
     }
 }
+

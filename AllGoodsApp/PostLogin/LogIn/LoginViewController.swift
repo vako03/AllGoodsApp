@@ -10,6 +10,7 @@ final class LoginViewController: UIViewController {
     var coordinator: AppCoordinator?
     private let viewModel = AuthViewModel()
 
+    // MARK: - UI Elements
     private let logoImageView = UIImageView(image: UIImage(named: "allgoodsapp"))
     private let titleLabel = CustomLabel(text: "Welcome", fontSize: 28, alignment: .left)
     private let descriptionLabel = CustomLabel(text: "Log in, sign up, or continue as a guest.", fontSize: 16, textColor: .gray, alignment: .left)
@@ -42,7 +43,7 @@ final class LoginViewController: UIViewController {
             }
         )
         textField.autocorrectionType = .no
-        textField.textContentType = .oneTimeCode // Disable strong password suggestion
+        textField.textContentType = .oneTimeCode 
         return textField
     }()
     
@@ -60,6 +61,7 @@ final class LoginViewController: UIViewController {
     
     private let orLabel = CustomLabel(text: "or", alignment: .center)
 
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -76,6 +78,7 @@ final class LoginViewController: UIViewController {
         self.navigationController?.isNavigationBarHidden = false
     }
 
+    // MARK: - Setup UI
     private func setupUI() {
         logoImageView.contentMode = .scaleAspectFit
         logoImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -101,6 +104,7 @@ final class LoginViewController: UIViewController {
         ])
     }
 
+    // MARK: - Actions
     @objc private func dismissKeyboard() {
         view.endEditing(true)
     }

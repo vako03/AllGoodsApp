@@ -10,6 +10,7 @@ import FirebaseAuth
 
 final class AuthViewModel {
 
+    // MARK: - Registration
     func register(email: String, password: String, username: String, completion: @escaping (Result<UserModel, Error>) -> Void) {
         Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
             if let error = error {
@@ -33,6 +34,7 @@ final class AuthViewModel {
         }
     }
 
+    // MARK: - Login
     func login(email: String, password: String, completion: @escaping (Result<UserModel, Error>) -> Void) {
         Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
             if let error = error {
@@ -47,6 +49,7 @@ final class AuthViewModel {
         }
     }
 
+    // MARK: - Logout
     func logout(completion: @escaping (Result<Void, Error>) -> Void) {
         do {
             try Auth.auth().signOut()
@@ -56,6 +59,7 @@ final class AuthViewModel {
         }
     }
 
+    // MARK: - User State
     var isLoggedIn: Bool {
         return Auth.auth().currentUser != nil
     }

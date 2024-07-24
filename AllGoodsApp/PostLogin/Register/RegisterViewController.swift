@@ -11,6 +11,7 @@ final class RegisterViewController: UIViewController {
     var coordinator: AppCoordinator?
     private let viewModel = AuthViewModel()
 
+    // MARK: - UI Elements
     private let logoImageView = UIImageView(image: UIImage(named: "allgoodsapp"))
     private let titleLabel = CustomLabel(text: "Register", fontSize: 28, alignment: .left)
     private let loader = CustomLoader()
@@ -56,7 +57,7 @@ final class RegisterViewController: UIViewController {
             }
         )
         textField.autocorrectionType = .no
-        textField.textContentType = .oneTimeCode // Disable strong password suggestion
+        textField.textContentType = .oneTimeCode 
         return textField
     }()
 
@@ -66,6 +67,7 @@ final class RegisterViewController: UIViewController {
         self?.handleRegisterTapped()
     }
 
+    // MARK: - Properties
     private var termsAccepted = false {
         didSet {
             updateRegisterButtonState()
@@ -78,6 +80,7 @@ final class RegisterViewController: UIViewController {
                !(passwordTextField.text?.isEmpty ?? true)
     }
 
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -86,6 +89,7 @@ final class RegisterViewController: UIViewController {
         updateRegisterButtonState()
     }
 
+    // MARK: - Setup UI
     private func setupUI() {
         termsCheckmark.setImage(UIImage(systemName: "checkmark.circle"), for: .normal)
         termsCheckmark.tintColor = .black
@@ -122,6 +126,7 @@ final class RegisterViewController: UIViewController {
         ])
     }
 
+    // MARK: - Actions
     private func setupActions() {
         termsCheckmark.addAction(UIAction { [weak self] _ in
             self?.showTermsAndConditions()
@@ -174,6 +179,7 @@ final class RegisterViewController: UIViewController {
     }
 }
 
+// MARK: - TermsViewControllerDelegate
 extension RegisterViewController: TermsViewControllerDelegate {
     func didAcceptTerms() {
         termsAccepted = true

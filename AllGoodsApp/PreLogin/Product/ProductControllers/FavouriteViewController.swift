@@ -15,6 +15,7 @@ class FavouriteViewController: UIViewController {
     private var noFavoritesImageView: UIImageView!
     private var noFavoritesLabel: UILabel!
 
+    // MARK: - Lifecycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -25,6 +26,11 @@ class FavouriteViewController: UIViewController {
         setupNotificationObservers()
     }
 
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    // MARK: - UI Setup
     private func setupCollectionView() {
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: view.frame.width, height: 150)
@@ -70,6 +76,7 @@ class FavouriteViewController: UIViewController {
         ])
     }
 
+    // MARK: - Data Fetching
     private func fetchFavorites() {
         viewModel.fetchAllProducts { [weak self] result in
             switch result {
@@ -91,6 +98,7 @@ class FavouriteViewController: UIViewController {
         noFavoritesLabel.isHidden = hasFavorites
     }
 
+    // MARK: - Notification Setup
     private func setupNotificationObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(reloadCollectionView), name: .favoritesUpdated, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadCollectionView), name: .cartUpdated, object: nil)
@@ -102,12 +110,9 @@ class FavouriteViewController: UIViewController {
             self.updateUI()
         }
     }
-
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
 }
 
+// MARK: - UICollectionViewDataSource
 extension FavouriteViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return favoriteProducts.count
@@ -122,6 +127,7 @@ extension FavouriteViewController: UICollectionViewDataSource {
     }
 }
 
+// MARK: - UICollectionViewDelegate
 extension FavouriteViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let product = favoriteProducts[indexPath.row]
@@ -130,12 +136,14 @@ extension FavouriteViewController: UICollectionViewDelegate {
     }
 }
 
+// MARK: - UICollectionViewDelegateFlowLayout
 extension FavouriteViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: 150)
     }
 }
 
+// MARK: - ProductSelectionDelegate
 extension FavouriteViewController: ProductSelectionDelegate {
     func didSelectProduct(_ product: Product) {
         let productDetailViewController = ProductDetailViewController(product: product)

@@ -10,6 +10,7 @@ import UIKit
 final class OnboardingViewController: UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate {
     var coordinator: AppCoordinator?
 
+    // MARK: - Ordered View Controllers
     private(set) lazy var orderedViewControllers: [UIViewController] = {
         return [
             self.firstOnboardingPage(),
@@ -18,15 +19,16 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
         ]
     }()
 
+    // MARK: - UI Elements
     private let pageControl = UIPageControl()
     private lazy var nextButton = CustomButton(title: "Next") { [weak self] in
         self?.nextTapped()
     }
     private lazy var skipButton = CustomButton(title: "Skip") { [weak self] in
         self?.skipTapped()
-        
     }
 
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         dataSource = self
@@ -40,6 +42,7 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
         setupButtons()
     }
 
+    // MARK: - Onboarding Pages
     private func firstOnboardingPage() -> UIViewController {
         let onboardingPage = FirstOnboardingPageViewController()
         onboardingPage.titleText = "Discover the Best Deals"
@@ -62,6 +65,7 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
         return onboardingPage
     }
 
+    // MARK: - Setup UI
     private func setupPageControl() {
         pageControl.numberOfPages = orderedViewControllers.count
         pageControl.currentPage = 0
@@ -81,20 +85,18 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
         view.addSubview(skipButton)
         view.addSubview(nextButton)
         
-        // Set width constraints for the buttons
         skipButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
         nextButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
-
 
         NSLayoutConstraint.activate([
             skipButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             skipButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -60),
-
             nextButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             nextButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -60)
         ])
     }
 
+    // MARK: - Button Actions
     private func skipTapped() {
         coordinator?.showLogin()
     }
@@ -128,8 +130,7 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
         }
     }
 
-    // MARK: UIPageViewControllerDataSource
-
+    // MARK: - UIPageViewControllerDataSource
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         guard let viewControllerIndex = orderedViewControllers.firstIndex(of: viewController) else {
             return nil
@@ -168,15 +169,14 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
     }
 
     func presentationCount(for pageViewController: UIPageViewController) -> Int {
-        return 0 // Returning 0 here hides the default page control.
+        return 0
     }
 
     func presentationIndex(for pageViewController: UIPageViewController) -> Int {
         return 0
     }
 
-    // MARK: UIPageViewControllerDelegate
-
+    // MARK: - UIPageViewControllerDelegate
     func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
         if let pendingViewController = pendingViewControllers.first,
            let index = orderedViewControllers.firstIndex(of: pendingViewController) {

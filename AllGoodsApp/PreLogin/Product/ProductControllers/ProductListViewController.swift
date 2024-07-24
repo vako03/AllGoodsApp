@@ -5,8 +5,6 @@
 //  Created by valeri mekhashishvili on 11.07.24.
 //
 
-
-
 import UIKit
 
 class ProductListViewController: UIViewController {
@@ -14,7 +12,7 @@ class ProductListViewController: UIViewController {
     private let products: [Product]
     private let collectionView: UICollectionView
     private let viewModel: ProductViewModel
-    weak var delegate: ProductSelectionDelegate? // Add this delegate property
+    weak var delegate: ProductSelectionDelegate?
 
     init(category: String, products: [Product], viewModel: ProductViewModel) {
         self.category = category
@@ -26,7 +24,7 @@ class ProductListViewController: UIViewController {
         layout.minimumInteritemSpacing = 0
         layout.minimumLineSpacing = 10
         layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        layout.itemSize = CGSize(width: UIScreen.main.bounds.width - 20, height: 150) // Adjust height as needed
+        layout.itemSize = CGSize(width: UIScreen.main.bounds.width - 20, height: 150)
         
         self.collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         super.init(nibName: nil, bundle: nil)
@@ -56,6 +54,7 @@ class ProductListViewController: UIViewController {
     }
 }
 
+// MARK: - UICollectionViewDataSource
 extension ProductListViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return products.count
@@ -69,9 +68,10 @@ extension ProductListViewController: UICollectionViewDataSource {
     }
 }
 
+// MARK: - UICollectionViewDelegate
 extension ProductListViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let product = products[indexPath.item]
-        delegate?.didSelectProduct(product) // Call delegate method
+        delegate?.didSelectProduct(product)
     }
 }

@@ -8,15 +8,29 @@
 import UIKit
 
 class TabBarController: UITabBarController {
+
+    // MARK: - Properties
     private var middleButton: UIButton!
 
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupMiddleButton()
         customizeTabBarAppearance()
     }
 
-    func setupMiddleButton() {
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        view.bringSubviewToFront(middleButton)
+
+        let middleButtonSize = middleButton.frame.size
+        let middleButtonY = tabBar.frame.origin.y - (middleButtonSize.height / 2) + 5  
+        let middleButtonX = (view.bounds.width - middleButtonSize.width) / 2
+        middleButton.frame.origin = CGPoint(x: middleButtonX, y: middleButtonY)
+    }
+
+    // MARK: - Setup Middle Button
+    private func setupMiddleButton() {
         middleButton = UIButton(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
         middleButton.backgroundColor = .systemGreen
         middleButton.layer.cornerRadius = middleButton.frame.height / 2
@@ -28,23 +42,14 @@ class TabBarController: UITabBarController {
         middleButton.layer.shadowOpacity = 0.3
 
         middleButton.addAction(UIAction { [weak self] _ in
-            self?.selectedIndex = 2  // Assuming ExpressViewController is at index 2
+            self?.selectedIndex = 2
         }, for: .touchUpInside)
 
         view.addSubview(middleButton)
     }
 
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        view.bringSubviewToFront(middleButton)
-
-        let middleButtonSize = middleButton.frame.size
-        let middleButtonY = tabBar.frame.origin.y - (middleButtonSize.height / 2) + 5  // Lower the button slightly
-        let middleButtonX = (view.bounds.width - middleButtonSize.width) / 2
-        middleButton.frame.origin = CGPoint(x: middleButtonX, y: middleButtonY)
-    }
-
-    func customizeTabBarAppearance() {
+    // MARK: - Customize Tab Bar Appearance
+    private func customizeTabBarAppearance() {
         let appearance = UITabBarAppearance()
         appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = .white

@@ -15,6 +15,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UICollectionV
     private var sortButton: UIBarButtonItem!
     private var sortCriteria: SortCriteria = .priceAscending
 
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -23,11 +24,12 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UICollectionV
         setupNavigationItems()
     }
 
+    // MARK: - Setup UI
     private func setupSearchBar() {
         searchBar = UISearchBar()
         searchBar.delegate = self
         searchBar.placeholder = "Search for products"
-        searchBar.inputAccessoryView = createToolbar()  // Add the toolbar to the search bar
+        searchBar.inputAccessoryView = createToolbar()
         navigationItem.titleView = searchBar
     }
 
@@ -53,12 +55,10 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UICollectionV
     }
 
     private func setupNavigationItems() {
-        // Custom back button
         let backButton = UIBarButtonItem(image: UIImage(systemName: "chevron.left"), style: .plain, target: self, action: #selector(backButtonTapped))
         backButton.tintColor = .black
         navigationItem.leftBarButtonItem = backButton
         
-        // Sort button
         sortButton = UIBarButtonItem(image: UIImage(systemName: "arrow.up.arrow.down"), style: .plain, target: self, action: #selector(sortButtonTapped))
         navigationItem.rightBarButtonItem = sortButton
     }
@@ -72,6 +72,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UICollectionV
         return toolbar
     }
 
+    // MARK: - Actions
     @objc private func doneButtonTapped() {
         searchBar.resignFirstResponder()
     }
@@ -110,6 +111,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UICollectionV
         present(alertController, animated: true, completion: nil)
     }
 
+    // MARK: - Sorting
     private func sortProducts() {
         products.sort(by: { (p1, p2) -> Bool in
             switch sortCriteria {
@@ -130,6 +132,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UICollectionV
         collectionView.reloadData()
     }
 
+    // MARK: - UISearchBarDelegate
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         searchProducts(with: searchText)
     }
@@ -149,6 +152,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UICollectionV
         }
     }
 
+    // MARK: - UICollectionViewDataSource, UICollectionViewDelegateFlowLayout
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return products.count
     }
@@ -168,6 +172,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UICollectionV
     }
 }
 
+// MARK: - ProductSelectionDelegate
 extension SearchViewController: ProductSelectionDelegate {
     func didSelectProduct(_ product: Product) {
         let productDetailViewController = ProductDetailViewController(product: product)
@@ -175,6 +180,7 @@ extension SearchViewController: ProductSelectionDelegate {
     }
 }
 
+// MARK: - SortCriteria
 enum SortCriteria {
     case priceAscending
     case priceDescending

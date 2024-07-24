@@ -3,15 +3,29 @@
 //  AllGoodsApp
 //
 //  Created by valeri mekhashishvili on 14.07.24.
-    //
+    
 import UIKit
 
 class RatedProductCell: UICollectionViewCell {
+    // MARK: - Properties
     static let identifier = "RatedProductCell"
     weak var delegate: ProductSelectionDelegate?
-    public var product: Product? // Make this property public to access it outside the cell
+    public var product: Product?
     private var viewModel: ProductViewModel?
 
+    public var isFavorite: Bool = false {
+        didSet {
+            updateHeartButtonAppearance()
+        }
+    }
+    
+    public var isAddedToCart: Bool = false {
+        didSet {
+            updateAddToCartButtonAppearance()
+        }
+    }
+    
+    // MARK: - UI Elements
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
@@ -97,18 +111,7 @@ class RatedProductCell: UICollectionViewCell {
         return button
     }()
     
-    public var isFavorite: Bool = false { // Make this property public to access it outside the cell
-        didSet {
-            updateHeartButtonAppearance()
-        }
-    }
-    
-    public var isAddedToCart: Bool = false { // Make this property public to access it outside the cell
-        didSet {
-            updateAddToCartButtonAppearance()
-        }
-    }
-    
+    // MARK: - Initialization
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.addSubview(imageView)
@@ -125,6 +128,106 @@ class RatedProductCell: UICollectionViewCell {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(cellTapped))
         contentView.addGestureRecognizer(tapGestureRecognizer)
         
+        setupConstraints()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Configuration
+    func configure(with product: Product, viewModel: ProductViewModel) {
+        self.product = product
+        self.viewModel = viewModel
+        if let url = URL(string: product.thumbnail) {
+            imageView.load(url: url)
+        }
+        titleLabel.text = product.title
+        priceLabel.text = "$\(String(format: "%.2f", product.price))"
+        ratingLabel.text = "\(product.rating)"
+        
+        isFavorite = viewModel.isFavorite(productId: product.id)
+        isAddedToCart = viewModel.isInCart(productId: product.id)
+        updateHeartButtonAppearance()
+        updateAddToCartButtonAppearance()
+    }
+    
+    // MARK: - Actions
+    @objc private func heartButtonTapped() {
+        guard let product = product, let viewModel = viewModel else { return }
+        viewModel.toggleFavorite(productId: product.id)
+        isFavorite.toggle()
+        updateHeartButtonAppearance()
+        animateHeartButton()
+        NotificationCenter.default.post(name: .favoritesUpdated, object: product.id)
+    }
+    
+    @objc private func addToCartButtonTapped() {
+        guard let product = product, let viewModel = viewModel else { return }
+        viewModel.toggleCart(productId: product.id)
+        isAddedToCart.toggle()
+        updateAddToCartButtonAppearance()
+        animateAddToCartButton()
+        NotificationCenter.default.post(name: .cartUpdated, object: product.id)
+    }
+    
+    @objc private func cellTapped() {
+        if let product = product {
+            delegate?.didSelectProduct(product)
+        }
+    }
+    
+    // MARK: - Appearance
+    private func updateHeartButtonAppearance() {
+        let iconName = isFavorite ? "heart.fill" : "heart"
+        let icon = UIImage(systemName: iconName)?.withRenderingMode(.alwaysTemplate)
+        if #available(iOS 15.0, *) {
+            var configuration = heartButton.configuration
+            configuration?.image = icon?.withConfiguration(UIImage.SymbolConfiguration(scale: .small))
+            configuration?.baseForegroundColor = isFavorite ? .red : .white
+            heartButton.configuration = configuration
+        } else {
+            heartButton.setImage(icon, for: .normal)
+            heartButton.tintColor = isFavorite ? .red : .white
+        }
+    }
+    
+    private func updateAddToCartButtonAppearance() {
+        let tintColor: UIColor = isAddedToCart ? .black : .white
+        if #available(iOS 15.0, *) {
+            var configuration = addToCartButton.configuration
+            configuration?.baseForegroundColor = tintColor
+            addToCartButton.configuration = configuration
+        } else {
+            addToCartButton.tintColor = tintColor
+        }
+    }
+    
+    // MARK: - Animations
+    private func animateHeartButton() {
+        UIView.animate(withDuration: 0.1, animations: {
+            self.heartButton.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+        }) { _ in
+            UIView.animate(withDuration: 0.1) {
+                self.heartButton.transform = CGAffineTransform.identity
+            }
+        }
+    }
+    
+    private func animateAddToCartButton() {
+        UIView.animate(withDuration: 0.1, animations: {
+            self.addToCartButton.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+            let tintColor: UIColor = self.isAddedToCart ? .black : .white
+            self.addToCartButton.tintColor = tintColor
+        }) { _ in
+            UIView.animate(withDuration: 0.1) {
+                self.addToCartButton.transform = CGAffineTransform.identity
+            }
+        }
+    }
+    
+    // MARK: - Layout
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
@@ -155,98 +258,7 @@ class RatedProductCell: UICollectionViewCell {
             addToCartButton.leadingAnchor.constraint(equalTo: heartButton.trailingAnchor, constant: 5),
             addToCartButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             addToCartButton.heightAnchor.constraint(equalToConstant: 25),
-            addToCartButton.widthAnchor.constraint(equalToConstant: 95) // Adjust width as needed
+            addToCartButton.widthAnchor.constraint(equalToConstant: 95)
         ])
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func configure(with product: Product, viewModel: ProductViewModel) {
-        self.product = product
-        self.viewModel = viewModel
-        if let url = URL(string: product.thumbnail) {
-            imageView.load(url: url)
-        }
-        titleLabel.text = product.title
-        priceLabel.text = "$\(String(format: "%.2f", product.price))"
-        ratingLabel.text = "\(product.rating)"
-        
-        isFavorite = viewModel.isFavorite(productId: product.id)
-        isAddedToCart = viewModel.isInCart(productId: product.id)
-        updateHeartButtonAppearance()
-        updateAddToCartButtonAppearance()
-    }
-    
-    @objc private func heartButtonTapped() {
-        guard let product = product, let viewModel = viewModel else { return }
-        viewModel.toggleFavorite(productId: product.id)
-        isFavorite.toggle()
-        updateHeartButtonAppearance() // Directly update the button UI
-        animateHeartButton()
-        NotificationCenter.default.post(name: .favoritesUpdated, object: product.id)
-    }
-    
-    @objc private func addToCartButtonTapped() {
-        guard let product = product, let viewModel = viewModel else { return }
-        viewModel.toggleCart(productId: product.id)
-        isAddedToCart.toggle()
-        updateAddToCartButtonAppearance() // Directly update the button UI
-        animateAddToCartButton()
-        NotificationCenter.default.post(name: .cartUpdated, object: product.id)
-    }
-    
-    @objc private func cellTapped() {
-        if let product = product {
-            delegate?.didSelectProduct(product)
-        }
-    }
-    
-    private func updateHeartButtonAppearance() {
-        let iconName = isFavorite ? "heart.fill" : "heart"
-        let icon = UIImage(systemName: iconName)?.withRenderingMode(.alwaysTemplate)
-        if #available(iOS 15.0, *) {
-            var configuration = heartButton.configuration
-            configuration?.image = icon?.withConfiguration(UIImage.SymbolConfiguration(scale: .small))
-            configuration?.baseForegroundColor = isFavorite ? .red : .white
-            heartButton.configuration = configuration
-        } else {
-            heartButton.setImage(icon, for: .normal)
-            heartButton.tintColor = isFavorite ? .red : .white
-        }
-    }
-    
-    private func updateAddToCartButtonAppearance() {
-        let tintColor: UIColor = isAddedToCart ? .black : .white
-        if #available(iOS 15.0, *) {
-            var configuration = addToCartButton.configuration
-            configuration?.baseForegroundColor = tintColor
-            addToCartButton.configuration = configuration
-        } else {
-            addToCartButton.tintColor = tintColor
-        }
-    }
-    
-    private func animateHeartButton() {
-        UIView.animate(withDuration: 0.1, animations: {
-            self.heartButton.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
-        }) { _ in
-            UIView.animate(withDuration: 0.1) {
-                self.heartButton.transform = CGAffineTransform.identity
-            }
-        }
-    }
-    
-    private func animateAddToCartButton() {
-        UIView.animate(withDuration: 0.1, animations: {
-            self.addToCartButton.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
-            let tintColor: UIColor = self.isAddedToCart ? .black : .white
-            self.addToCartButton.tintColor = tintColor
-        }) { _ in
-            UIView.animate(withDuration: 0.1) {
-                self.addToCartButton.transform = CGAffineTransform.identity
-            }
-        }
     }
 }

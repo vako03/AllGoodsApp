@@ -4,6 +4,7 @@
 //
 //  Created by valeri mekhashishvili on 19.07.24.
 //
+
 import SwiftUI
 
 struct ContactInformationView: View {
@@ -17,10 +18,12 @@ struct ContactInformationView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
+            // MARK: - Title
             Text("Contact Information")
                 .font(.largeTitle)
                 .padding()
 
+            // MARK: - Nickname
             VStack(alignment: .leading, spacing: 8) {
                 Text("Nickname*")
                     .font(.headline)
@@ -33,6 +36,7 @@ struct ContactInformationView: View {
             }
             .padding(.horizontal)
 
+            // MARK: - Email
             VStack(alignment: .leading, spacing: 8) {
                 Text("Email*")
                     .font(.headline)
@@ -45,6 +49,7 @@ struct ContactInformationView: View {
             }
             .padding(.horizontal)
 
+            // MARK: - Phone Number
             VStack(alignment: .leading, spacing: 8) {
                 Text("Phone Number*")
                     .font(.headline)
@@ -77,6 +82,7 @@ struct ContactInformationView: View {
             }
             .padding(.horizontal)
 
+            // MARK: - Continue Button
             NavigationLink(destination: AddressInformationView(email: email, phoneNumber: phoneNumber, cartProducts: cartProducts), isActive: $showingAddressInformationView) {
                 Button(action: {
                     if isValidPhoneNumber() {
@@ -97,6 +103,7 @@ struct ContactInformationView: View {
         }
     }
 
+    // MARK: - Phone Number Formatting
     private func formatPhoneNumber() {
         var cleanedNumber = phoneNumber
             .replacingOccurrences(of: "+995 ", with: "")
@@ -118,6 +125,7 @@ struct ContactInformationView: View {
         phoneNumber = newString
     }
 
+    // MARK: - Phone Number Validation
     private func isValidPhoneNumber() -> Bool {
         let phoneNumberWithoutSpaces = phoneNumber.replacingOccurrences(of: " ", with: "")
         if phoneNumberWithoutSpaces.count != 13 { // +995 + 9 digits = 13

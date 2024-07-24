@@ -32,6 +32,7 @@ class BrandListViewController: UIViewController {
         fetchBrands()
     }
 
+    // MARK: - UI Setup
     private func setupTableView() {
         tableView = UITableView(frame: view.bounds)
         tableView.dataSource = self
@@ -40,6 +41,7 @@ class BrandListViewController: UIViewController {
         view.addSubview(tableView)
     }
 
+    // MARK: - Data Fetching
     private func fetchBrands() {
         viewModel.fetchAllBrands { [weak self] result in
             switch result {
@@ -55,6 +57,7 @@ class BrandListViewController: UIViewController {
     }
 }
 
+// MARK: - UITableViewDataSource
 extension BrandListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return brands.count
@@ -67,6 +70,7 @@ extension BrandListViewController: UITableViewDataSource {
     }
 }
 
+// MARK: - UITableViewDelegate
 extension BrandListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedBrand = brands[indexPath.row]

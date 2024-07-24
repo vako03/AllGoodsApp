@@ -22,6 +22,7 @@ class ExpressViewController: UIViewController, ProductSelectionDelegate {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
@@ -30,10 +31,15 @@ class ExpressViewController: UIViewController, ProductSelectionDelegate {
         setupNotificationObservers()
     }
 
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    // MARK: - Setup UI
     private func setupCollectionView() {
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: view.bounds.width, height: 200)  // Make the cell width equal to the view's width
-        layout.minimumLineSpacing = 10 // Add some spacing between cells
+        layout.itemSize = CGSize(width: view.bounds.width, height: 200)
+        layout.minimumLineSpacing = 10
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -50,6 +56,7 @@ class ExpressViewController: UIViewController, ProductSelectionDelegate {
         ])
     }
 
+    // MARK: - Fetch Data
     private func fetchGroceries() {
         viewModel.fetchProducts(for: "groceries") { [weak self] result in
             DispatchQueue.main.async {
@@ -64,6 +71,7 @@ class ExpressViewController: UIViewController, ProductSelectionDelegate {
         }
     }
 
+    // MARK: - Notifications
     private func setupNotificationObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(reloadCollectionView), name: .favoritesUpdated, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadCollectionView), name: .cartUpdated, object: nil)
@@ -75,10 +83,6 @@ class ExpressViewController: UIViewController, ProductSelectionDelegate {
         }
     }
 
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-
     // MARK: - ProductSelectionDelegate Method
     func didSelectProduct(_ product: Product) {
         let productDetailViewController = ProductDetailViewController(product: product)
@@ -86,6 +90,7 @@ class ExpressViewController: UIViewController, ProductSelectionDelegate {
     }
 }
 
+// MARK: - UICollectionViewDataSource
 extension ExpressViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return products.count
@@ -95,11 +100,12 @@ extension ExpressViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProductCell.identifier, for: indexPath) as! ProductCell
         let product = products[indexPath.row]
         cell.configure(with: product, viewModel: viewModel)
-        cell.delegate = self // Set the delegate
+        cell.delegate = self
         return cell
     }
 }
 
+// MARK: - UICollectionViewDelegate
 extension ExpressViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let product = products[indexPath.row]

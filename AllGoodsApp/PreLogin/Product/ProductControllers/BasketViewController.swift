@@ -44,6 +44,7 @@ class BasketViewController: UIViewController {
         setupNotificationObservers()
     }
 
+    // MARK: - UI Setup
     private func setupScrollView() {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         contentView.translatesAutoresizingMaskIntoConstraints = false
@@ -223,6 +224,7 @@ class BasketViewController: UIViewController {
         return separator
     }
 
+    // MARK: - Data Fetching
     private func fetchCartItems() {
         viewModel.fetchAllProducts { [weak self] result in
             switch result {
@@ -270,6 +272,7 @@ class BasketViewController: UIViewController {
         totalLabel.text = String(format: "$%.2f", total)
     }
 
+    // MARK: - Notifications
     private func setupNotificationObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(reloadCollectionView), name: .cartUpdated, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadCollectionView), name: .favoritesUpdated, object: nil)
@@ -302,6 +305,7 @@ class BasketViewController: UIViewController {
     }
 }
 
+// MARK: - UICollectionViewDataSource
 extension BasketViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return cartProducts.count
@@ -316,6 +320,7 @@ extension BasketViewController: UICollectionViewDataSource {
     }
 }
 
+// MARK: - UICollectionViewDelegate
 extension BasketViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cartProduct = cartProducts[indexPath.row]
@@ -324,6 +329,7 @@ extension BasketViewController: UICollectionViewDelegate {
     }
 }
 
+// MARK: - BasketProductCellDelegate
 extension BasketViewController: BasketProductCellDelegate {
     func didUpdateQuantity(for product: Product, quantity: Int) {
         if let index = cartProducts.firstIndex(where: { $0.product.id == product.id }) {

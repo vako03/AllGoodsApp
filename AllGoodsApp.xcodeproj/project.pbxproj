@@ -55,6 +55,7 @@
 		1AB696012C38768100EA6F49 /* TermsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB696002C38768100EA6F49 /* TermsViewController.swift */; };
 		1AE2969A2C43337D006224F7 /* RatedProductCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE296992C43337D006224F7 /* RatedProductCell.swift */; };
 		1AE2969C2C433A88006224F7 /* AllProductViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE2969B2C433A88006224F7 /* AllProductViewController.swift */; };
+		1AEEB78B2C5122C700836706 /* PrivacyTermsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AEEB78A2C5122C700836706 /* PrivacyTermsViewController.swift */; };
 		1AEF54062C45B93C009B1CFF /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 1AEF54052C45B93C009B1CFF /* SDWebImage */; };
 		1AEF54082C45B93C009B1CFF /* SDWebImageMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 1AEF54072C45B93C009B1CFF /* SDWebImageMapKit */; };
 		1AEF540B2C45C10B009B1CFF /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 1AEF540A2C45C10B009B1CFF /* FirebaseFirestore */; };
@@ -127,6 +128,7 @@
 		1AB696002C38768100EA6F49 /* TermsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsViewController.swift; sourceTree = "<group>"; };
 		1AE296992C43337D006224F7 /* RatedProductCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatedProductCell.swift; sourceTree = "<group>"; };
 		1AE2969B2C433A88006224F7 /* AllProductViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllProductViewController.swift; sourceTree = "<group>"; };
+		1AEEB78A2C5122C700836706 /* PrivacyTermsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyTermsViewController.swift; sourceTree = "<group>"; };
 		1AEF540E2C45D120009B1CFF /* BasketProductCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketProductCell.swift; sourceTree = "<group>"; };
 		1AEF54282C49B673009B1CFF /* ContactInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactInformationView.swift; sourceTree = "<group>"; };
 		1AEF542C2C49CB8F009B1CFF /* AddressInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressInformationView.swift; sourceTree = "<group>"; };
@@ -274,6 +276,7 @@
 				1A5F28972C40874200FFBAE3 /* CategoryViewController.swift */,
 				1A5F28CE2C41C33A00FFBAE3 /* BrandListViewController.swift */,
 				1A031A0F2C4F05E10038495F /* OrderViewController.swift */,
+				1AEEB78A2C5122C700836706 /* PrivacyTermsViewController.swift */,
 			);
 			path = ProductControllers;
 			sourceTree = "<group>";
@@ -557,6 +560,7 @@
 				1AA582352C3D70090081A410 /* CustomImageView.swift in Sources */,
 				1A6FE1F22C3BE90300F6D5B4 /* TicTacToeViewModel.swift in Sources */,
 				1A6FE1F02C3BE6F700F6D5B4 /* TicTacToeGameView.swift in Sources */,
+				1AEEB78B2C5122C700836706 /* PrivacyTermsViewController.swift in Sources */,
 				1A1E6F2B2C500179003CF541 /* CheckoutView.swift in Sources */,
 				1AEF54292C49B673009B1CFF /* ContactInformationView.swift in Sources */,
 				1A2E0BBD2C44910500FB1228 /* SharedStorage.swift in Sources */,

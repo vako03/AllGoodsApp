@@ -20,9 +20,9 @@ struct CheckoutView: View {
     @State private var navigateToSuccess = false
     @State private var orderNumber: String = ""
     @State private var showAlert = false
-
+    
     private let viewModel = ProductViewModel()
-
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
@@ -45,7 +45,7 @@ struct CheckoutView: View {
             Alert(title: Text("Payment Method Required"), message: Text("Please choose a payment method."), dismissButton: .default(Text("OK")))
         }
     }
-
+    
     private var userInfoSection: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
@@ -70,12 +70,12 @@ struct CheckoutView: View {
         .background(Color(.systemGray6))
         .cornerRadius(8)
     }
-
+    
     private var cartSection: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("CART")
                 .font(.headline)
-
+            
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
                     ForEach(cartProducts, id: \.product.id) { cartProduct in
@@ -85,7 +85,7 @@ struct CheckoutView: View {
                                     .frame(width: 100, height: 100)
                                     .cornerRadius(8)
                             }
-
+                            
                             Text("\(cartProduct.quantity)")
                                 .font(.caption)
                                 .foregroundColor(.white)
@@ -128,12 +128,12 @@ struct CheckoutView: View {
         .background(Color(.systemGray6))
         .cornerRadius(8)
     }
-
+    
     private var paymentInformationSection: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Choose a payment method")
                 .font(.headline)
-
+            
             HStack {
                 Text("Payment to the courier by card")
                 Spacer()
@@ -157,7 +157,7 @@ struct CheckoutView: View {
         .background(Color(.systemGray6))
         .cornerRadius(8)
     }
-
+    
     private var promoCodeSection: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Promo Code")
@@ -179,13 +179,12 @@ struct CheckoutView: View {
         .background(Color(.systemGray6))
         .cornerRadius(8)
     }
-
+    
     private var payButton: some View {
         Button(action: {
             if selectedPaymentMethod.isEmpty {
                 showAlert = true
             } else {
-                // Handle payment
                 orderNumber = generateOrderNumber()
                 let order = Order(orderNumber: orderNumber,
                                   productThumbnail: cartProducts.first?.product.thumbnail ?? "",
@@ -193,7 +192,7 @@ struct CheckoutView: View {
                                   customerPhoneNumber: phoneNumber,
                                   date: getCurrentDate(),
                                   amount: String(format: "%.2f₾", total))
-
+                
                 SharedStorage.shared.addOrder(order)
                 navigateToSuccess = true
             }
@@ -207,13 +206,13 @@ struct CheckoutView: View {
         }
         .padding(.top)
     }
-
+    
     private func updatePaymentDetails() {
         subtotal = cartProducts.reduce(0) { $0 + ($1.product.price * Double($1.quantity)) }
         discount = cartProducts.reduce(0) { $0 + (($1.product.price * $1.product.discountPercentage / 100) * Double($1.quantity)) }
         total = subtotal + discount
     }
-
+    
     private func applyPromoCode() {
         if promoCode == "Get10" {
             discount = min(subtotal * 0.1, 300.0)
@@ -223,11 +222,11 @@ struct CheckoutView: View {
             total = subtotal
         }
     }
-
+    
     private func generateOrderNumber() -> String {
         return String(format: "%04d", Int.random(in: 0...9999))
     }
-
+    
     private func getCurrentDate() -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm"
