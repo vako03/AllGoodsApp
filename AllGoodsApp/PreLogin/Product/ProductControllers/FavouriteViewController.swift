@@ -14,6 +14,7 @@ class FavouriteViewController: UIViewController {
     private var favoriteProducts: [Product] = []
     private var noFavoritesImageView: UIImageView!
     private var noFavoritesLabel: UILabel!
+    private var loadingIndicator: UIActivityIndicatorView!
 
     // MARK: - Lifecycle Methods
     override func viewDidLoad() {
@@ -22,6 +23,7 @@ class FavouriteViewController: UIViewController {
         title = "Favourite"
         setupCollectionView()
         setupNoFavoritesView()
+        setupLoadingIndicator()
         fetchFavorites()
         setupNotificationObservers()
     }
@@ -76,17 +78,32 @@ class FavouriteViewController: UIViewController {
         ])
     }
 
+    private func setupLoadingIndicator() {
+        loadingIndicator = UIActivityIndicatorView(style: .large)
+        loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
+        loadingIndicator.hidesWhenStopped = true
+
+        view.addSubview(loadingIndicator)
+
+        NSLayoutConstraint.activate([
+            loadingIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            loadingIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+    }
+
     // MARK: - Data Fetching
     private func fetchFavorites() {
+        loadingIndicator.startAnimating()
         viewModel.fetchAllProducts { [weak self] result in
-            switch result {
-            case .success:
-                DispatchQueue.main.async {
+            DispatchQueue.main.async {
+                self?.loadingIndicator.stopAnimating() 
+                switch result {
+                case .success:
                     self?.favoriteProducts = self?.viewModel.getFavoriteProducts() ?? []
                     self?.updateUI()
+                case .failure(let error):
+                    print("Failed to fetch products:", error)
                 }
-            case .failure(let error):
-                print("Failed to fetch products:", error)
             }
         }
     }
