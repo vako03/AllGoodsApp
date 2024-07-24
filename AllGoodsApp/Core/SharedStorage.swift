@@ -22,13 +22,11 @@ class SharedStorage {
     private(set) var orders: [Order] = []
 
     private init() {
-        // Load data from Firestore on initialization
         loadFavoritesFromFirestore()
         loadCartFromFirestore()
         loadOrdersFromFirestore()
     }
-
-    // Favorite Products
+    
     func toggleFavorite(productId: Int) {
         if favoriteProductIds.contains(productId) {
             favoriteProductIds.remove(productId)
@@ -69,7 +67,6 @@ class SharedStorage {
         }
     }
 
-    // Cart Products
     func toggleCart(productId: Int) {
         if cartProductIds.contains(productId) {
             cartProductIds.remove(productId)

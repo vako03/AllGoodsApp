@@ -16,7 +16,7 @@ final class CustomTextField: UITextField {
         rightIconButton = UIButton(type: .custom)
         rightIconButton.setImage(rightIconImage, for: .normal)
         rightIconButton.tintColor = .black
-        rightIconButton.isHidden = true // Hide initially
+        rightIconButton.isHidden = true
 
         underline = UIView()
         underline.backgroundColor = .black

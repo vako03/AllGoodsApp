@@ -41,7 +41,7 @@ class CategoryViewController: UIViewController, UICollectionViewDataSource, UICo
     }
 
     private func setupCollectionView() {
-        let layout = LineFlowLayout()
+        let layout = SeparatorLine()
 
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.dataSource = self

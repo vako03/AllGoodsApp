@@ -28,7 +28,7 @@ class BasketViewController: UIViewController {
     private let paymentDetailsStack = UIStackView()
 
     private let emptyCartView = UIView()
-    private let emptyCartIcon = UIImageView(image: UIImage(named: "shopping"))
+    private let emptyCartIcon = UIImageView(image: UIImage(named: "empty-cart"))
     private let emptyCartLabel = UILabel()
 
     override func viewDidLoad() {
@@ -70,7 +70,7 @@ class BasketViewController: UIViewController {
         emptyCartIcon.contentMode = .scaleAspectFit
         emptyCartIcon.translatesAutoresizingMaskIntoConstraints = false
 
-        emptyCartLabel.text = "Cart is empty"
+        emptyCartLabel.text = "Your cart is empty"
         emptyCartLabel.font = UIFont.systemFont(ofSize: 18)
         emptyCartLabel.textColor = .gray
         emptyCartLabel.textAlignment = .center
@@ -81,8 +81,9 @@ class BasketViewController: UIViewController {
         contentView.addSubview(emptyCartView)
 
         NSLayoutConstraint.activate([
-            emptyCartView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            emptyCartView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            emptyCartView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            emptyCartView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            emptyCartView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 100),
             
             emptyCartIcon.centerXAnchor.constraint(equalTo: emptyCartView.centerXAnchor),
             emptyCartIcon.topAnchor.constraint(equalTo: emptyCartView.topAnchor),
