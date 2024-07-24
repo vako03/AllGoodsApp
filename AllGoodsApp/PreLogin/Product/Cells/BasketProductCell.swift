@@ -62,6 +62,7 @@ class BasketProductCell: UICollectionViewCell {
         button.tintColor = .black
         button.backgroundColor = .lightGray
         button.layer.cornerRadius = 5
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -72,6 +73,7 @@ class BasketProductCell: UICollectionViewCell {
         button.tintColor = .black
         button.backgroundColor = .lightGray
         button.layer.cornerRadius = 5
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -80,6 +82,7 @@ class BasketProductCell: UICollectionViewCell {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "trash"), for: .normal)
         button.tintColor = .red
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)  // Set desired font size here
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -168,7 +171,7 @@ class BasketProductCell: UICollectionViewCell {
         
         titleLabel.text = cartProduct.product.title
         priceLabel.text = "$\(String(format: "%.2f", cartProduct.product.price))"
-        quantityLabel.text = "\(cartProduct.quantity)" 
+        quantityLabel.text = "\(cartProduct.quantity)"
     }
 
     // MARK: - Actions

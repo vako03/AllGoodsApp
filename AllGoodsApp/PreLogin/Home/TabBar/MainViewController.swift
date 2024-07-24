@@ -83,7 +83,7 @@ class MainViewController: UIViewController {
     // MARK: - Shimmer Effect
     private func addShimmerEffect() {
         let shimmerView = UIView(frame: view.bounds)
-        shimmerView.backgroundColor = UIColor.clear  // Make the background of shimmerView clear
+        shimmerView.backgroundColor = UIColor.clear
         view.addSubview(shimmerView)
         view.bringSubviewToFront(shimmerView)
 
@@ -118,8 +118,6 @@ class MainViewController: UIViewController {
             shimmerView.removeFromSuperview()
         }
     }
-
-
 
     // MARK: - Setup UI
     private func setupUI() {

@@ -107,7 +107,6 @@ class ProductCell: UICollectionViewCell {
         return button
     }()
 
-    
     private let separatorView: UIView = {
         let view = UIView()
         view.backgroundColor = .black
@@ -266,7 +265,7 @@ class ProductCell: UICollectionViewCell {
             configuration?.background.backgroundColor = .clear
             
             var titleAttr = AttributedString(title)
-            titleAttr.font = UIFont.systemFont(ofSize: 12)  // Set desired font size here
+            titleAttr.font = UIFont.systemFont(ofSize: 12)
             configuration?.attributedTitle = titleAttr
             
             addToCartButton.configuration = configuration
@@ -275,7 +274,7 @@ class ProductCell: UICollectionViewCell {
             addToCartButton.setImage(icon, for: .normal)
             addToCartButton.tintColor = tintColor
             addToCartButton.backgroundColor = .clear
-            addToCartButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)  // Set desired font size here
+            addToCartButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)  
         }
     }
 }
