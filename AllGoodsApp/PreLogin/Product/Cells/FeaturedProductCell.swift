@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class FeaturedProductCell: UICollectionViewCell {
     static let identifier = "FeaturedProductCell"
@@ -114,6 +115,13 @@ class FeaturedProductCell: UICollectionViewCell {
         return button
     }()
     
+    private let discountImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
     public var isFavorite: Bool = false {
         didSet {
             updateHeartButtonAppearance()
@@ -137,6 +145,7 @@ class FeaturedProductCell: UICollectionViewCell {
         contentView.addSubview(ratingLabel)
         contentView.addSubview(heartButton)
         contentView.addSubview(addToCartButton)
+        contentView.addSubview(discountImageView)
         
         heartButton.addTarget(self, action: #selector(heartButtonTapped), for: .touchUpInside)
         addToCartButton.addTarget(self, action: #selector(addToCartButtonTapped), for: .touchUpInside)
@@ -177,7 +186,12 @@ class FeaturedProductCell: UICollectionViewCell {
             addToCartButton.leadingAnchor.constraint(equalTo: heartButton.trailingAnchor, constant: 5),
             addToCartButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             addToCartButton.heightAnchor.constraint(equalToConstant: 25),
-            addToCartButton.widthAnchor.constraint(equalToConstant: 95)
+            addToCartButton.widthAnchor.constraint(equalToConstant: 95),
+            
+            discountImageView.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: -10),
+            discountImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            discountImageView.widthAnchor.constraint(equalToConstant: 20),
+            discountImageView.heightAnchor.constraint(equalToConstant: 20)
         ])
     }
     
@@ -213,6 +227,7 @@ class FeaturedProductCell: UICollectionViewCell {
         isAddedToCart = viewModel.isInCart(productId: product.id)
         updateHeartButtonAppearance()
         updateAddToCartButtonAppearance()
+        updateDiscountIcon()
     }
 
     // MARK: - Actions
@@ -270,7 +285,7 @@ class FeaturedProductCell: UICollectionViewCell {
             configuration?.background.backgroundColor = .clear
             
             var titleAttr = AttributedString(title)
-            titleAttr.font = UIFont.systemFont(ofSize: 12)
+            titleAttr.font = UIFont.systemFont(ofSize: 14)
             configuration?.attributedTitle = titleAttr
 
             addToCartButton.configuration = configuration
@@ -279,8 +294,14 @@ class FeaturedProductCell: UICollectionViewCell {
             addToCartButton.setImage(icon, for: .normal)
             addToCartButton.tintColor = tintColor
             addToCartButton.backgroundColor = .clear
-            addToCartButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+            addToCartButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         }
+    }
+
+    private func updateDiscountIcon() {
+        let discountIcons = ["discount1", "discount2", "discount3", "discount4"]
+        let randomIcon = discountIcons.randomElement()!
+        discountImageView.image = UIImage(named: randomIcon)
     }
 
     // MARK: - Animations

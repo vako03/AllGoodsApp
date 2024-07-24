@@ -114,7 +114,7 @@ class MainViewController: UIViewController {
         animation.repeatCount = .infinity
         gradientLayer.add(animation, forKey: "shimmerAnimation")
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.8) {
             shimmerView.removeFromSuperview()
         }
     }

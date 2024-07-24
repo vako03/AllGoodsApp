@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import SDWebImage
+
 
 class PromotionCell: UICollectionViewCell {
     static let identifier = "PromotionCell"

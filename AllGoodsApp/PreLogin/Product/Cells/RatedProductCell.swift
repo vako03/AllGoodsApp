@@ -5,6 +5,8 @@
 //  Created by valeri mekhashishvili on 14.07.24.
     
 import UIKit
+import SDWebImage
+
 
 class RatedProductCell: UICollectionViewCell {
     // MARK: - Properties
