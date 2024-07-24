@@ -35,12 +35,11 @@ Save for Later: Add products to your wishlist for future purchases.
 App Screens:
 
 <img src="https://github.com/user-attachments/assets/5ac29561-eb5e-4f7f-a8a6-8f6e0074ab54" alt="map" width="200"/>
-<img src="https://github.com/user-attachments/assets/3f391bc5-b98d-421f-92dd-95a24f663357" alt="map" width="200"/>
-<img src="https://github.com/user-attachments/assets/da30f7e9-687e-4a2a-8bb3-96726fdc8f70" alt="map" width="200"/> 
+<img src="https://github.com/user-attachments/assets/3f391bc5-b98d-421f-92dd-95a24f663357" alt="map" width="200"/> 
 <img src="https://github.com/user-attachments/assets/5b0da1d5-5f86-49fe-bd2a-3d93066d55b2" alt="map" width="200"/>
-<img src="https://github.com/user-attachments/assets/8e73828b-32f0-4a3e-bc0e-273f09a4e808" alt="map" width="200"/>
-<img src="https://github.com/user-attachments/assets/e3843b33-7c8c-478a-8e77-600b30613caf" alt="map" width="200"/>
 <img src="https://github.com/user-attachments/assets/e8bdf4da-42ea-438f-8735-9ba9a602344f" alt="map" width="200"/>
-<img src="https://github.com/user-attachments/assets/da30f7e9-687e-4a2a-8bb3-96726fdc8f70" alt="map" width="200"/> 
+<img src="https://github.com/user-attachments/assets/2534956b-d684-4cc9-912b-d071058e0ed5" alt="map" width="200"/>
+<img src="https://github.com/user-attachments/assets/e3843b33-7c8c-478a-8e77-600b30613caf" alt="map" width="200"/>
+<img src="https://github.com/user-attachments/assets/9790a330-86d3-4603-8820-a85f1f433537" alt="map" width="200"/>
 <img src="https://github.com/user-attachments/assets/87837881-e9e7-4089-ad1b-40739ef1b8cf" alt="map" width="200"/>
 
