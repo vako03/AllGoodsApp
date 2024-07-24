@@ -226,6 +226,7 @@
 				1A6FE1942C3B380300F6D5B4 /* SharedLogic.swift */,
 				1A2E0BBC2C44910500FB1228 /* SharedStorage.swift */,
 				1A6FE1912C3B37EA00F6D5B4 /* ReusableComponents */,
+				1AEEB7A02C51778500836706 /* OtherFiles */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -296,7 +297,6 @@
 			children = (
 				1A1209302C35D59300FDC9BE /* AllGoodsApp */,
 				1A12092F2C35D59300FDC9BE /* Products */,
-				1AEF54092C45BEA6009B1CFF /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -402,11 +402,11 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
-		1AEF54092C45BEA6009B1CFF /* Frameworks */ = {
+		1AEEB7A02C51778500836706 /* OtherFiles */ = {
 			isa = PBXGroup;
 			children = (
 			);
-			name = Frameworks;
+			path = OtherFiles;
 			sourceTree = "<group>";
 		};
 		1AF97DBC2C36D8AC00C3E55F /* Coordinator */ = {

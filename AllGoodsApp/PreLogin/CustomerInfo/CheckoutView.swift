@@ -210,16 +210,19 @@ struct CheckoutView: View {
     private func updatePaymentDetails() {
         subtotal = cartProducts.reduce(0) { $0 + ($1.product.price * Double($1.quantity)) }
         discount = cartProducts.reduce(0) { $0 + (($1.product.price * $1.product.discountPercentage / 100) * Double($1.quantity)) }
-        total = subtotal + discount
+        total = subtotal - discount
+        applyPromoCode()  // Re-apply promo code when updating payment details
     }
     
     private func applyPromoCode() {
         if promoCode == "Get10" {
-            discount = min(subtotal * 0.1, 300.0)
+            let promoDiscount = subtotal * 0.1
+            discount += promoDiscount
             total = subtotal - discount
         } else {
-            discount = 0.0
-            total = subtotal
+            // Recalculate discount without promo code
+            discount = cartProducts.reduce(0) { $0 + (($1.product.price * $1.product.discountPercentage / 100) * Double($1.quantity)) }
+            total = subtotal - discount
         }
     }
     
