@@ -85,8 +85,15 @@ class ProductDetailViewController: UIViewController {
         basicDetailsLabel.text = getBasicDetailsText(for: product)
         basicDetailsLabel.translatesAutoresizingMaskIntoConstraints = false
 
+        toggleDetailsButton = UIButton(type: .system)
+        toggleDetailsButton.setTitle("Show More Details", for: .normal)
+        toggleDetailsButton.setTitleColor(.systemBlue, for: .normal)
+        toggleDetailsButton.translatesAutoresizingMaskIntoConstraints = false
+        toggleDetailsButton.addTarget(self, action: #selector(toggleDetails), for: .touchUpInside)
+
         additionalDetailsContainer = UIView()
         additionalDetailsContainer.translatesAutoresizingMaskIntoConstraints = false
+        additionalDetailsContainer.isHidden = !showDetails
         contentView.addSubview(additionalDetailsContainer)
 
         additionalDetailsLabel = UILabel()
@@ -94,7 +101,6 @@ class ProductDetailViewController: UIViewController {
         additionalDetailsLabel.numberOfLines = 0
         additionalDetailsLabel.attributedText = getAdditionalDetailsAttributedText(for: product)
         additionalDetailsLabel.translatesAutoresizingMaskIntoConstraints = false
-        additionalDetailsLabel.isHidden = !showDetails
         additionalDetailsContainer.addSubview(additionalDetailsLabel)
 
         heartButton = UIButton(type: .system)
@@ -118,12 +124,6 @@ class ProductDetailViewController: UIViewController {
         proceedToCheckoutButton.layer.cornerRadius = 10
         proceedToCheckoutButton.translatesAutoresizingMaskIntoConstraints = false
         proceedToCheckoutButton.addTarget(self, action: #selector(proceedToCheckout), for: .touchUpInside)
-
-        toggleDetailsButton = UIButton(type: .system)
-        toggleDetailsButton.setTitle("Show More Details", for: .normal)
-        toggleDetailsButton.setTitleColor(.systemBlue, for: .normal)
-        toggleDetailsButton.translatesAutoresizingMaskIntoConstraints = false
-        toggleDetailsButton.addTarget(self, action: #selector(toggleDetails), for: .touchUpInside)
 
         contentView.addSubview(imageView)
         contentView.addSubview(titleLabel)
@@ -181,29 +181,31 @@ class ProductDetailViewController: UIViewController {
             basicDetailsLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             basicDetailsLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
 
-            additionalDetailsContainer.topAnchor.constraint(equalTo: basicDetailsLabel.bottomAnchor, constant: 16),
+            toggleDetailsButton.topAnchor.constraint(equalTo: basicDetailsLabel.bottomAnchor, constant: 16),
+            toggleDetailsButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            toggleDetailsButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+
+            additionalDetailsContainer.topAnchor.constraint(equalTo: toggleDetailsButton.bottomAnchor, constant: 16),
             additionalDetailsContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             additionalDetailsContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            
+            additionalDetailsContainer.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
+
             additionalDetailsLabel.topAnchor.constraint(equalTo: additionalDetailsContainer.topAnchor),
             additionalDetailsLabel.leadingAnchor.constraint(equalTo: additionalDetailsContainer.leadingAnchor),
             additionalDetailsLabel.trailingAnchor.constraint(equalTo: additionalDetailsContainer.trailingAnchor),
-            additionalDetailsLabel.bottomAnchor.constraint(equalTo: additionalDetailsContainer.bottomAnchor),
-
-            toggleDetailsButton.topAnchor.constraint(equalTo: additionalDetailsContainer.bottomAnchor, constant: 16),
-            toggleDetailsButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            toggleDetailsButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            toggleDetailsButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
+            additionalDetailsLabel.bottomAnchor.constraint(equalTo: additionalDetailsContainer.bottomAnchor)
         ])
     }
 
     // MARK: - Action Methods
     @objc private func toggleDetails() {
         showDetails.toggle()
-        additionalDetailsLabel.isHidden = !showDetails
+        additionalDetailsContainer.isHidden = !showDetails
         let buttonTitle = showDetails ? "Hide Details" : "Show More Details"
         toggleDetailsButton.setTitle(buttonTitle, for: .normal)
-        additionalDetailsContainer.layoutIfNeeded() 
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
     }
 
     @objc private func addToFavorites() {
