@@ -87,7 +87,7 @@
 		1A1209332C35D59300FDC9BE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		1A12093A2C35D59500FDC9BE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1A12093D2C35D59500FDC9BE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		1A12093F2C35D59500FDC9BE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1A12093F2C35D59500FDC9BE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = Info.plist; path = AllGoodsApp/Helpers/Info.plist; sourceTree = SOURCE_ROOT; };
 		1A1E6F2A2C500179003CF541 /* CheckoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutView.swift; sourceTree = "<group>"; };
 		1A24837C2C50467800D3C53F /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		1A24837E2C5046EF00D3C53F /* GoogleMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleMapView.swift; sourceTree = "<group>"; };
@@ -313,11 +313,8 @@
 			children = (
 				1A1209312C35D59300FDC9BE /* AppDelegate.swift */,
 				1A1209332C35D59300FDC9BE /* SceneDelegate.swift */,
+				1AEEB7E92C518C3E00836706 /* Helpers */,
 				1AF97DBC2C36D8AC00C3E55F /* Coordinator */,
-				1A12093A2C35D59500FDC9BE /* Assets.xcassets */,
-				1A12093C2C35D59500FDC9BE /* LaunchScreen.storyboard */,
-				1A12093F2C35D59500FDC9BE /* Info.plist */,
-				1AF97DA32C36D02E00C3E55F /* GoogleService-Info.plist */,
 				1A0119C22C4EF8CA00002151 /* PostLogin */,
 				1A0119CB2C4EFEA300002151 /* PreLogin */,
 				1A284E762C400C1700DB27FF /* NetworkManager */,
@@ -407,6 +404,17 @@
 			children = (
 			);
 			path = OtherFiles;
+			sourceTree = "<group>";
+		};
+		1AEEB7E92C518C3E00836706 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				1A12093F2C35D59500FDC9BE /* Info.plist */,
+				1AF97DA32C36D02E00C3E55F /* GoogleService-Info.plist */,
+				1A12093C2C35D59500FDC9BE /* LaunchScreen.storyboard */,
+				1A12093A2C35D59500FDC9BE /* Assets.xcassets */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 		1AF97DBC2C36D8AC00C3E55F /* Coordinator */ = {
@@ -723,7 +731,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Q2N9JMQ98Q;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = AllGoodsApp/Info.plist;
+				INFOPLIST_FILE = AllGoodsApp/Helpers/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -749,7 +757,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Q2N9JMQ98Q;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = AllGoodsApp/Info.plist;
+				INFOPLIST_FILE = AllGoodsApp/Helpers/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
