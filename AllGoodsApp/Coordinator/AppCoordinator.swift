@@ -11,6 +11,7 @@ final class AppCoordinator {
     var window: UIWindow
     var navigationController: UINavigationController
     private let viewModel = ProductViewModel()
+    let onboardingVC = OnboardingViewController()
     
     init(window: UIWindow) {
         self.window = window
@@ -33,7 +34,7 @@ final class AppCoordinator {
     
     func showOnboarding() {
         let onboardingVC = OnboardingViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
-        onboardingVC.coordinator = self
+        onboardingVC.viewModel = OnboardingViewModel(coordinator: self)
         navigationController.setViewControllers([onboardingVC], animated: true)
     }
     
