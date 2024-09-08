@@ -183,7 +183,8 @@ class ProfileViewController: UIViewController {
     }
 
     private func handlePrivacyTermsTapped() {
-        let privacyTermsVC = PrivacyTermsViewController()
+        let viewModel = PrivacyTermsViewModel()
+        let privacyTermsVC = PrivacyTermsViewController(viewModel: viewModel)
         privacyTermsVC.modalPresentationStyle = .formSheet
         present(privacyTermsVC, animated: true, completion: nil)
     }
