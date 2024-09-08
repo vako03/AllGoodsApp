@@ -121,13 +121,11 @@ class OnboardingPageViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        // Set initial state for animation here, before the view appears.
         setInitialAnimationState()
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        // Start the animation after the view has appeared.
         applyAnimation()
     }
 
@@ -159,30 +157,27 @@ class OnboardingPageViewController: UIViewController {
         imageView.image = UIImage(named: viewModel.imageName)
     }
 
-    // MARK: - Set Initial Animation State
     private func setInitialAnimationState() {
-        // Set different initial states based on the image
         switch viewModel.imageName {
         case "FirstOnboard":
-            imageView.transform = CGAffineTransform(translationX: 0, y: -view.bounds.height) // Start from offscreen (above)
+            imageView.transform = CGAffineTransform(translationX: 0, y: -view.bounds.height)
         case "SecondOnboard":
-            imageView.transform = CGAffineTransform(translationX: view.bounds.width, y: 0) // Start from offscreen (right)
+            imageView.transform = CGAffineTransform(translationX: view.bounds.width, y: 0)
         case "ThirdOnboard":
-            imageView.transform = CGAffineTransform(translationX: 0, y: -view.bounds.height) // Start from offscreen (above)
+            imageView.transform = CGAffineTransform(translationX: 0, y: -view.bounds.height)
         default:
             imageView.transform = .identity
         }
     }
 
-    // MARK: - Apply Animation After View Appears
     private func applyAnimation() {
         switch viewModel.imageName {
         case "FirstOnboard":
-            animateParcelImage()  // The first page animation
+            animateParcelImage()
         case "SecondOnboard":
-            animateImage3D()      // The second page animation
+            animateImage3D()
         case "ThirdOnboard":
-            animateShoppingImage() // The third page animation
+            animateShoppingImage()
         default:
             break
         }
@@ -191,7 +186,7 @@ class OnboardingPageViewController: UIViewController {
     // MARK: - First Onboarding Animation (Move and Wiggle)
     private func animateParcelImage() {
         UIView.animate(withDuration: 2.0, delay: 0, options: [.curveEaseInOut], animations: {
-            self.imageView.transform = .identity  // Move to final position (on screen)
+            self.imageView.transform = .identity
         }, completion: { _ in
             self.moveImageSideways()
         })
@@ -206,7 +201,7 @@ class OnboardingPageViewController: UIViewController {
     // MARK: - Second Onboarding Animation (3D Spin)
     private func animateImage3D() {
         UIView.animate(withDuration: 2.0, delay: 0, options: [.curveEaseInOut], animations: {
-            self.imageView.transform = .identity  // Move to final position (on screen)
+            self.imageView.transform = .identity
         }, completion: { _ in
             self.spinImage3D()
         })
@@ -214,10 +209,10 @@ class OnboardingPageViewController: UIViewController {
 
     private func spinImage3D() {
         UIView.animate(withDuration: 1.0, delay: 0, options: [.autoreverse, .repeat, .curveEaseInOut], animations: {
-            self.imageView.transform = CGAffineTransform(rotationAngle: -.pi / 9)  // Rotate left
+            self.imageView.transform = CGAffineTransform(rotationAngle: -.pi / 9)
         }, completion: { _ in
             UIView.animate(withDuration: 1.0, delay: 0, options: [.autoreverse, .repeat, .curveEaseInOut], animations: {
-                self.imageView.transform = CGAffineTransform(rotationAngle: .pi / 9)  // Rotate right
+                self.imageView.transform = CGAffineTransform(rotationAngle: .pi / 9)
             })
         })
     }
@@ -225,7 +220,7 @@ class OnboardingPageViewController: UIViewController {
     // MARK: - Third Onboarding Animation (Shake Effect)
     private func animateShoppingImage() {
         UIView.animate(withDuration: 2.0, delay: 0, options: [.curveEaseInOut], animations: {
-            self.imageView.transform = .identity  // Move to final position (on screen)
+            self.imageView.transform = .identity
         }, completion: { _ in
             self.shakeShoppingImage()
         })

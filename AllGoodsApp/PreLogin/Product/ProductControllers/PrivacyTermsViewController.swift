@@ -9,18 +9,15 @@ import UIKit
 
 class PrivacyTermsViewController: UIViewController {
     
-    // MARK: - UI Elements
     private lazy var textView: UITextView = {
         let textView = UITextView()
         textView.font = UIFont.systemFont(ofSize: 16)
         textView.isEditable = false
         return textView
     }()
-    
-    // MARK: - Properties
+
     private let viewModel: PrivacyTermsViewModel
 
-    // MARK: - Initializers
     init(viewModel: PrivacyTermsViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -30,7 +27,6 @@ class PrivacyTermsViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: - Lifecycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -39,7 +35,6 @@ class PrivacyTermsViewController: UIViewController {
         configureTextView()
     }
 
-    // MARK: - Setup Views
     private func setupViews() {
         view.addSubview(textView)
         textView.translatesAutoresizingMaskIntoConstraints = false
@@ -52,7 +47,6 @@ class PrivacyTermsViewController: UIViewController {
         ])
     }
 
-    // MARK: - Configure TextView
     private func configureTextView() {
         textView.text = viewModel.privacyTermsText
     }

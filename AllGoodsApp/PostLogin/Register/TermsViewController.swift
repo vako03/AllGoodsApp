@@ -15,7 +15,6 @@ final class TermsViewController: UIViewController, UITextViewDelegate {
     weak var delegate: TermsViewControllerDelegate?
     private let viewModel = TermsViewModel()
 
-    // MARK: - UI Elements
     private let termsTextView: UITextView = {
         let textView = UITextView()
         textView.isEditable = false
@@ -27,7 +26,6 @@ final class TermsViewController: UIViewController, UITextViewDelegate {
         self?.acceptTapped()
     }
 
-    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -37,12 +35,10 @@ final class TermsViewController: UIViewController, UITextViewDelegate {
         acceptButton.isEnabled = false
     }
 
-    // MARK: - Bind Data
     private func bindData() {
         termsTextView.text = viewModel.termsAndConditionsText 
     }
 
-    // MARK: - Setup UI
     private func setupUI() {
         view.addSubview(termsTextView)
         view.addSubview(acceptButton)
@@ -59,13 +55,11 @@ final class TermsViewController: UIViewController, UITextViewDelegate {
         ])
     }
 
-    // MARK: - Actions
     private func acceptTapped() {
         delegate?.didAcceptTerms()
         dismiss(animated: true, completion: nil)
     }
 
-    // MARK: - UITextViewDelegate
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let bottomEdge = scrollView.contentOffset.y + scrollView.frame.size.height
         if bottomEdge >= scrollView.contentSize.height {

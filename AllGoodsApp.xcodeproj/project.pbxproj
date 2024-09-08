@@ -200,6 +200,10 @@
 		1A0119C02C4EF81200002151 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				1AF97DB12C36D21200C3E55F /* MainViewController.swift */,
+				1AFFA1A02C4DE2190062979A /* SearchViewController.swift */,
+				1A284E252C3E9A4A00DB27FF /* ExpressViewController.swift */,
+				1AA582322C3D5F590081A410 /* ProfileViewController.swift */,
 				1A0119C92C4EFD9900002151 /* TabBar */,
 			);
 			path = Home;
@@ -258,12 +262,8 @@
 		1A0119C92C4EFD9900002151 /* TabBar */ = {
 			isa = PBXGroup;
 			children = (
-				1A284E272C3E9B9A00DB27FF /* TabBarController.swift */,
-				1AF97DB12C36D21200C3E55F /* MainViewController.swift */,
-				1AFFA1A02C4DE2190062979A /* SearchViewController.swift */,
-				1A284E252C3E9A4A00DB27FF /* ExpressViewController.swift */,
-				1AA582322C3D5F590081A410 /* ProfileViewController.swift */,
 				1A0119C12C4EF82C00002151 /* View */,
+				1A284E272C3E9B9A00DB27FF /* TabBarController.swift */,
 			);
 			path = TabBar;
 			sourceTree = "<group>";
